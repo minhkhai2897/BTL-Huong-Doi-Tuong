@@ -11,43 +11,12 @@ import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.animation.BomberAnimation;
 import uet.oop.bomberman.graphics.Sprite;
 
-public class Bomber extends Entity {
+public class Bomber extends MovingEntity {
     private BomberAnimation bomberAnimation = new BomberAnimation();
-    private int speed = 2;
-    private boolean left = false;
-    private boolean right = false;
-    private boolean up = false;
-    private boolean down = false;
 
 
     public Bomber(int x, int y, Image img) {
         super( x, y, img);
-    }
-
-    public boolean isLeft() {
-        return left;
-    }
-
-    public boolean isRight() {
-        return right;
-    }
-
-    public boolean isUp() {
-        return up;
-    }
-
-    public boolean isDown() {
-        return down;
-    }
-
-    public int getSpeed() {
-        return speed;
-    }
-
-    public void setSpeed(int speed) {
-        if (0 < speed && speed <= 3) {
-            this.speed = speed;
-        }
     }
 
     @Override
@@ -85,20 +54,5 @@ public class Bomber extends Entity {
                 this.right = false;
             }
         });
-    }
-
-    /**
-     * di chuyen.
-     */
-    private void move() {
-        if (left) {
-            this.x -= this.getSpeed();
-        } else if (right) {
-            this.x += this.getSpeed();
-        } else if (up) {
-            this.y -= this.getSpeed();
-        } else if (down) {
-            this.y += this.getSpeed();
-        }
     }
 }
