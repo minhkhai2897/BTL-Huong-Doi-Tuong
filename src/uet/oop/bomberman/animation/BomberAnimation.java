@@ -1,9 +1,9 @@
 package uet.oop.bomberman.animation;
 
+import javafx.scene.image.ImageView;
 import uet.oop.bomberman.entities.*;
 import javafx.scene.image.Image;
 import uet.oop.bomberman.graphics.Sprite;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,6 +64,8 @@ public class BomberAnimation extends Animation{
             } else {
                 bomber.setImg(Sprite.player_down.getFxImage());
             }
+            ImageView imageView = new ImageView(bomber.getImg());
+            bomber.setImageView(imageView);
         }
     }
 }

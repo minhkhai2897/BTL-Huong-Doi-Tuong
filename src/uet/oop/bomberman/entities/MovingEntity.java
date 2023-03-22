@@ -53,4 +53,8 @@ public abstract class MovingEntity extends Entity {
             this.y += this.getSpeed();
         }
     }
+
+    protected void checkCollision(Object obj) {
+
+    }
 }
