@@ -17,6 +17,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BombermanGame extends Application {
+    private Bomber bomber;
+    private Group root;
+    private Scene scene;
     
     public static int width;
     public static int height;
@@ -26,6 +29,7 @@ public class BombermanGame extends Application {
     private List<String> map = new ArrayList<>();
     private List<Entity> entities = new ArrayList<>();
     private List<Entity> stillObjects = new ArrayList<>();
+    private List<Entity> grasses = new ArrayList<>();
 
 
     public static void main(String[] args) {
@@ -41,11 +45,11 @@ public class BombermanGame extends Application {
         gc = canvas.getGraphicsContext2D();
 
         // Tao root container
-        Group root = new Group();
+        root = new Group();
         root.getChildren().add(canvas);
 
         // Tao scene
-        Scene scene = new Scene(root);
+        scene = new Scene(root);
 
         // Them scene vao stage
         stage.setScene(scene);
@@ -60,16 +64,15 @@ public class BombermanGame extends Application {
         };
         timer.start();
 
+
         createMap();
 
-        Bomber bomber = null;
         for (int i = 0; i < entities.size(); i++) {
             if (entities.get(i) instanceof Bomber) {
                 bomber = (Bomber) entities.get(i);
                 break;
             }
         }
-        bomber.handleKeyPress(scene);
     }
 
 
@@ -81,14 +84,14 @@ public class BombermanGame extends Application {
             String s = map.get(i);
             for (int j = 0; j < width; j++) {
                 Entity object = new Grass(j, i, Sprite.grass.getFxImage());
-                stillObjects.add(object);
+                grasses.add(object);
+                object = null;
                 char c = s.charAt(j);
+
                 if (c == 'p') {
                     object = new Bomber(j, i, Sprite.player_down.getFxImage());
                     entities.add(object);
                 } else if ('0' <= c && c <= '9') {
-                    object = new Grass(j, i, Sprite.grass.getFxImage());
-                    stillObjects.add(object);
                     if (c == '1') {
                         object = new Balloon(j, i, Sprite.balloom_left1.getFxImage());
                     }
@@ -105,18 +108,17 @@ public class BombermanGame extends Application {
                         object = new Brick(j, i, Sprite.brick.getFxImage());
                     } else if (c == 'x') {
                         object = new Portal(j, i, Sprite.portal.getFxImage());
-                    } else if (c == ' ') {
-                        object = new Grass(j, i, Sprite.grass.getFxImage());
                     } else if (c == 'b') {
                         object = new Bomb(j, i, Sprite.powerup_bombs.getFxImage());
                     } else if (c == 'f') {
                         object = new Flame(j, i, Sprite.powerup_flames.getFxImage());
                     } else if (c == 's') {
                         object = new Speed(j, i, Sprite.powerup_speed.getFxImage());
-                    } else {
-                        object = new Grass(j, i, Sprite.grass.getFxImage());
                     }
-                    stillObjects.add(object);
+
+                    if (object != null) {
+                        stillObjects.add(object);
+                    }
                 }
             }
         }
@@ -124,10 +126,31 @@ public class BombermanGame extends Application {
 
     public void update() {
         entities.forEach(Entity::update);
+        bomber.handleKeyPress(this.scene);
+
+        for (int i = 0; i < entities.size(); i++) {
+            if (!(entities.get(i) instanceof Bomber)) {
+                bomber.checkCollision(entities.get(i));
+                MovingEntity movingEntity = (MovingEntity) entities.get(i);
+                for (int j = 0; j < stillObjects.size(); j++) {
+                    if (stillObjects.get(j) instanceof Portal) {
+                        continue;
+                    }
+                    movingEntity.checkCollision(stillObjects.get(j));
+                }
+            }
+        }
+        for (int i = 0; i < stillObjects.size(); i++) {
+            if (stillObjects.get(i) instanceof Portal) {
+                continue;
+            }
+            bomber.checkCollision(stillObjects.get(i));
+        }
     }
 
     public void render() {
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        grasses.forEach(g -> g.render(gc));
         stillObjects.forEach(g -> g.render(gc));
         entities.forEach(g -> g.render(gc));
     }

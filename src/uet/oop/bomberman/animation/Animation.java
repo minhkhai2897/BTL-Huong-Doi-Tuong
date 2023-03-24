@@ -6,7 +6,7 @@ import java.util.List;
 
 public class Animation {
     private int count = 0;
-    private final int numberOfFrames = 8;
+    private final int numberOfFrames = 7;
 
     protected Image handle(List<Image> list) {
         Image img = (list.get(count / numberOfFrames));
