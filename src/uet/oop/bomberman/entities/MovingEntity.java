@@ -102,14 +102,14 @@ public abstract class MovingEntity extends Entity {
             down1 = movingEntity.intersects(obj, movingEntity.getX() + 4, movingEntity.getY() + movingEntity.getImg().getHeight() - 2);
             down2 = movingEntity.intersects(obj, movingEntity.getX() + movingEntity.getImg().getWidth() - 10, movingEntity .getY() + movingEntity.getImg().getHeight() - 2);
         } else {
-            left1 = movingEntity.intersects(obj, movingEntity.getX() , movingEntity.getY() + 3);
-            left2 = movingEntity.intersects(obj, movingEntity.getX() , movingEntity.getY() + movingEntity.getImg().getHeight() - 3);
-            right1 = movingEntity.intersects(obj, movingEntity.getX() + movingEntity.getImg().getWidth() , movingEntity.getY() + 3);
-            right2 = movingEntity.intersects(obj, movingEntity.getX() + movingEntity.getImg().getWidth(), movingEntity.getY() + movingEntity. getImg().getHeight() - 3);
-            up1 = movingEntity.intersects(obj, movingEntity.getX() + 3, movingEntity.getY());
-            up2 = movingEntity.intersects(obj, movingEntity.getX() + movingEntity.getImg().getWidth() - 3, movingEntity .getY());
-            down1 = movingEntity.intersects(obj, movingEntity.getX() + 3, movingEntity.getY() + movingEntity.getImg().getHeight());
-            down2 = movingEntity.intersects(obj, movingEntity.getX() + movingEntity.getImg().getWidth() - 3, movingEntity .getY() + movingEntity.getImg().getHeight());
+            left1 = movingEntity.intersects(obj, movingEntity.getX() , movingEntity.getY() + 1);
+            left2 = movingEntity.intersects(obj, movingEntity.getX() , movingEntity.getY() + movingEntity.getImg().getHeight() - 1);
+            right1 = movingEntity.intersects(obj, movingEntity.getX() + movingEntity.getImg().getWidth() , movingEntity.getY() + 1);
+            right2 = movingEntity.intersects(obj, movingEntity.getX() + movingEntity.getImg().getWidth(), movingEntity.getY() + movingEntity. getImg().getHeight() - 1);
+            up1 = movingEntity.intersects(obj, movingEntity.getX() + 1, movingEntity.getY());
+            up2 = movingEntity.intersects(obj, movingEntity.getX() + movingEntity.getImg().getWidth() - 1, movingEntity .getY());
+            down1 = movingEntity.intersects(obj, movingEntity.getX() + 1, movingEntity.getY() + movingEntity.getImg().getHeight());
+            down2 = movingEntity.intersects(obj, movingEntity.getX() + movingEntity.getImg().getWidth() - 1, movingEntity .getY() + movingEntity.getImg().getHeight());
         }
 
         if (this.ableToMoveLeft) {
