@@ -2,9 +2,9 @@ package uet.oop.bomberman.entities;
 
 import javafx.scene.image.Image;
 
-public class Bomb extends Entity {
+public class PowerupSpeed extends Entity {
 
-    public Bomb(int x, int y, Image img) {
+    public PowerupSpeed(int x, int y, Image img) {
         super(x, y, img);
     }
 

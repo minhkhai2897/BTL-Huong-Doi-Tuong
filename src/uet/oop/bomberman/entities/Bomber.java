@@ -12,11 +12,33 @@ import uet.oop.bomberman.animation.BomberAnimation;
 import uet.oop.bomberman.graphics.Sprite;
 
 public class Bomber extends MovingEntity {
+    private int bomb = 1;
+    private int flame = 1;
     private BomberAnimation bomberAnimation = new BomberAnimation();
 
 
     public Bomber(int x, int y, Image img) {
         super( x, y, img);
+    }
+
+    public int getFlame() {
+        return flame;
+    }
+
+    public void setFlame(int flame) {
+        if (1 <= flame && flame <= 5) {
+            this.flame = flame;
+        }
+    }
+
+    public int getBomb() {
+        return bomb;
+    }
+
+    public void setBomb(int bomb) {
+        if (1 <= bomb && bomb <= 5) {
+            this.bomb = bomb;
+        }
     }
 
     @Override

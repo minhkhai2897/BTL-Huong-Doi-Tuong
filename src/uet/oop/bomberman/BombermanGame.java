@@ -97,6 +97,8 @@ public class BombermanGame extends Application {
                     }
                     else if (c == '2') {
                         object = new Oneal(j, i, Sprite.oneal_right1.getFxImage());
+                    } else if (c == '3') {
+                        object = new Kondoria(j, i, Sprite.kondoria_left1.getFxImage());
                     } else {
                         object = new Balloon(j, i, Sprite.balloom_left1.getFxImage());
                     }
@@ -109,11 +111,13 @@ public class BombermanGame extends Application {
                     } else if (c == 'x') {
                         object = new Portal(j, i, Sprite.portal.getFxImage());
                     } else if (c == 'b') {
-                        object = new Bomb(j, i, Sprite.powerup_bombs.getFxImage());
+                        object = new PowerupBomb(j, i, Sprite.powerup_bombs.getFxImage());
                     } else if (c == 'f') {
-                        object = new Flame(j, i, Sprite.powerup_flames.getFxImage());
+                        object = new PowerupFlame(j, i, Sprite.powerup_flames.getFxImage());
                     } else if (c == 's') {
-                        object = new Speed(j, i, Sprite.powerup_speed.getFxImage());
+                        object = new PowerupSpeed(j, i, Sprite.powerup_speed.getFxImage());
+                    }   else if (c == 'w') {
+                        object = new PowerupWallPass(j, i, Sprite.powerup_wallpass.getFxImage());
                     }
 
                     if (object != null) {
@@ -127,25 +131,7 @@ public class BombermanGame extends Application {
     public void update() {
         entities.forEach(Entity::update);
         bomber.handleKeyPress(this.scene);
-
-        for (int i = 0; i < entities.size(); i++) {
-            if (!(entities.get(i) instanceof Bomber)) {
-                bomber.checkCollision(entities.get(i));
-                MovingEntity movingEntity = (MovingEntity) entities.get(i);
-                for (int j = 0; j < stillObjects.size(); j++) {
-                    if (stillObjects.get(j) instanceof Portal) {
-                        continue;
-                    }
-                    movingEntity.checkCollision(stillObjects.get(j));
-                }
-            }
-        }
-        for (int i = 0; i < stillObjects.size(); i++) {
-            if (stillObjects.get(i) instanceof Portal) {
-                continue;
-            }
-            bomber.checkCollision(stillObjects.get(i));
-        }
+        this.handleCollision();
     }
 
     public void render() {
@@ -175,5 +161,79 @@ public class BombermanGame extends Application {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Xu ly va cham (tat ca moi va cham deu xu ly o day).
+     */
+    public void handleCollision() {
+        // Nhan vat
+        for (int i = 0; i < entities.size(); i++) {
+            if (!(entities.get(i) instanceof Bomber)) {
+                if (bomber.intersects(entities.get(i))) {
+                    System.out.println("conga");
+                    continue;
+                }
+            }
+        }
+        for (int i = 0; i < stillObjects.size(); i++) {
+            if (stillObjects.get(i) instanceof Brick && bomber.isWallPass()) {
+                continue;
+            }
+            if (stillObjects.get(i) instanceof Portal) {
+                if (bomber.intersects(stillObjects.get(i)) && entities.size() == 1) {
+
+                }
+                continue;
+            }
+            if (stillObjects.get(i) instanceof PowerupSpeed) {
+                if (bomber.intersects(stillObjects.get(i))) {
+                    bomber.setSpeed(bomber.getSpeed() + 1);
+                    stillObjects.remove(i--);
+                }
+                continue;
+            }
+            if (stillObjects.get(i) instanceof PowerupWallPass) {
+                if (bomber.intersects(stillObjects.get(i))) {
+                    bomber.setWallPass(true);
+                    stillObjects.remove(i--);
+                }
+                continue;
+            }
+            if (stillObjects.get(i) instanceof PowerupFlame) {
+                if (bomber.intersects(stillObjects.get(i))) {
+                    bomber.setFlame(bomber.getFlame() + 1);
+                    stillObjects.remove(i--);
+                }
+                continue;
+            }
+            if (stillObjects.get(i) instanceof PowerupBomb) {
+                if (bomber.intersects(stillObjects.get(i))) {
+                    bomber.setBomb(bomber.getBomb() + 1);
+                    stillObjects.remove(i--);
+                }
+                continue;
+            }
+            bomber.checkObjectMovementAbility(stillObjects.get(i));
+        }
+
+        // Cac enemy
+        for (int i = 0; i < entities.size(); i++) {
+            if (!(entities.get(i) instanceof Bomber)) {
+                MovingEntity movingEntity = (MovingEntity) entities.get(i);
+                for (int j = 0; j < stillObjects.size(); j++) {
+                    if (stillObjects.get(j) instanceof Brick && movingEntity.isWallPass()) {
+                        continue;
+                    }
+
+                    if (stillObjects.get(j) instanceof Portal) {
+                        continue;
+                    }
+
+                    movingEntity.checkObjectMovementAbility(stillObjects.get(j));
+                }
+            }
+        }
+
     }
 }
