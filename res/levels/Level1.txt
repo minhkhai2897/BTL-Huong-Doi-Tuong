@@ -4,13 +4,13 @@
 # # # #*# # #*#*# # # #*#*#*# #
 #  x*     ***  *  1   * 2 * * #
 # # # # # #*# # #*#*# # # # #*#
-#f     w   x **  *  *   1     #
+#s     w   x **  *  *   1     #
 # # # # # # # # # #*# #*# # # #
-#*  *  w   *  *      *        #
+#*  *  w   *3 *      *        #
 # # # # #*# # # #*#*# # # # # #
-#*    **  *       *           #
+#*    **  *       *     f     #
 # #*# # # # # # #*# # # # # # #
-#           *   *  *          #
+#           *   *  *    b     #
 ###############################
 
 
@@ -30,10 +30,12 @@ Character:
 p - Bomber
 1 - Balloon
 2 - Oneal
+3 - Kondoria
 
 Items:
 b - Bomb Item
 f - Flame Item
 s - Speed Item
+w - Wall Pass Item
 
 Kí tự khác các kí tự trên - Grass
