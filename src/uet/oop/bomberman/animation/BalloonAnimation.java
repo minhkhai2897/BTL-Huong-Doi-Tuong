@@ -31,15 +31,13 @@ public class BalloonAnimation extends Animation {
         if (obj instanceof Balloon) {
             Balloon balloon = (Balloon) obj;
 
-            if (balloon.isLeft()) {
+            if (balloon.isMoveLeft()) {
                 balloon.setImg(this.handle(left));
-            } else if (balloon.isRight()) {
+            } else if (balloon.isMoveRight()) {
                 balloon.setImg(this.handle(right));
             } else {
-                balloon.setImg(Sprite.balloom_dead.getFxImage());
+                return;
             }
-            ImageView imageView = new ImageView(balloon.getImg());
-            balloon.setImageView(imageView);
         }
     }
 }

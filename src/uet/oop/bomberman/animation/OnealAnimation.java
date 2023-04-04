@@ -29,15 +29,13 @@ public class OnealAnimation extends Animation {
         if (obj instanceof Oneal) {
             Oneal oneal = (Oneal) obj;
 
-            if (oneal.isLeft()) {
+            if (oneal.isMoveLeft()) {
                 oneal.setImg(this.handle(left));
-            } else if (oneal.isRight()) {
+            } else if (oneal.isMoveRight()) {
                 oneal.setImg(this.handle(right));
             } else {
-                oneal.setImg(Sprite.oneal_dead.getFxImage());
+                return;
             }
-            ImageView imageView = new ImageView(oneal.getImg());
-            oneal.setImageView(imageView);
         }
     }
 }
