@@ -23,11 +23,5 @@ public class Oneal extends MovingEntity {
     public void update() {
         this.move();
         this.onealAnimation.setOnealSprite(this);
-
-public class Oneal extends Balloon {
-    public Oneal(int x, int y, Image img) {
-        super(x, y, img);
-        this.setSpeed(2);
-
     }
 }
