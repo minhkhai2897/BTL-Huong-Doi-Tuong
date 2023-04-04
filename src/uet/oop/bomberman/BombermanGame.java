@@ -27,7 +27,6 @@ public class BombermanGame extends Application {
     private List<Entity> entities = new ArrayList<>();
     private List<Entity> stillObjects = new ArrayList<>();
 
-
     public static void main(String[] args) {
         Application.launch(BombermanGame.class);
     }
