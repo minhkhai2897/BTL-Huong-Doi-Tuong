@@ -11,14 +11,12 @@ public abstract class Entity {
     protected int x;
     protected int y;
     protected Image img;
-    protected ImageView imageView;
-
-    public ImageView getImageView() {
-        return imageView;
+    public int getX() {
+        return x;
     }
 
-    public void setImageView(ImageView imageView) {
-        this.imageView = imageView;
+    public int getY() {
+        return y;
     }
 
     public Image getImg() {
@@ -34,7 +32,6 @@ public abstract class Entity {
         this.x = xUnit * Sprite.SCALED_SIZE;
         this.y = yUnit * Sprite.SCALED_SIZE;
         this.img = img;
-        this.imageView = new ImageView(img);
     }
 
     public void render(GraphicsContext gc) {

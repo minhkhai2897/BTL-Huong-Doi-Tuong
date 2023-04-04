@@ -1,6 +1,5 @@
 package uet.oop.bomberman.animation;
 
-import javafx.scene.image.ImageView;
 import uet.oop.bomberman.entities.*;
 import javafx.scene.image.Image;
 import uet.oop.bomberman.graphics.Sprite;
@@ -53,19 +52,17 @@ public class BomberAnimation extends Animation{
         if (obj instanceof Bomber) {
             Bomber bomber = (Bomber) obj;
 
-            if (bomber.isLeft()) {
+            if (bomber.isMoveLeft()) {
                 bomber.setImg(this.handle(left));
-            } else if (bomber.isRight()) {
+            } else if (bomber.isMoveRight()) {
                 bomber.setImg(this.handle(right));
-            } else if (bomber.isUp()) {
+            } else if (bomber.isMoveUp()) {
                 bomber.setImg(this.handle(up));
-            } else if (bomber.isDown()) {
+            } else if (bomber.isMoveDown()) {
                 bomber.setImg(this.handle(down));
             } else {
-                bomber.setImg(Sprite.player_down.getFxImage());
+                return;
             }
-            ImageView imageView = new ImageView(bomber.getImg());
-            bomber.setImageView(imageView);
         }
     }
 }

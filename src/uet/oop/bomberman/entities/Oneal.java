@@ -12,6 +12,7 @@ import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.animation.OnealAnimation;
 import uet.oop.bomberman.graphics.Sprite;
 
+
 public class Oneal extends MovingEntity {
     private OnealAnimation onealAnimation = new OnealAnimation();
     public Oneal(int x, int y, Image img) {
@@ -22,5 +23,11 @@ public class Oneal extends MovingEntity {
     public void update() {
         this.move();
         this.onealAnimation.setOnealSprite(this);
+
+public class Oneal extends Balloon {
+    public Oneal(int x, int y, Image img) {
+        super(x, y, img);
+        this.setSpeed(2);
+
     }
 }

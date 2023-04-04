@@ -1,41 +1,75 @@
 package uet.oop.bomberman.entities;
 
+import java.util.Random;
+
+
 import javafx.scene.image.Image;
 
 public abstract class MovingEntity extends Entity {
-    protected int speed = 2;
-    protected boolean left = false;
-    protected boolean right = false;
-    protected boolean up = false;
-    protected boolean down = false;
+    protected int speed = 1;
+    protected int hp = 1;
+    protected boolean wallPass = false;
+    protected boolean moveLeft = false;
+    protected boolean moveRight = false;
+    protected boolean moveUp = false;
+    protected boolean moveDown = false;
+
+    protected boolean ableToMoveLeft = true;
+    protected boolean ableToMoveRight = true;
+    protected boolean ableToMoveUp = true;
+    protected boolean ableToMoveDown = true;
+
+    public boolean isWallPass() {
+        return wallPass;
+    }
+
+    public void setWallPass(boolean wallPass) {
+        this.wallPass = wallPass;
+    }
+
+    public boolean isAbleToMoveLeft() {
+        return ableToMoveLeft;
+    }
+
+    public boolean isAbleToMoveRight() {
+        return ableToMoveRight;
+    }
+
+    public boolean isAbleToMoveUp() {
+        return ableToMoveUp;
+    }
+
+    public boolean isAbleToMoveDown() {
+        return ableToMoveDown;
+    }
 
     public MovingEntity(int x, int y, Image img) {
         super( x, y, img);
     }
 
-    public boolean isLeft() {
-        return left;
+    public boolean isMoveLeft() {
+        return moveLeft;
     }
 
-    public boolean isRight() {
-        return right;
+    public boolean isMoveRight() {
+        return moveRight;
     }
 
-    public boolean isUp() {
-        return up;
+    public boolean isMoveUp() {
+        return moveUp;
     }
 
-    public boolean isDown() {
-        return down;
+    public boolean isMoveDown() {
+        return moveDown;
     }
 
     public int getSpeed() {
         return speed;
     }
 
-    public void setSpeed(int speed) {
-        if (0 < speed && speed <= 3) {
-            this.speed = speed;
+    public void setSpeed(int  newSpeed) {
+        if (0 < newSpeed && newSpeed <= 2) {
+            this.speed = newSpeed;
         }
     }
 
@@ -43,18 +77,113 @@ public abstract class MovingEntity extends Entity {
      * di chuyen.
      */
     protected void move() {
-        if (left) {
+        if (moveLeft && this.ableToMoveLeft) {
             this.x -= this.getSpeed();
-        } else if (right) {
+        } else if (moveRight && this.ableToMoveRight) {
             this.x += this.getSpeed();
-        } else if (up) {
+        } else if (moveUp && this.ableToMoveUp) {
             this.y -= this.getSpeed();
-        } else if (down) {
+        } else if (moveDown && this.ableToMoveDown) {
             this.y += this.getSpeed();
         }
     }
 
-    protected void checkCollision(Object obj) {
+    /**
+     * Ham kiem tra va cham giua 2 doi tuong.
+     * @param obj doi tuong bat ki
+     * @return neu va cham tra ve true, con lai tra ve false
+     */
+    public boolean intersects(Entity obj) {
+        boolean left1, left2, right1, right2, up1, up2, down1, down2;
 
+        if (this instanceof Bomber) {
+            left1 = this.intersects(obj, this.getX() + 1, this.getY() + 4);
+            left2 = this.intersects(obj, this.getX() + 1, this.getY() + this.getImg().getHeight() - 4);
+            right1 = this.intersects(obj, this.getX() + this.getImg().getWidth() - 7 , this.getY() + 4);
+            right2 = this.intersects(obj, this.getX() + this.getImg().getWidth() - 7, this.getY() + this. getImg().getHeight() - 4);
+            up1 = this.intersects(obj, this.getX() + 4, this.getY() + 2);
+            up2 = this.intersects(obj, this.getX() + this.getImg().getWidth() - 10, this .getY() + 2);
+            down1 = this.intersects(obj, this.getX() + 4, this.getY() + this.getImg().getHeight() - 2);
+            down2 = this.intersects(obj, this.getX() + this.getImg().getWidth() - 10, this .getY() + this.getImg().getHeight() - 2);
+        } else {
+            left1 = this.intersects(obj, this.getX() , this.getY() + 1);
+            left2 = this.intersects(obj, this.getX() , this.getY() + this.getImg().getHeight() - 1);
+            right1 = this.intersects(obj, this.getX() + this.getImg().getWidth() , this.getY() + 1);
+            right2 = this.intersects(obj, this.getX() + this.getImg().getWidth(), this.getY() + this. getImg().getHeight() - 1);
+            up1 = this.intersects(obj, this.getX() + 1, this.getY());
+            up2 = this.intersects(obj, this.getX() + this.getImg().getWidth() - 1, this .getY());
+            down1 = this.intersects(obj, this.getX() + 1, this.getY() + this.getImg().getHeight());
+            down2 = this.intersects(obj, this.getX() + this.getImg().getWidth() - 1, this .getY() + this.getImg().getHeight());
+        }
+
+        return (left1 || left2 || right1 || right2 || up1 || up2 || down1 || down2);
+    }
+
+    public void checkObjectMovementAbility(Entity obj) {
+        boolean left1, left2, right1, right2, up1, up2, down1, down2;
+
+        if (this instanceof Bomber) {
+            left1 = this.intersects(obj, this.getX() + 1, this.getY() + 4);
+            left2 = this.intersects(obj, this.getX() + 1, this.getY() + this.getImg().getHeight() - 4);
+            right1 = this.intersects(obj, this.getX() + this.getImg().getWidth() - 7 , this.getY() + 4);
+            right2 = this.intersects(obj, this.getX() + this.getImg().getWidth() - 7, this.getY() + this. getImg().getHeight() - 4);
+            up1 = this.intersects(obj, this.getX() + 4, this.getY() + 2);
+            up2 = this.intersects(obj, this.getX() + this.getImg().getWidth() - 10, this .getY() + 2);
+            down1 = this.intersects(obj, this.getX() + 4, this.getY() + this.getImg().getHeight() - 2);
+            down2 = this.intersects(obj, this.getX() + this.getImg().getWidth() - 10, this .getY() + this.getImg().getHeight() - 2);
+        } else {
+            left1 = this.intersects(obj, this.getX() , this.getY() + 1);
+            left2 = this.intersects(obj, this.getX() , this.getY() + this.getImg().getHeight() - 1);
+            right1 = this.intersects(obj, this.getX() + this.getImg().getWidth() , this.getY() + 1);
+            right2 = this.intersects(obj, this.getX() + this.getImg().getWidth(), this.getY() + this. getImg().getHeight() - 1);
+            up1 = this.intersects(obj, this.getX() + 1, this.getY());
+            up2 = this.intersects(obj, this.getX() + this.getImg().getWidth() - 1, this .getY());
+            down1 = this.intersects(obj, this.getX() + 1, this.getY() + this.getImg().getHeight());
+            down2 = this.intersects(obj, this.getX() + this.getImg().getWidth() - 1, this .getY() + this.getImg().getHeight());
+        }
+
+        if (this.ableToMoveLeft) {
+            if (left1 || left2) {
+                this.ableToMoveLeft = false;
+            }
+        }
+        if (this.ableToMoveRight) {
+            if (right1 || right2) {
+                this.ableToMoveRight = false;
+            }
+        }
+        if (this.ableToMoveUp) {
+            if (up1 || up2) {
+                this.ableToMoveUp = false;
+            }
+        }
+        if (this.ableToMoveDown) {
+            if (down1 || down2) {
+                this.ableToMoveDown = false;
+            }
+        }
+    }
+
+    /**
+     * Ham kiem tra xem mot diem co nam trong doi tuong ko
+     * @param entity doi tuong
+     * @param x toa do x
+     * @param y toa do y
+     * @return true neu co, false neu ko
+     */
+    private boolean intersects(Entity entity, double x, double y) {
+        return (entity.getX() <= x && x <= (entity.getX() + entity.img.getWidth())
+                && entity.getY() <= y && y <= (entity.getY() + entity.img.getHeight()));
+    }
+
+    /**
+     * Ham tra ve so ngau nhien trong khoang min, max
+     * @param min can duoi
+     * @param max can tren
+     * @return so ngau nhieu
+     */
+    protected int getRandomNumber(int min, int max) {
+        Random random = new Random();
+        return random.nextInt((max - min) + 1) + min;
     }
 }
