@@ -34,7 +34,7 @@ public class OnealAnimation extends Animation {
             } else if (oneal.isMoveRight()) {
                 oneal.setImg(this.handle(right));
             } else {
-                return;
+                oneal.setImg(this.handle(left));
             }
         }
     }

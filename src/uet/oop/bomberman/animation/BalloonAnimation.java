@@ -36,7 +36,7 @@ public class BalloonAnimation extends Animation {
             } else if (balloon.isMoveRight()) {
                 balloon.setImg(this.handle(right));
             } else {
-                return;
+                balloon.setImg(this.handle(right));
             }
         }
     }

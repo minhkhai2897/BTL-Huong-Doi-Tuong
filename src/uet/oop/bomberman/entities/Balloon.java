@@ -1,11 +1,14 @@
 package uet.oop.bomberman.entities;
 
 import javafx.scene.image.Image;
+import uet.oop.bomberman.animation.BalloonAnimation;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Balloon extends MovingEntity {
+
+    private BalloonAnimation balloonAnimation = new BalloonAnimation();
     public Balloon(int x, int y, Image img) {
         super(x, y, img);
     }
@@ -14,6 +17,7 @@ public class Balloon extends MovingEntity {
     public void update() {
         this.handleMove();
         this.move();
+        this.balloonAnimation.setBalloonSprite(this);
         this.ableToMoveDown = true;
         this.ableToMoveLeft = true;
         this.ableToMoveRight = true;
