@@ -6,8 +6,13 @@ import java.util.List;
 
 public class Animation {
     private int count = 0;
-    private final int numberOfFrames = 7;
-
+    protected static final int numberOfFrames = 8;
+    /**
+     * Truyen vao mot danh sach cac anh va sau đó tra ve anh duoc chon.
+     * sau numberOfFrames khung hình thì sẽ thay 1 anh moi. den het thi lai quay ve anh dau
+     * @param list danh sach cac anh
+     * @return
+     */
     protected Image handle(List<Image> list) {
         Image img = (list.get(count / numberOfFrames));
         count++;

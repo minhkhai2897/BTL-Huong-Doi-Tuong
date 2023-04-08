@@ -26,10 +26,11 @@ public class Balloon extends MovingEntity {
     }
 
     /**
-     * 0: left
-     * 1: up
-     * 2: down
-     * 3: right
+     * Ham di chuyen ngau nhien cho enemy.
+     *
+     * Khong di chuyen truc tiep cac nhan vat. cac nhan vat duoc dieu khien bang cach dieu chinh
+     * huong di (true/false): moveLeft (0), moveUp (1), moveDown (2), moveRight (3)
+     * va cac bien (true/false): ableToMoveLeft,... nhan gia tri tu viec kiem tra thuc te vi tri cua nhan vat
      */
     protected void handleMove() {
         int last = -1;

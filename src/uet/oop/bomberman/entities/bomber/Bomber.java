@@ -46,9 +46,6 @@ public class Bomber extends MovingEntity {
         }
     }
 
-
-
-    @Override
     public void update() {
         this.move();
         this.bomberAnimation.setBomberSprite(this);

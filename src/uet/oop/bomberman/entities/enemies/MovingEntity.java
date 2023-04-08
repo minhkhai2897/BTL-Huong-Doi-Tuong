@@ -120,6 +120,10 @@ public abstract class MovingEntity extends Entity {
         return (left1 || left2 || right1 || right2 || up1 || up2 || down1 || down2);
     }
 
+    /**
+     * Kiem tra xem mot nhan vat co duoc di sang trai, sang phai, ... hay khong
+     * @param obj
+     */
     public void checkObjectMovementAbility(Entity obj) {
         boolean left1, left2, right1, right2, up1, up2, down1, down2;
 

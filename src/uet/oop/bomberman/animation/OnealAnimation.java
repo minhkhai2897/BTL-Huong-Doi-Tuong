@@ -11,6 +11,9 @@ public class OnealAnimation extends Animation {
     private List<Image> right = new ArrayList<>();
     private List<Image> dead = new ArrayList<>();
 
+    /**
+     * Nhap du lieu anh vao cac mang
+     */
     public OnealAnimation() {
         left.add(Sprite.oneal_left1.getFxImage());
         left.add(Sprite.oneal_left2.getFxImage());
@@ -26,6 +29,10 @@ public class OnealAnimation extends Animation {
         dead.add(Sprite.mob_dead3.getFxImage());
     }
 
+    /**
+     * chia truong hop de chon loai hoat anh phu hop
+     * @param oneal doi tuong can xu ly
+     */
     public void setOnealSprite(Oneal oneal) {
         if (oneal.getHp() <= 0) {
             oneal.setImg(this.handle(dead));

@@ -11,6 +11,9 @@ public class KondoriaAnimation extends Animation {
     private List<Image> right = new ArrayList<>();
     private List<Image> dead = new ArrayList<>();
 
+    /**
+     * Nhap du lieu anh vao cac mang
+     */
     public KondoriaAnimation() {
         left.add(Sprite.kondoria_left1.getFxImage());
         left.add(Sprite.kondoria_left2.getFxImage());
@@ -27,6 +30,10 @@ public class KondoriaAnimation extends Animation {
 
     }
 
+    /**
+     * chia truong hop de chon loai hoat anh phu hop
+     * @param kondoria doi tuong can xu ly
+     */
     public void setKondoriaSprite(Kondoria kondoria) {
         if (kondoria.getHp() <= 0) {
             kondoria.setImg(this.handle(dead));

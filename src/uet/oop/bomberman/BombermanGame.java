@@ -42,12 +42,10 @@ public class BombermanGame extends Application {
     private List<Entity> bombs = new ArrayList<>();
     private List<Entity> deads = new ArrayList<>();
 
-
     public static void main(String[] args) {
         Application.launch(BombermanGame.class);
     }
 
-    @Override
     public void start(Stage stage) {
         readDataFromFile();
 
@@ -70,7 +68,6 @@ public class BombermanGame extends Application {
 
         createMap();
     }
-
 
     /**
      * tao map tu du lieu trong list map
@@ -114,23 +111,7 @@ public class BombermanGame extends Application {
                         object = new Brick(j, i, Sprite.brick.getFxImage());
                         bricks.add(object);
                         // Them item ngau nhien
-                        int randomNumber = MyMath.getRandomNumber(0, 99);
-                        if (randomNumber < 3) {
-                            object = new PowerupWallPass(j, i, Sprite.powerup_wallpass.getFxImage());
-                            items.add(object);
-                        }
-                        else if (randomNumber < 6) {
-                            object = new PowerupSpeed(j, i, Sprite.powerup_speed.getFxImage());
-                            items.add(object);
-                        }
-                        else if (randomNumber < 9) {
-                            object = new PowerupBomb(j, i, Sprite.powerup_bombs.getFxImage());
-                            items.add(object);
-                        }
-                        else if (randomNumber < 12) {
-                            object = new PowerupFlame(j, i, Sprite.powerup_flames.getFxImage());
-                            items.add(object);
-                        }
+                        this.addRandomItem(j, i);
 
                     } else if (c == 'x') {
                         object = new Portal(j, i, Sprite.portal.getFxImage());
@@ -150,6 +131,31 @@ public class BombermanGame extends Application {
                     }
                 }
             }
+        }
+        int randomNumber = MyMath.getRandomNumber(0, bricks.size() - 1);
+        Entity portal = new Portal(bricks.get(randomNumber).getX() / Sprite.SCALED_SIZE,
+                bricks.get(randomNumber).getY() / Sprite.SCALED_SIZE, Sprite.portal.getFxImage());
+        portals.add(portal);
+    }
+
+    public void addRandomItem(int x, int y) {
+        Entity object;
+        int randomNumber = MyMath.getRandomNumber(0, 99);
+        if (randomNumber < 3) {
+            object = new PowerupWallPass(x, y, Sprite.powerup_wallpass.getFxImage());
+            items.add(object);
+        }
+        else if (randomNumber < 6) {
+            object = new PowerupSpeed(x, y, Sprite.powerup_speed.getFxImage());
+            items.add(object);
+        }
+        else if (randomNumber < 9) {
+            object = new PowerupBomb(x, y, Sprite.powerup_bombs.getFxImage());
+            items.add(object);
+        }
+        else if (randomNumber < 12) {
+            object = new PowerupFlame(x, y, Sprite.powerup_flames.getFxImage());
+            items.add(object);
         }
     }
 
@@ -216,6 +222,7 @@ public class BombermanGame extends Application {
      */
     public void handleCollision() {
         // Nhan vat
+        ///////////////////////////////////////////////////////
         if (bombers.size() > 0) {
             Bomber bomber = (Bomber) bombers.get(0);
             for (int i = 0; i < enemies.size(); i++) {
@@ -267,6 +274,7 @@ public class BombermanGame extends Application {
         }
 
         // Cac enemy
+        ////////////////////////////////////////////////////////////////
         for (int i = 0; i < enemies.size(); i++) {
             MovingEntity movingEntity = (MovingEntity) enemies.get(i);
             if (!movingEntity.isWallPass()) {
@@ -283,6 +291,9 @@ public class BombermanGame extends Application {
         }
     }
 
+    /**
+     * Xoa nhung doi tuong co hp <= 0 khoi cac list
+     */
     public void removeDeadEntity() {
         for (int i = 0; i < bricks.size(); i++) {
             if (bricks.get(i).getHp() <= 0) {
@@ -306,6 +317,9 @@ public class BombermanGame extends Application {
         }
     }
 
+    /**
+     * Them bomb khi nhan duoc lenh tu ban phim va co du dieu kien.
+     */
     public void addBomb() {
         if (bombers.size() <= 0) {
             return;
@@ -324,6 +338,14 @@ public class BombermanGame extends Application {
                 break;
             }
         }
+        if (bomber.isWallPass() && add) {
+            for (int i = 0; i < bricks.size(); i++) {
+                if (bricks.get(i).getX() == bomb.getX() && bricks.get(i).getY() == bomb.getY()) {
+                    add = false;
+                    break;
+                }
+            }
+        }
         if (add) {
             bombs.add(bomb);
         }
@@ -335,6 +357,12 @@ public class BombermanGame extends Application {
                 break;
             }
             bombs.remove(i--);
+        }
+    }
+
+    public void conga() {
+        for (int i = 0; i < deads.size(); i++) {
+
         }
     }
 }

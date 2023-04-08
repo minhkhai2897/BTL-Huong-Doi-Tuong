@@ -13,6 +13,9 @@ public class BalloonAnimation extends Animation {
     private List<Image> right = new ArrayList<>();
     private List<Image> dead = new ArrayList<>();
 
+    /**
+     * Nhap du lieu anh vao cac mang
+     */
     public BalloonAnimation() {
         left.add(Sprite.balloom_left1.getFxImage());
         left.add(Sprite.balloom_left2.getFxImage());
@@ -28,6 +31,10 @@ public class BalloonAnimation extends Animation {
         dead.add(Sprite.mob_dead3.getFxImage());
     }
 
+    /**
+     * chia truong hop de chon loai hoat anh phu hop
+     * @param balloon doi tuong can xu ly
+     */
     public void setBalloonSprite(Balloon balloon) {
         if (balloon.getHp() <= 0) {
             balloon.setImg(this.handle(dead));

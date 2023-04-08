@@ -1,14 +1,13 @@
-package uet.oop.bomberman.entities.enemies;
+package uet.oop.bomberman.entities.stillObjects;
 
 import javafx.scene.image.Image;
 import uet.oop.bomberman.animation.BombAnimation;
 import uet.oop.bomberman.entities.bomber.Bomber;
-import uet.oop.bomberman.entities.stillObjects.Entity;
 
 public class Bomb extends Entity {
     private boolean isPassable = true;
     private BombAnimation bombAnimation = new BombAnimation();
-    private static final int time = 120;
+    private static final int time = 150;
     private int count = 0;
     public Bomb(int x, int y, Image img) {
         super(x, y, img);
@@ -18,7 +17,6 @@ public class Bomb extends Entity {
         return isPassable;
     }
 
-    @Override
     public void update() {
         this.bombTimer();
         this.bombAnimation.setBombSprite(this);

@@ -9,7 +9,6 @@ public class PowerupWallPass extends Entity {
         super(x, y, img);
     }
 
-    @Override
     public void update() {
 
     }

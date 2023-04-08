@@ -18,7 +18,7 @@ public class BomberAnimation extends Animation{
     private List<Image> dead = new ArrayList<>();
 
     /**
-     * Khoi tao va nhap du lieu cho cac list.
+     * Nhap du lieu anh vao cac mang
      */
     public BomberAnimation() {
         left.add(Sprite.player_left.getFxImage());
@@ -42,6 +42,10 @@ public class BomberAnimation extends Animation{
         dead.add(Sprite.player_dead3.getFxImage());
     }
 
+    /**
+     * chia truong hop de chon loai hoat anh phu hop
+     * @param bomber doi tuong can xu ly
+     */
     public void setBomberSprite(Bomber bomber) {
         if (bomber.getHp() <= 0) {
             bomber.setImg(this.handle(dead));
