@@ -1,7 +1,7 @@
 package uet.oop.bomberman.animation;
 
-import uet.oop.bomberman.entities.*;
 import javafx.scene.image.Image;
+import uet.oop.bomberman.entities.enemies.Kondoria;
 import uet.oop.bomberman.graphics.Sprite;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,20 +21,24 @@ public class KondoriaAnimation extends Animation {
         right.add(Sprite.kondoria_right3.getFxImage());
 
         dead.add(Sprite.kondoria_dead.getFxImage());
+        dead.add(Sprite.mob_dead1.getFxImage());
+        dead.add(Sprite.mob_dead2.getFxImage());
+        dead.add(Sprite.mob_dead3.getFxImage());
 
     }
 
-    public void setKondoriaSprite(Object obj) {
-        if (obj instanceof Kondoria) {
-            Kondoria kondoria = (Kondoria) obj;
+    public void setKondoriaSprite(Kondoria kondoria) {
+        if (kondoria.getHp() <= 0) {
+            kondoria.setImg(this.handle(dead));
+            return;
+        }
 
-            if (kondoria.isMoveLeft()) {
-                kondoria.setImg(this.handle(left));
-            } else if (kondoria.isMoveRight()) {
-                kondoria.setImg(this.handle(right));
-            } else {
-                kondoria.setImg(this.handle(right));
-            }
+        if (kondoria.isMoveLeft()) {
+            kondoria.setImg(this.handle(left));
+        } else if (kondoria.isMoveRight()) {
+            kondoria.setImg(this.handle(right));
+        } else {
+            kondoria.setImg(this.handle(right));
         }
     }
 }

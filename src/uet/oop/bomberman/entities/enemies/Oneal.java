@@ -1,7 +1,8 @@
-package uet.oop.bomberman.entities;
+package uet.oop.bomberman.entities.enemies;
 
 import javafx.scene.image.Image;
 import uet.oop.bomberman.animation.OnealAnimation;
+import uet.oop.bomberman.entities.enemies.Balloon;
 
 public class Oneal extends Balloon {
 

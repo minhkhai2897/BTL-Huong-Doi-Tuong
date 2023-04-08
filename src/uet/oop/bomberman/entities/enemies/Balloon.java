@@ -1,6 +1,7 @@
-package uet.oop.bomberman.entities;
+package uet.oop.bomberman.entities.enemies;
 
 import javafx.scene.image.Image;
+import uet.oop.bomberman.MyMath;
 import uet.oop.bomberman.animation.BalloonAnimation;
 
 import java.util.ArrayList;
@@ -76,14 +77,14 @@ public class Balloon extends MovingEntity {
             }
         }
 
-        int n = this.getRandomNumber(0, directions.size() - 1);
-        if (directions.get(n) == 0) {
+        int randomNumber = MyMath.getRandomNumber(0, directions.size() - 1);
+        if (directions.get(randomNumber) == 0) {
             moveLeft = true;
-        } else if (directions.get(n) == 3) {
+        } else if (directions.get(randomNumber) == 3) {
             moveRight = true;
-        } else if (directions.get(n) == 1) {
+        } else if (directions.get(randomNumber) == 1) {
             moveUp = true;
-        } else if (directions.get(n) == 2) {
+        } else if (directions.get(randomNumber) == 2) {
             moveDown = true;
         }
     }

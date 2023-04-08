@@ -1,10 +1,8 @@
 package uet.oop.bomberman.animation;
 
-import javafx.scene.image.ImageView;
-import uet.oop.bomberman.entities.*;
 import javafx.scene.image.Image;
+import uet.oop.bomberman.entities.enemies.Oneal;
 import uet.oop.bomberman.graphics.Sprite;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,19 +21,23 @@ public class OnealAnimation extends Animation {
         right.add(Sprite.oneal_right3.getFxImage());
 
         dead.add(Sprite.oneal_dead.getFxImage());
+        dead.add(Sprite.mob_dead1.getFxImage());
+        dead.add(Sprite.mob_dead2.getFxImage());
+        dead.add(Sprite.mob_dead3.getFxImage());
     }
 
-    public void setOnealSprite(Object obj) {
-        if (obj instanceof Oneal) {
-            Oneal oneal = (Oneal) obj;
+    public void setOnealSprite(Oneal oneal) {
+        if (oneal.getHp() <= 0) {
+            oneal.setImg(this.handle(dead));
+            return;
+        }
 
-            if (oneal.isMoveLeft()) {
-                oneal.setImg(this.handle(left));
-            } else if (oneal.isMoveRight()) {
-                oneal.setImg(this.handle(right));
-            } else {
-                oneal.setImg(this.handle(left));
-            }
+        if (oneal.isMoveLeft()) {
+            oneal.setImg(this.handle(left));
+        } else if (oneal.isMoveRight()) {
+            oneal.setImg(this.handle(right));
+        } else {
+            oneal.setImg(this.handle(left));
         }
     }
 }

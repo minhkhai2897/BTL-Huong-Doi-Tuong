@@ -1,13 +1,11 @@
-package uet.oop.bomberman.entities;
-
-import java.util.Random;
-
+package uet.oop.bomberman.entities.enemies;
 
 import javafx.scene.image.Image;
+import uet.oop.bomberman.entities.bomber.Bomber;
+import uet.oop.bomberman.entities.stillObjects.Entity;
 
 public abstract class MovingEntity extends Entity {
     protected int speed = 1;
-    protected int hp = 1;
     protected boolean wallPass = false;
     protected boolean moveLeft = false;
     protected boolean moveRight = false;
@@ -77,6 +75,9 @@ public abstract class MovingEntity extends Entity {
      * di chuyen.
      */
     protected void move() {
+        if (this.hp <= 0) {
+            return;
+        }
         if (moveLeft && this.ableToMoveLeft) {
             this.x -= this.getSpeed();
         } else if (moveRight && this.ableToMoveRight) {
@@ -172,8 +173,8 @@ public abstract class MovingEntity extends Entity {
      * @return true neu co, false neu ko
      */
     private boolean intersects(Entity entity, double x, double y) {
-        return (entity.getX() <= x && x <= (entity.getX() + entity.img.getWidth())
-                && entity.getY() <= y && y <= (entity.getY() + entity.img.getHeight()));
+        return (entity.getX() <= x && x <= (entity.getX() + entity.getImg().getWidth())
+                && entity.getY() <= y && y <= (entity.getY() + entity.getImg().getHeight()));
     }
 
     /**
@@ -182,8 +183,4 @@ public abstract class MovingEntity extends Entity {
      * @param max can tren
      * @return so ngau nhieu
      */
-    protected int getRandomNumber(int min, int max) {
-        Random random = new Random();
-        return random.nextInt((max - min) + 1) + min;
-    }
 }

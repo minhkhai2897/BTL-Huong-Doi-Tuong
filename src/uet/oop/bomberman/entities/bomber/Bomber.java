@@ -1,17 +1,22 @@
-package uet.oop.bomberman.entities;
+package uet.oop.bomberman.entities.bomber;
 
 import javafx.scene.Scene;
-import javafx.scene.SnapshotParameters;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.paint.Color;
 import javafx.scene.input.KeyCode;
-import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.animation.BomberAnimation;
-import uet.oop.bomberman.graphics.Sprite;
+import uet.oop.bomberman.entities.enemies.MovingEntity;
 
 public class Bomber extends MovingEntity {
+    private boolean createBomb = false;
+
+    public boolean isCreateBomb() {
+        return createBomb;
+    }
+
+    public void setCreateBomb(boolean createBomb) {
+        this.createBomb = createBomb;
+    }
+
     private int bomb = 1;
     private int flame = 1;
     private BomberAnimation bomberAnimation = new BomberAnimation();
@@ -41,6 +46,8 @@ public class Bomber extends MovingEntity {
         }
     }
 
+
+
     @Override
     public void update() {
         this.move();
@@ -66,6 +73,9 @@ public class Bomber extends MovingEntity {
             } else if (event.getCode() == KeyCode.D) {
                 this.moveRight = true;
             }
+            if (event.getCode() == KeyCode.SPACE) {
+                this.createBomb = true;
+            }
         });
 
         scene.setOnKeyReleased(event -> {
@@ -78,6 +88,9 @@ public class Bomber extends MovingEntity {
                 this.moveLeft = false;
             } else if (event.getCode() == KeyCode.D) {
                 this.moveRight = false;
+            }
+            if (event.getCode() == KeyCode.SPACE) {
+                this.createBomb = false;
             }
         });
     }

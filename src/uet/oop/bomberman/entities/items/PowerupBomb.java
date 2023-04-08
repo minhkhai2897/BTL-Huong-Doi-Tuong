@@ -1,10 +1,7 @@
-package uet.oop.bomberman.entities;
+package uet.oop.bomberman.entities.items;
 
 import javafx.scene.image.Image;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import uet.oop.bomberman.entities.stillObjects.Entity;
 
 public class PowerupBomb extends Entity {
 

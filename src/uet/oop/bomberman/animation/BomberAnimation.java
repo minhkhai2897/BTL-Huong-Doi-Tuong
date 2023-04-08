@@ -1,7 +1,7 @@
 package uet.oop.bomberman.animation;
 
-import uet.oop.bomberman.entities.*;
 import javafx.scene.image.Image;
+import uet.oop.bomberman.entities.bomber.Bomber;
 import uet.oop.bomberman.graphics.Sprite;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,27 +42,22 @@ public class BomberAnimation extends Animation{
         dead.add(Sprite.player_dead3.getFxImage());
     }
 
-    /**
-     * Ham dat trang thai cho nhan vat.
-     *
-     * @param obj có phan kiem tra class cua obj
-     *            neu cung class thi moi thuc hien
-     */
-    public void setBomberSprite(Object obj) {
-        if (obj instanceof Bomber) {
-            Bomber bomber = (Bomber) obj;
+    public void setBomberSprite(Bomber bomber) {
+        if (bomber.getHp() <= 0) {
+            bomber.setImg(this.handle(dead));
+            return;
+        }
 
-            if (bomber.isMoveLeft()) {
-                bomber.setImg(this.handle(left));
-            } else if (bomber.isMoveRight()) {
-                bomber.setImg(this.handle(right));
-            } else if (bomber.isMoveUp()) {
-                bomber.setImg(this.handle(up));
-            } else if (bomber.isMoveDown()) {
-                bomber.setImg(this.handle(down));
-            } else {
-                return;
-            }
+        if (bomber.isMoveLeft()) {
+            bomber.setImg(this.handle(left));
+        } else if (bomber.isMoveRight()) {
+            bomber.setImg(this.handle(right));
+        } else if (bomber.isMoveUp()) {
+            bomber.setImg(this.handle(up));
+        } else if (bomber.isMoveDown()) {
+            bomber.setImg(this.handle(down));
+        } else {
+            return;
         }
     }
 }

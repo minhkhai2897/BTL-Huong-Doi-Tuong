@@ -1,4 +1,4 @@
-package uet.oop.bomberman.entities;
+package uet.oop.bomberman.entities.stillObjects;
 
 import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.GraphicsContext;
@@ -7,16 +7,37 @@ import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
 import uet.oop.bomberman.graphics.Sprite;
 
+import java.util.Random;
+
+
 public abstract class Entity {
     protected int x;
     protected int y;
     protected Image img;
+    protected int hp = 1;
+
+    public int getHp() {
+        return hp;
+    }
+
+    public void setHp(int hp) {
+        this.hp = hp;
+    }
+
     public int getX() {
         return x;
     }
 
     public int getY() {
         return y;
+    }
+
+    public void setX(int xUnit) {
+        this.x = xUnit * Sprite.SCALED_SIZE;
+    }
+
+    public void setY(int yUnit) {
+        this.y = yUnit * Sprite.SCALED_SIZE;
     }
 
     public Image getImg() {
@@ -38,4 +59,6 @@ public abstract class Entity {
         gc.drawImage(img, x, y);
     }
     public abstract void update();
+
+
 }
