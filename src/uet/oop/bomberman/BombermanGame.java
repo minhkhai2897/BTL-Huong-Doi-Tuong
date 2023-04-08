@@ -172,7 +172,7 @@ public class BombermanGame extends Application {
         }
         for (int i = 0; i < bombs.size(); i++) {
             for (int j = 0; j < bombers.size(); j++) {
-                Bomber bomber = (Bomber) bombers.get(i);
+                Bomber bomber = (Bomber) bombers.get(j);
                 ((Bomb)bombs.get(i)).checkCharacterPassability(bomber);
             }
         }
@@ -325,7 +325,7 @@ public class BombermanGame extends Application {
             return;
         }
         Bomber bomber = (Bomber) bombers.get(0);
-        if ((!bomber.isCreateBomb()) || bombs.size() >= bomber.getBomb()) {
+        if ((bomber.getCreateBomb() != 1) || bombs.size() >= bomber.getBomb()) {
             return;
         }
 
