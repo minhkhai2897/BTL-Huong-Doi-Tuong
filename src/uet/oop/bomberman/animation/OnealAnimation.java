@@ -4,31 +4,24 @@ import javafx.scene.image.Image;
 import uet.oop.bomberman.entities.enemies.MovingEntity;
 import uet.oop.bomberman.graphics.Sprite;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import uet.oop.bomberman.entities.stillObjects.Entity;
 
 
 public class OnealAnimation extends Animation {
-    private List<Image> left = new ArrayList<>();
-    private List<Image> right = new ArrayList<>();
-    private List<Image> dead = new ArrayList<>();
+    private static List<Image> left = new ArrayList<>(Arrays.asList(Sprite.oneal_left1.getFxImage(),Sprite.oneal_left2.getFxImage()
+            ,Sprite.oneal_left3.getFxImage()));
+    private static List<Image> right = new ArrayList<>(Arrays.asList(Sprite.oneal_right1.getFxImage(),Sprite.oneal_right2.getFxImage()
+            ,Sprite.oneal_right3.getFxImage()));
+    private static List<Image> dead = new ArrayList<>(Arrays.asList(Sprite.oneal_dead.getFxImage(),Sprite.mob_dead1.getFxImage()
+            ,Sprite.mob_dead2.getFxImage(),Sprite.mob_dead3.getFxImage()));
 
     /**
      * Nhap du lieu anh vao cac mang
      */
     public OnealAnimation() {
-        left.add(Sprite.oneal_left1.getFxImage());
-        left.add(Sprite.oneal_left2.getFxImage());
-        left.add(Sprite.oneal_left3.getFxImage());
 
-        right.add(Sprite.oneal_right1.getFxImage());
-        right.add(Sprite.oneal_right2.getFxImage());
-        right.add(Sprite.oneal_right3.getFxImage());
-
-        dead.add(Sprite.oneal_dead.getFxImage());
-        dead.add(Sprite.mob_dead1.getFxImage());
-        dead.add(Sprite.mob_dead2.getFxImage());
-        dead.add(Sprite.mob_dead3.getFxImage());
     }
 
     /**

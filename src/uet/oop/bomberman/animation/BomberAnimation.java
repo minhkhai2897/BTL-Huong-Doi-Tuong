@@ -4,6 +4,7 @@ import javafx.scene.image.Image;
 import uet.oop.bomberman.entities.enemies.MovingEntity;
 import uet.oop.bomberman.graphics.Sprite;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import uet.oop.bomberman.entities.stillObjects.Entity;
 
@@ -13,35 +14,22 @@ public class BomberAnimation extends Animation{
     /**
      * cac list là cac trang thai
      */
-    private List<Image> left = new ArrayList<>();
-    private List<Image> right = new ArrayList<>();
-    private List<Image> down = new ArrayList<>();
-    private List<Image> up = new ArrayList<>();
-    private List<Image> dead = new ArrayList<>();
+    private static List<Image> left = new ArrayList<>(Arrays.asList(Sprite.player_left.getFxImage(),Sprite.player_left_1.getFxImage()
+       ,Sprite.player_left_2.getFxImage()));
+    private static List<Image> right = new ArrayList<>(Arrays.asList(Sprite.player_right.getFxImage(),Sprite.player_right_1.getFxImage()
+       ,Sprite.player_right_2.getFxImage()));
+    private static List<Image> up = new ArrayList<>(Arrays.asList(Sprite.player_up.getFxImage(),Sprite.player_up_1.getFxImage()
+        ,Sprite.player_up_2.getFxImage()));
+    private static List<Image> down = new ArrayList<>(Arrays.asList(Sprite.player_down.getFxImage(),Sprite.player_down_1.getFxImage()
+        ,Sprite.player_down_2.getFxImage()));
+    private static List<Image> dead = new ArrayList<>(Arrays.asList(Sprite.player_dead1.getFxImage(),Sprite.player_dead2.getFxImage()
+        ,Sprite.player_dead3.getFxImage()));
 
     /**
      * Nhap du lieu anh vao cac mang
      */
     public BomberAnimation() {
-        left.add(Sprite.player_left.getFxImage());
-        left.add(Sprite.player_left_1.getFxImage());
-        left.add(Sprite.player_left_2.getFxImage());
 
-        right.add(Sprite.player_right.getFxImage());
-        right.add(Sprite.player_right_1.getFxImage());
-        right.add(Sprite.player_right_2.getFxImage());
-
-        up.add(Sprite.player_up.getFxImage());
-        up.add(Sprite.player_up_1.getFxImage());
-        up.add(Sprite.player_up_2.getFxImage());
-
-        down.add(Sprite.player_down.getFxImage());
-        down.add(Sprite.player_down_1.getFxImage());
-        down.add(Sprite.player_down_2.getFxImage());
-
-        dead.add(Sprite.player_dead1.getFxImage());
-        dead.add(Sprite.player_dead2.getFxImage());
-        dead.add(Sprite.player_dead3.getFxImage());
     }
 
     /**

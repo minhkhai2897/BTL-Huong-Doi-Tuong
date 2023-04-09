@@ -3,22 +3,20 @@ package uet.oop.bomberman.animation;
 import javafx.scene.image.Image;
 import uet.oop.bomberman.graphics.Sprite;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import uet.oop.bomberman.entities.stillObjects.Entity;
 
 
 public class BrickAnimation extends Animation {
-    private List<Image> dead = new ArrayList<>();
+    private static List<Image> dead = new ArrayList<>(Arrays.asList(Sprite.brick_exploded.getFxImage(),Sprite.brick_exploded1.getFxImage()
+    ,Sprite.brick_exploded2.getFxImage()));
 
     /**
      * Nhap du lieu anh vao cac mang
      */
     public BrickAnimation() {
         this.numberOfDeadFrames = 16;
-
-        dead.add(Sprite.brick_exploded.getFxImage());
-        dead.add(Sprite.brick_exploded1.getFxImage());
-        dead.add(Sprite.brick_exploded2.getFxImage());
     }
 
     /**

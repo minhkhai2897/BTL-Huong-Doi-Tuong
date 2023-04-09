@@ -4,31 +4,23 @@ import javafx.scene.image.Image;
 import uet.oop.bomberman.entities.enemies.MovingEntity;
 import uet.oop.bomberman.graphics.Sprite;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import uet.oop.bomberman.entities.stillObjects.Entity;
 
 
 public class KondoriaAnimation extends Animation {
-    private List<Image> left = new ArrayList<>();
-    private List<Image> right = new ArrayList<>();
-    private List<Image> dead = new ArrayList<>();
+    private static List<Image> left = new ArrayList<>(Arrays.asList(Sprite.kondoria_left1.getFxImage(),Sprite.kondoria_left2.getFxImage()
+    ,Sprite.kondoria_left3.getFxImage()));
+    private static List<Image> right = new ArrayList<>(Arrays.asList(Sprite.kondoria_right1.getFxImage(),Sprite.kondoria_right2.getFxImage()
+    ,Sprite.kondoria_right3.getFxImage()));
+    private static List<Image> dead = new ArrayList<>(Arrays.asList(Sprite.kondoria_dead.getFxImage(),Sprite.mob_dead1.getFxImage()
+    ,Sprite.mob_dead2.getFxImage(),Sprite.mob_dead3.getFxImage()));
 
     /**
      * Nhap du lieu anh vao cac mang
      */
     public KondoriaAnimation() {
-        left.add(Sprite.kondoria_left1.getFxImage());
-        left.add(Sprite.kondoria_left2.getFxImage());
-        left.add(Sprite.kondoria_left3.getFxImage());
-
-        right.add(Sprite.kondoria_right1.getFxImage());
-        right.add(Sprite.kondoria_right2.getFxImage());
-        right.add(Sprite.kondoria_right3.getFxImage());
-
-        dead.add(Sprite.kondoria_dead.getFxImage());
-        dead.add(Sprite.mob_dead1.getFxImage());
-        dead.add(Sprite.mob_dead2.getFxImage());
-        dead.add(Sprite.mob_dead3.getFxImage());
 
     }
 
