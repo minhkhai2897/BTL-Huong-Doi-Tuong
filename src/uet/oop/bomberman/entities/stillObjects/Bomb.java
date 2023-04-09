@@ -6,11 +6,11 @@ import uet.oop.bomberman.entities.bomber.Bomber;
 
 public class Bomb extends Entity {
     private boolean isPassable = true;
-    private BombAnimation bombAnimation = new BombAnimation();
     private static final int time = 150;
     private int count = 0;
     public Bomb(int x, int y, Image img) {
         super(x, y, img);
+        animation = new BombAnimation();
     }
 
     public boolean isPassable() {
@@ -19,7 +19,7 @@ public class Bomb extends Entity {
 
     public void update() {
         this.bombTimer();
-        this.bombAnimation.setBombSprite(this);
+        this.animation.setSprite(this);
     }
 
     public boolean equals(Object object) {

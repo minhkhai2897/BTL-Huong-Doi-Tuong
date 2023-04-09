@@ -5,6 +5,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.paint.Color;
+import uet.oop.bomberman.animation.Animation;
 import uet.oop.bomberman.graphics.Sprite;
 
 import java.util.Random;
@@ -14,6 +15,7 @@ public abstract class Entity {
     protected int x;
     protected int y;
     protected Image img;
+    protected Animation animation;
     protected int hp = 1;
 
     public int getHp() {
@@ -46,6 +48,10 @@ public abstract class Entity {
 
     public void setImg(Image img) {
         this.img = img;
+    }
+
+    public Animation getAnimation() {
+        return animation;
     }
 
     //Khởi tạo đối tượng, chuyển từ tọa độ đơn vị sang tọa độ trong canvas

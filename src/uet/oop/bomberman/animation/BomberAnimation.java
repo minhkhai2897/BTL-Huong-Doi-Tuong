@@ -2,9 +2,12 @@ package uet.oop.bomberman.animation;
 
 import javafx.scene.image.Image;
 import uet.oop.bomberman.entities.bomber.Bomber;
+import uet.oop.bomberman.entities.enemies.MovingEntity;
 import uet.oop.bomberman.graphics.Sprite;
 import java.util.ArrayList;
 import java.util.List;
+import uet.oop.bomberman.entities.stillObjects.Entity;
+
 
 public class BomberAnimation extends Animation{
 
@@ -44,24 +47,32 @@ public class BomberAnimation extends Animation{
 
     /**
      * chia truong hop de chon loai hoat anh phu hop
-     * @param bomber doi tuong can xu ly
+     * @param entity doi tuong can xu ly
      */
-    public void setBomberSprite(Bomber bomber) {
-        if (bomber.getHp() <= 0) {
-            bomber.setImg(this.handle(dead));
+    public void setSprite(Entity entity) {
+        if (!(entity instanceof MovingEntity)) {
+            return;
+        }
+        MovingEntity movingEntity = (MovingEntity) entity;
+        if (movingEntity.getHp() <= 0) {
+            this.numberOfFrames = this.numberOfDeadFrames;
+            movingEntity.setImg(this.handle(dead, "dead"));
+
+            this.countDeadFrames++;
+            if (this.countDeadFrames == this.numberOfDeadFrames * (this.dead.size())) {
+                this.finishDeadAnimation = true;
+            }
             return;
         }
 
-        if (bomber.isMoveLeft()) {
-            bomber.setImg(this.handle(left));
-        } else if (bomber.isMoveRight()) {
-            bomber.setImg(this.handle(right));
-        } else if (bomber.isMoveUp()) {
-            bomber.setImg(this.handle(up));
-        } else if (bomber.isMoveDown()) {
-            bomber.setImg(this.handle(down));
-        } else {
-            return;
+        if (movingEntity.isMoveLeft()) {
+            movingEntity.setImg(this.handle(left, "left"));
+        } else if (movingEntity.isMoveRight()) {
+            movingEntity.setImg(this.handle(right, "right"));
+        } else if (movingEntity.isMoveUp()) {
+            movingEntity.setImg(this.handle(up, "up"));
+        } else if (movingEntity.isMoveDown()) {
+            movingEntity.setImg(this.handle(down, "down"));
         }
     }
 }

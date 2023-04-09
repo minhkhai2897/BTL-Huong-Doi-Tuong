@@ -2,9 +2,12 @@ package uet.oop.bomberman.animation;
 
 import javafx.scene.image.Image;
 import uet.oop.bomberman.entities.enemies.Kondoria;
+import uet.oop.bomberman.entities.enemies.MovingEntity;
 import uet.oop.bomberman.graphics.Sprite;
 import java.util.ArrayList;
 import java.util.List;
+import uet.oop.bomberman.entities.stillObjects.Entity;
+
 
 public class KondoriaAnimation extends Animation {
     private List<Image> left = new ArrayList<>();
@@ -32,20 +35,30 @@ public class KondoriaAnimation extends Animation {
 
     /**
      * chia truong hop de chon loai hoat anh phu hop
-     * @param kondoria doi tuong can xu ly
+     * @param entity doi tuong can xu ly
      */
-    public void setKondoriaSprite(Kondoria kondoria) {
-        if (kondoria.getHp() <= 0) {
-            kondoria.setImg(this.handle(dead));
+    public void setSprite(Entity entity) {
+        if (!(entity instanceof MovingEntity)) {
+            return;
+        }
+        MovingEntity movingEntity = (MovingEntity) entity;
+        if (movingEntity.getHp() <= 0) {
+            this.numberOfFrames = this.numberOfDeadFrames;
+            movingEntity.setImg(this.handle(dead, "dead"));
+
+            this.countDeadFrames++;
+            if (this.countDeadFrames == this.numberOfDeadFrames * (dead.size())) {
+                this.finishDeadAnimation = true;
+            }
             return;
         }
 
-        if (kondoria.isMoveLeft()) {
-            kondoria.setImg(this.handle(left));
-        } else if (kondoria.isMoveRight()) {
-            kondoria.setImg(this.handle(right));
+        if (movingEntity.isMoveLeft()) {
+            movingEntity.setImg(this.handle(left, "left"));
+        } else if (movingEntity.isMoveRight()) {
+            movingEntity.setImg(this.handle(right, "right"));
         } else {
-            kondoria.setImg(this.handle(right));
+            movingEntity.setImg(this.handle(right, "right"));
         }
     }
 }
