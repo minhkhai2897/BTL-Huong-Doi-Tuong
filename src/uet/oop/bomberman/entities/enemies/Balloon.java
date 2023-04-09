@@ -8,17 +8,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Balloon extends MovingEntity {
-
-    private BalloonAnimation balloonAnimation = new BalloonAnimation();
     public Balloon(int x, int y, Image img) {
         super(x, y, img);
+        animation = new BalloonAnimation();
     }
 
-    @Override
     public void update() {
         this.handleMove();
         this.move();
-        this.balloonAnimation.setBalloonSprite(this);
+        this.animation.setSprite(this);
         this.ableToMoveDown = true;
         this.ableToMoveLeft = true;
         this.ableToMoveRight = true;

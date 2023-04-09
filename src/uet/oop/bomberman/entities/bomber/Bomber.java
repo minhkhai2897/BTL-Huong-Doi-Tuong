@@ -3,6 +3,7 @@ package uet.oop.bomberman.entities.bomber;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
+import uet.oop.bomberman.animation.Animation;
 import uet.oop.bomberman.animation.BomberAnimation;
 import uet.oop.bomberman.entities.enemies.MovingEntity;
 
@@ -15,11 +16,12 @@ public class Bomber extends MovingEntity {
 
     private int bomb = 1;
     private int flame = 1;
-    private BomberAnimation bomberAnimation = new BomberAnimation();
+
 
 
     public Bomber(int x, int y, Image img) {
         super( x, y, img);
+        animation = new BomberAnimation();
     }
 
     public int getFlame() {
@@ -44,7 +46,7 @@ public class Bomber extends MovingEntity {
 
     public void update() {
         this.move();
-        this.bomberAnimation.setBomberSprite(this);
+        this.animation.setSprite(this);
         this.ableToMoveDown = true;
         this.ableToMoveLeft = true;
         this.ableToMoveRight = true;

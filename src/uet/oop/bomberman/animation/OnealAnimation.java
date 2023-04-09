@@ -1,10 +1,12 @@
 package uet.oop.bomberman.animation;
 
 import javafx.scene.image.Image;
-import uet.oop.bomberman.entities.enemies.Oneal;
+import uet.oop.bomberman.entities.enemies.MovingEntity;
 import uet.oop.bomberman.graphics.Sprite;
 import java.util.ArrayList;
 import java.util.List;
+import uet.oop.bomberman.entities.stillObjects.Entity;
+
 
 public class OnealAnimation extends Animation {
     private List<Image> left = new ArrayList<>();
@@ -31,20 +33,30 @@ public class OnealAnimation extends Animation {
 
     /**
      * chia truong hop de chon loai hoat anh phu hop
-     * @param oneal doi tuong can xu ly
+     * @param entity doi tuong can xu ly
      */
-    public void setOnealSprite(Oneal oneal) {
-        if (oneal.getHp() <= 0) {
-            oneal.setImg(this.handle(dead));
+    public void setSprite(Entity entity) {
+        if (!(entity instanceof MovingEntity)) {
+            return;
+        }
+        MovingEntity movingEntity = (MovingEntity) entity;
+        if (movingEntity.getHp() <= 0) {
+            this.numberOfFrames = this.numberOfDeadFrames;
+            movingEntity.setImg(this.handle(dead, "dead"));
+
+            this.countDeadFrames++;
+            if (this.countDeadFrames == this.numberOfDeadFrames * (dead.size())) {
+                this.finishDeadAnimation = true;
+            }
             return;
         }
 
-        if (oneal.isMoveLeft()) {
-            oneal.setImg(this.handle(left));
-        } else if (oneal.isMoveRight()) {
-            oneal.setImg(this.handle(right));
+        if (movingEntity.isMoveLeft()) {
+            movingEntity.setImg(this.handle(left, "left"));
+        } else if (movingEntity.isMoveRight()) {
+            movingEntity.setImg(this.handle(right, "right"));
         } else {
-            oneal.setImg(this.handle(left));
+            movingEntity.setImg(this.handle(left, "left"));
         }
     }
 }

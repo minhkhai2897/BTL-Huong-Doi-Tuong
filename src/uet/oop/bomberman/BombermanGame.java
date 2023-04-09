@@ -160,6 +160,7 @@ public class BombermanGame extends Application {
     }
 
     public void update() {
+        this.conga();
         removeDeadEntity();
         bombers.forEach(Entity::update);
         enemies.forEach(Entity::update);
@@ -362,7 +363,9 @@ public class BombermanGame extends Application {
 
     public void conga() {
         for (int i = 0; i < deads.size(); i++) {
-
+            if (deads.get(i).getAnimation().isFinishDeadAnimation()) {
+                deads.remove(i--);
+            }
         }
     }
 }
