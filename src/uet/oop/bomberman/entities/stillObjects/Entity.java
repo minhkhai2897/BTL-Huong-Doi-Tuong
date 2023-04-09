@@ -24,6 +24,9 @@ public abstract class Entity {
     }
 
     public void setHp(int hp) {
+        if (hp < 0) {
+            hp = 0;
+        }
         this.hp = hp;
     }
 
@@ -56,7 +59,7 @@ public abstract class Entity {
     }
 
     //Khởi tạo đối tượng, chuyển từ tọa độ đơn vị sang tọa độ trong canvas
-    public Entity( int xUnit, int yUnit, Image img) {
+    public Entity(int xUnit, int yUnit, Image img) {
         this.x = xUnit * Sprite.SCALED_SIZE;
         this.y = yUnit * Sprite.SCALED_SIZE;
         this.img = img;

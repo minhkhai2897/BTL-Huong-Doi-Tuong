@@ -168,6 +168,7 @@ public class BombermanGame extends Application {
         deads.forEach(Entity::update);
         bombs.forEach(Entity::update);
         bricks.forEach(Entity::update);
+        flames.forEach(Entity::update);
 
         for (int i = 0; i < bombers.size(); i++) {
             ((Bomber)bombers.get(i)).handleKeyPress(this.scene);
@@ -227,6 +228,14 @@ public class BombermanGame extends Application {
         ///////////////////////////////////////////////////////
         if (bombers.size() > 0) {
             Bomber bomber = (Bomber) bombers.get(0);
+
+            for (int i = 0; i < flames.size(); i++) {
+                if (bomber.intersects(flames.get(i))) {
+                    bomber.setHp(0);
+                    break;
+                }
+            }
+
             for (int i = 0; i < enemies.size(); i++) {
                 if (bomber.intersects(enemies.get(i))) {
                     bomber.setHp(0);
@@ -287,6 +296,11 @@ public class BombermanGame extends Application {
             for (int j = 0; j < walls.size(); j++) {
                 movingEntity.checkObjectMovementAbility(walls.get(j));
             }
+            for (int j = 0; j < flames.size(); j++) {
+                if (movingEntity.intersects(flames.get(j))) {
+                    movingEntity.setHp(0);
+                }
+            }
         }
     }
 
@@ -298,6 +312,9 @@ public class BombermanGame extends Application {
             if (bombs.get(i).getHp() > 0) {
                 break;
             }
+            Entity flame = new Flame(bombs.get(i).getX() / Sprite.SCALED_SIZE, bombs.get(i).getY() / Sprite.SCALED_SIZE,
+                    Sprite.bomb_exploded.getFxImage(), "epicenter");
+            flames.add(flame);
             bombs.remove(i--);
         }
 

@@ -25,9 +25,6 @@ public class BomberAnimation extends Animation{
     private static List<Image> dead = new ArrayList<>(Arrays.asList(Sprite.player_dead1.getFxImage(),Sprite.player_dead2.getFxImage()
         ,Sprite.player_dead3.getFxImage()));
 
-    /**
-     * Nhap du lieu anh vao cac mang
-     */
     public BomberAnimation() {
 
     }

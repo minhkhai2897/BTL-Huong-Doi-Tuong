@@ -24,7 +24,7 @@ public class Flame extends Entity {
     }
 
     public void update() {
-
+        this.animation.setSprite(this);
     }
 
 }

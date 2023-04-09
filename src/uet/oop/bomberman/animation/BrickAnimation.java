@@ -12,9 +12,6 @@ public class BrickAnimation extends Animation {
     private static List<Image> dead = new ArrayList<>(Arrays.asList(Sprite.brick_exploded.getFxImage(),Sprite.brick_exploded1.getFxImage()
     ,Sprite.brick_exploded2.getFxImage()));
 
-    /**
-     * Nhap du lieu anh vao cac mang
-     */
     public BrickAnimation() {
         this.numberOfDeadFrames = 16;
     }

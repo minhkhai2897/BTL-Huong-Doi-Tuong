@@ -17,9 +17,6 @@ public class OnealAnimation extends Animation {
     private static List<Image> dead = new ArrayList<>(Arrays.asList(Sprite.oneal_dead.getFxImage(),Sprite.mob_dead1.getFxImage()
             ,Sprite.mob_dead2.getFxImage(),Sprite.mob_dead3.getFxImage()));
 
-    /**
-     * Nhap du lieu anh vao cac mang
-     */
     public OnealAnimation() {
 
     }

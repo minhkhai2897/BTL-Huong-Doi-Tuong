@@ -10,9 +10,6 @@ import java.util.List;
 
 
 public class BalloonAnimation extends Animation {
-    // Them tu khoa static ngay sau private.
-    // Viec nay giup tranh phai ton nhieu bo nho khi khai bao 1 doi tuong moi.
-
     private static List<Image> left = new ArrayList<>(Arrays.asList(Sprite.balloom_left1.getFxImage(),
             Sprite.balloom_left2.getFxImage(), Sprite.balloom_left3.getFxImage()));
     private static List<Image> right = new ArrayList<>(Arrays.asList(Sprite.balloom_right1.getFxImage(),
@@ -25,24 +22,6 @@ public class BalloonAnimation extends Animation {
      * Nhap du lieu anh vao cac mang
      */
     public BalloonAnimation() {
-        // Toan bo phan them anh se bi bo va chuyen len phia tren kia:
-        // Cu: private List<Image> dead = new ArrayList<>();
-        // Moi: private static List<Image> dead = new ArrayList<>(Arrays.asList(Sprite.balloom_dead.getFxImage(),...));
-        // Chu y: chi sua doi nhung phan lien quan den them anh vao cac List sau thoi nhe
-
-
-//        left.add(Sprite.balloom_left1.getFxImage());
-//        left.add(Sprite.balloom_left2.getFxImage());
-//        left.add(Sprite.balloom_left3.getFxImage());
-//
-//        right.add(Sprite.balloom_right1.getFxImage());
-//        right.add(Sprite.balloom_right2.getFxImage());
-//        right.add(Sprite.balloom_right3.getFxImage());
-//
-//        dead.add(Sprite.balloom_dead.getFxImage());
-//        dead.add(Sprite.mob_dead1.getFxImage());
-//        dead.add(Sprite.mob_dead2.getFxImage());
-//        dead.add(Sprite.mob_dead3.getFxImage());
     }
 
     /**

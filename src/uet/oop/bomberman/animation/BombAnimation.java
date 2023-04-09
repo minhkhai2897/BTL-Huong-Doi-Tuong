@@ -12,11 +12,7 @@ public class BombAnimation extends Animation {
     private static List<Image> bombSprite = new ArrayList<>(Arrays.asList(Sprite.bomb.getFxImage(),Sprite.bomb_1.getFxImage(),
             Sprite.bomb_2.getFxImage()));
 
-    /**
-     * Nhap du lieu anh vao cac mang
-     */
     public BombAnimation() {
-
     }
 
     /**

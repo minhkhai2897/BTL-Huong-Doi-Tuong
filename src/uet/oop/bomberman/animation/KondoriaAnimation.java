@@ -17,11 +17,7 @@ public class KondoriaAnimation extends Animation {
     private static List<Image> dead = new ArrayList<>(Arrays.asList(Sprite.kondoria_dead.getFxImage(),Sprite.mob_dead1.getFxImage()
     ,Sprite.mob_dead2.getFxImage(),Sprite.mob_dead3.getFxImage()));
 
-    /**
-     * Nhap du lieu anh vao cac mang
-     */
     public KondoriaAnimation() {
-
     }
 
     /**

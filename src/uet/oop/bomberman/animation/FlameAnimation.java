@@ -9,7 +9,8 @@ import uet.oop.bomberman.entities.stillObjects.Entity;
 import uet.oop.bomberman.entities.stillObjects.Flame;
 
 public class FlameAnimation extends Animation {
-    private static List<Image> epicenter = new ArrayList<>(Arrays.asList());
+    private static List<Image> epicenter = new ArrayList<>(Arrays.asList(Sprite.bomb_exploded.getFxImage(),
+            Sprite.bomb_exploded1.getFxImage(), Sprite.bomb_exploded2.getFxImage()));
     private static List<Image> horizontal = new ArrayList<>(Arrays.asList(Sprite.explosion_horizontal.getFxImage()
     ,Sprite.explosion_horizontal1.getFxImage(),Sprite.explosion_horizontal2.getFxImage()));
     private static List<Image> horizontalLeftLast = new ArrayList<>(Arrays.asList(Sprite.explosion_horizontal_left_last.getFxImage()
@@ -35,49 +36,49 @@ public class FlameAnimation extends Animation {
         if (flame.getClassification().equals("up")) {
             flame.setImg(this.handle(verticalUpLast, "up"));
             this.countDeadFrames++;
-            if (this.countDeadFrames == this.numberOfDeadFrames * (verticalUpLast.size())) {
+            if (this.countDeadFrames == this.numberOfFrames * (verticalUpLast.size())) {
                 this.finishDeadAnimation = true;
             }
         }
         else if (flame.getClassification().equals("down")) {
             flame.setImg(this.handle(VerticalDownLast, "down"));
             this.countDeadFrames++;
-            if (this.countDeadFrames == this.numberOfDeadFrames * (VerticalDownLast.size())) {
+            if (this.countDeadFrames == this.numberOfFrames * (VerticalDownLast.size())) {
                 this.finishDeadAnimation = true;
             }
         }
         else if (flame.getClassification().equals("left")) {
             flame.setImg(this.handle(horizontalLeftLast, "left"));
             this.countDeadFrames++;
-            if (this.countDeadFrames == this.numberOfDeadFrames * (horizontalLeftLast.size())) {
+            if (this.countDeadFrames == this.numberOfFrames * (horizontalLeftLast.size())) {
                 this.finishDeadAnimation = true;
             }
         }
         else if (flame.getClassification().equals("right")) {
             flame.setImg(this.handle(horizontalRightLast, "right"));
             this.countDeadFrames++;
-            if (this.countDeadFrames == this.numberOfDeadFrames * (horizontalRightLast.size())) {
+            if (this.countDeadFrames == this.numberOfFrames * (horizontalRightLast.size())) {
                 this.finishDeadAnimation = true;
             }
         }
         else if (flame.getClassification().equals("vertical")) {
             flame.setImg(this.handle(vertical, "vertical"));
             this.countDeadFrames++;
-            if (this.countDeadFrames == this.numberOfDeadFrames * (vertical.size())) {
+            if (this.countDeadFrames == this.numberOfFrames * (vertical.size())) {
                 this.finishDeadAnimation = true;
             }
         }
         else if (flame.getClassification().equals("epicenter")) {
             flame.setImg(this.handle(epicenter, "epicenter"));
             this.countDeadFrames++;
-            if (this.countDeadFrames == this.numberOfDeadFrames * (epicenter.size())) {
+            if (this.countDeadFrames == this.numberOfFrames * (epicenter.size())) {
                 this.finishDeadAnimation = true;
             }
         }
         else if (flame.getClassification().equals("horizontal")) {
             flame.setImg(this.handle(horizontal, "horizontal"));
             this.countDeadFrames++;
-            if (this.countDeadFrames == this.numberOfDeadFrames * (horizontal.size())) {
+            if (this.countDeadFrames == this.numberOfFrames * (horizontal.size())) {
                 this.finishDeadAnimation = true;
             }
         }
