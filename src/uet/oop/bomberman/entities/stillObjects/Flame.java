@@ -4,9 +4,22 @@ import javafx.scene.image.Image;
 import uet.oop.bomberman.animation.FlameAnimation;
 
 public class Flame extends Entity {
+    private String classification;
 
-    public Flame(int x, int y, Image img) {
+    public String getClassification() {
+        return classification;
+    }
+
+    /**
+     * Ham khoi tao
+     * @param x toa do x
+     * @param y toa do y
+     * @param img anh
+     * @param classification: phan loai (left, right, up, down, vertical, epicenter, horizontal)
+     */
+    public Flame(int x, int y, Image img, String classification) {
         super(x, y, img);
+        this.classification = classification;
         this.animation = new FlameAnimation();
     }
 

@@ -41,6 +41,7 @@ public class BombermanGame extends Application {
     private List<Entity> bombers = new ArrayList<>();
     private List<Entity> bombs = new ArrayList<>();
     private List<Entity> deads = new ArrayList<>();
+    private List<Entity> flames = new ArrayList<>();
 
     public static void main(String[] args) {
         Application.launch(BombermanGame.class);
@@ -160,7 +161,7 @@ public class BombermanGame extends Application {
     }
 
     public void update() {
-        this.conga();
+        this.removeFinishedElements();
         removeDeadEntity();
         bombers.forEach(Entity::update);
         enemies.forEach(Entity::update);
@@ -179,7 +180,6 @@ public class BombermanGame extends Application {
         }
 
         this.addBomb();
-        this.handleBomb();
         this.handleCollision();
     }
 
@@ -192,6 +192,7 @@ public class BombermanGame extends Application {
         walls.forEach(g -> g.render(gc));
         bombs.forEach(g -> g.render(gc));
         deads.forEach(g -> g.render(gc));
+        flames.forEach(g -> g.render(gc));
         enemies.forEach(g -> g.render(gc));
         bombers.forEach(g -> g.render(gc));
     }
@@ -255,20 +256,17 @@ public class BombermanGame extends Application {
                 if (bomber.intersects(items.get(i))) {
                     if (items.get(i) instanceof PowerupSpeed) {
                         bomber.setSpeed(bomber.getSpeed() + 1);
-                        items.remove(i);
                     }
                     else if (items.get(i) instanceof PowerupWallPass) {
                         bomber.setWallPass(true);
-                        items.remove(i);
                     }
                     else if (items.get(i) instanceof PowerupFlame) {
                         bomber.setFlame(bomber.getFlame() + 1);
-                        items.remove(i);
                     }
                     else if (items.get(i) instanceof PowerupBomb) {
                         bomber.setBomb(bomber.getBomb() + 1);
-                        items.remove(i);
                     }
+                    items.get(i).setHp(0);
                     break;
                 }
             }
@@ -296,6 +294,19 @@ public class BombermanGame extends Application {
      * Xoa nhung doi tuong co hp <= 0 khoi cac list
      */
     public void removeDeadEntity() {
+        for (int i = 0; i < bombs.size(); i++) {
+            if (bombs.get(i).getHp() > 0) {
+                break;
+            }
+            bombs.remove(i--);
+        }
+
+        for (int i = 0; i < items.size(); i++) {
+            if (items.get(i).getHp() <= 0) {
+                items.remove(i--);
+            }
+        }
+
         for (int i = 0; i < bricks.size(); i++) {
             if (bricks.get(i).getHp() <= 0) {
                 deads.add(bricks.get(i));
@@ -352,19 +363,16 @@ public class BombermanGame extends Application {
         }
     }
 
-    public void handleBomb() {
-        for (int i = 0; i < bombs.size(); i++) {
-            if (bombs.get(i).getHp() > 0) {
-                break;
-            }
-            bombs.remove(i--);
-        }
-    }
-
-    public void conga() {
+    public void removeFinishedElements() {
         for (int i = 0; i < deads.size(); i++) {
             if (deads.get(i).getAnimation().isFinishDeadAnimation()) {
                 deads.remove(i--);
+            }
+        }
+
+        for (int i = 0; i < flames.size(); i++) {
+            if (flames.get(i).getAnimation().isFinishDeadAnimation()) {
+                flames.remove(i--);
             }
         }
     }
