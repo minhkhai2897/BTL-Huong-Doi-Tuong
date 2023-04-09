@@ -363,7 +363,7 @@ public class BombermanGame extends Application {
 
     public void conga() {
         for (int i = 0; i < deads.size(); i++) {
-            if (deads.get(i).geatAnimation().isFinishDeadAnimation()) {
+            if (deads.get(i).getAnimation().isFinishDeadAnimation()) {
                 deads.remove(i--);
             }
         }
