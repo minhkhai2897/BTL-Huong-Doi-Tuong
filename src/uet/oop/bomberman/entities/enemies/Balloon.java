@@ -13,7 +13,6 @@ public class Balloon extends MovingEntity {
         animation = new BalloonAnimation();
     }
 
-    @Override
     public void update() {
         this.handleMove();
         this.move();

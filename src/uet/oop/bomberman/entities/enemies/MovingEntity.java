@@ -94,31 +94,7 @@ public abstract class MovingEntity extends Entity {
      * @param obj doi tuong bat ki
      * @return neu va cham tra ve true, con lai tra ve false
      */
-    public boolean intersects(Entity obj) {
-        boolean left1, left2, right1, right2, up1, up2, down1, down2;
 
-        if (this instanceof Bomber) {
-            left1 = this.intersects(obj, this.getX() + 1, this.getY() + 4);
-            left2 = this.intersects(obj, this.getX() + 1, this.getY() + this.getImg().getHeight() - 4);
-            right1 = this.intersects(obj, this.getX() + this.getImg().getWidth() - 7 , this.getY() + 4);
-            right2 = this.intersects(obj, this.getX() + this.getImg().getWidth() - 7, this.getY() + this. getImg().getHeight() - 4);
-            up1 = this.intersects(obj, this.getX() + 4, this.getY() + 2);
-            up2 = this.intersects(obj, this.getX() + this.getImg().getWidth() - 10, this .getY() + 2);
-            down1 = this.intersects(obj, this.getX() + 4, this.getY() + this.getImg().getHeight() - 2);
-            down2 = this.intersects(obj, this.getX() + this.getImg().getWidth() - 10, this .getY() + this.getImg().getHeight() - 2);
-        } else {
-            left1 = this.intersects(obj, this.getX() , this.getY() + 1);
-            left2 = this.intersects(obj, this.getX() , this.getY() + this.getImg().getHeight() - 1);
-            right1 = this.intersects(obj, this.getX() + this.getImg().getWidth() , this.getY() + 1);
-            right2 = this.intersects(obj, this.getX() + this.getImg().getWidth(), this.getY() + this. getImg().getHeight() - 1);
-            up1 = this.intersects(obj, this.getX() + 1, this.getY());
-            up2 = this.intersects(obj, this.getX() + this.getImg().getWidth() - 1, this .getY());
-            down1 = this.intersects(obj, this.getX() + 1, this.getY() + this.getImg().getHeight());
-            down2 = this.intersects(obj, this.getX() + this.getImg().getWidth() - 1, this .getY() + this.getImg().getHeight());
-        }
-
-        return (left1 || left2 || right1 || right2 || up1 || up2 || down1 || down2);
-    }
 
     /**
      * Kiem tra xem mot nhan vat co duoc di sang trai, sang phai, ... hay khong
@@ -168,23 +144,4 @@ public abstract class MovingEntity extends Entity {
             }
         }
     }
-
-    /**
-     * Ham kiem tra xem mot diem co nam trong doi tuong ko
-     * @param entity doi tuong
-     * @param x toa do x
-     * @param y toa do y
-     * @return true neu co, false neu ko
-     */
-    private boolean intersects(Entity entity, double x, double y) {
-        return (entity.getX() <= x && x <= (entity.getX() + entity.getImg().getWidth())
-                && entity.getY() <= y && y <= (entity.getY() + entity.getImg().getHeight()));
-    }
-
-    /**
-     * Ham tra ve so ngau nhien trong khoang min, max
-     * @param min can duoi
-     * @param max can tren
-     * @return so ngau nhieu
-     */
 }
