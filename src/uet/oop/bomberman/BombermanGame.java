@@ -25,12 +25,18 @@ import java.util.List;
 public class BombermanGame extends Application {
     private Group root;
     private Scene scene;
-    
+    private boolean win = false;
+    private boolean lose = false;
+
+    private boolean isGameComplete = false;
+    private int level = 0;
+
     public static int width;
     public static int height;
     
     private GraphicsContext gc;
     private Canvas canvas;
+    private List<String> mapList = new ArrayList<>();
     private List<String> map = new ArrayList<>();
     private List<Entity> grasses = new ArrayList<>();
     private List<Entity> enemies = new ArrayList<>();
@@ -48,7 +54,8 @@ public class BombermanGame extends Application {
     }
 
     public void start(Stage stage) {
-        readDataFromFile();
+        this.loadMapListFromFile();
+        this.readDataFromFile();
 
         canvas = new Canvas(Sprite.SCALED_SIZE * width, Sprite.SCALED_SIZE * height);
         gc = canvas.getGraphicsContext2D();
@@ -63,6 +70,29 @@ public class BombermanGame extends Application {
             public void handle(long l) {
                 render();
                 update();
+
+                if (lose) {
+                    return;
+                }
+
+                if (win) {
+                    return;
+                }
+
+                if (isGameComplete()) {
+                    readDataFromFile();
+
+                    canvas.setHeight(Sprite.SCALED_SIZE * height);
+                    canvas.setWidth(Sprite.SCALED_SIZE * width);
+                    gc = canvas.getGraphicsContext2D();
+                    root = new Group();
+                    root.getChildren().add(canvas);
+                    scene = new Scene(root);
+                    stage.setScene(scene);
+                    stage.show();
+
+                    createMap(); // Tạo bản đồ mới
+                }
             }
         };
         timer.start();
@@ -74,6 +104,16 @@ public class BombermanGame extends Application {
      * tao map tu du lieu trong list map
      */
     public void createMap() {
+        flames.clear();
+        deads.clear();
+        bombs.clear();
+        walls.clear();
+        grasses.clear();
+        enemies.clear();
+        items.clear();
+        bricks.clear();
+        portals.clear();
+
         for (int i = 0; i < height; i++) {
             String s = map.get(i);
             for (int j = 0; j < width; j++) {
@@ -111,9 +151,6 @@ public class BombermanGame extends Application {
                     } else if (c == '*') {
                         object = new Brick(j, i, Sprite.brick.getFxImage());
                         bricks.add(object);
-                        // Them item ngau nhien
-                        this.addRandomItem(j, i);
-
                     } else if (c == 'x') {
                         object = new Portal(j, i, Sprite.portal.getFxImage());
                         portals.add(object);
@@ -182,6 +219,10 @@ public class BombermanGame extends Application {
         this.handleCollision();
         this.removeFinishedElements();
         removeDeadEntity();
+
+        if (bombers.size() == 0 && deads.size() == 0) {
+            lose = true;
+        }
     }
 
     public void render() {
@@ -198,12 +239,36 @@ public class BombermanGame extends Application {
         bombers.forEach(g -> g.render(gc));
     }
 
+    private void loadMapListFromFile() {
+        mapList.clear();
+        try {
+            File file = new File("res/levels/mapList.txt");
+            Scanner scanner = new Scanner(file);
+
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                mapList.add(line);
+            }
+
+            scanner.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * Doc du lieu tu file txt va ghi vao list map.
      */
-    private void readDataFromFile(){
+    private void readDataFromFile() {
+        map.clear();
+
         try {
-            File file = new File("res/levels/Level1.txt");
+            if (level >= mapList.size()) {
+                win = true;
+                return;
+            }
+
+            File file = new File(mapList.get(level++));
             Scanner scaner = new Scanner(file);
             int L;
             L = scaner.nextInt();
@@ -215,6 +280,7 @@ public class BombermanGame extends Application {
                 line = scaner.nextLine();
                 map.add(line);
             }
+            scaner.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -258,7 +324,15 @@ public class BombermanGame extends Application {
             }
             for (int i = 0; i < portals.size(); i++) {
                 if (bomber.intersects(portals.get(i)) && enemies.size() == 0) {
-                    ///////////////////////////
+                    boolean complete = true;
+                    for (int j = 0; j < bricks.size(); j++) {
+                        if (portals.get(i).getX() == bricks.get(j).getX() &&
+                            portals.get(i).getY() == bricks.get(j).getY()) {
+                            complete = false;
+                            break;
+                        }
+                    }
+                    this.isGameComplete = complete;
                 }
             }
             for (int i = 0; i < items.size(); i++) {
@@ -335,6 +409,8 @@ public class BombermanGame extends Application {
         for (int i = 0; i < bricks.size(); i++) {
             if (bricks.get(i).getHp() <= 0) {
                 deads.add(bricks.get(i));
+                // Them item ngau nhien
+                this.addRandomItem(bricks.get(i).getX() / Sprite.SCALED_SIZE, bricks.get(i).getY() / Sprite.SCALED_SIZE);
                 bricks.remove(i--);
             }
         }
@@ -475,4 +551,13 @@ public class BombermanGame extends Application {
             flames.add(flame);
         }
     }
+
+    private boolean isGameComplete() {
+        if (isGameComplete) {
+            isGameComplete = false;
+            return true;
+        }
+        return false;
+    };
+
 }
