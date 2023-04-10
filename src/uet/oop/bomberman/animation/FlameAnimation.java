@@ -21,7 +21,7 @@ public class FlameAnimation extends Animation {
     ,Sprite.explosion_vertical1.getFxImage(),Sprite.explosion_vertical2.getFxImage()));
     private static List<Image> verticalUpLast = new ArrayList<>(Arrays.asList(Sprite.explosion_vertical_top_last.getFxImage()
     ,Sprite.explosion_vertical_top_last1.getFxImage(),Sprite.explosion_vertical_top_last2.getFxImage()));
-    private static List<Image> VerticalDownLast = new ArrayList<>(Arrays.asList(Sprite.explosion_vertical_down_last.getFxImage()
+    private static List<Image> verticalDownLast = new ArrayList<>(Arrays.asList(Sprite.explosion_vertical_down_last.getFxImage()
     ,Sprite.explosion_vertical_down_last1.getFxImage(),Sprite.explosion_vertical_down_last2.getFxImage()));
 
 
@@ -41,9 +41,9 @@ public class FlameAnimation extends Animation {
             }
         }
         else if (flame.getClassification().equals("down")) {
-            flame.setImg(this.handle(VerticalDownLast, "down"));
+            flame.setImg(this.handle(verticalDownLast, "down"));
             this.countDeadFrames++;
-            if (this.countDeadFrames == this.numberOfFrames * (VerticalDownLast.size())) {
+            if (this.countDeadFrames == this.numberOfFrames * (verticalDownLast.size())) {
                 this.finishDeadAnimation = true;
             }
         }

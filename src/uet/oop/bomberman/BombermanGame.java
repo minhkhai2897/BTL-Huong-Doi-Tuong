@@ -161,8 +161,6 @@ public class BombermanGame extends Application {
     }
 
     public void update() {
-        this.removeFinishedElements();
-        removeDeadEntity();
         bombers.forEach(Entity::update);
         enemies.forEach(Entity::update);
         deads.forEach(Entity::update);
@@ -182,6 +180,8 @@ public class BombermanGame extends Application {
 
         this.addBomb();
         this.handleCollision();
+        this.removeFinishedElements();
+        removeDeadEntity();
     }
 
     public void render() {
@@ -302,6 +302,16 @@ public class BombermanGame extends Application {
                 }
             }
         }
+
+        // Bomb
+        for (int i = 0; i < bombs.size(); i++) {
+            for (int j = 0; j < flames.size(); j++) {
+                if (bombs.get(i).intersects(flames.get(j))) {
+                    bombs.get(i).setHp(0);
+                    break;
+                }
+            }
+        }
     }
 
     /**
@@ -312,9 +322,7 @@ public class BombermanGame extends Application {
             if (bombs.get(i).getHp() > 0) {
                 break;
             }
-            Entity flame = new Flame(bombs.get(i).getX() / Sprite.SCALED_SIZE, bombs.get(i).getY() / Sprite.SCALED_SIZE,
-                    Sprite.bomb_exploded.getFxImage(), "epicenter");
-            flames.add(flame);
+            this.addFlame(bombs.get(i).getX() / Sprite.SCALED_SIZE, bombs.get(i).getY() / Sprite.SCALED_SIZE);
             bombs.remove(i--);
         }
 
@@ -391,6 +399,80 @@ public class BombermanGame extends Application {
             if (flames.get(i).getAnimation().isFinishDeadAnimation()) {
                 flames.remove(i--);
             }
+        }
+    }
+
+    public void addFlame(int xUnit, int yUnit) {
+        if (bombers.size() == 0) {
+            return;
+        }
+
+        Entity flame = new Flame(xUnit, yUnit, "epicenter");
+        flames.add(flame);
+        this.addFlame(xUnit, yUnit, -1, 0);
+        this.addFlame(xUnit, yUnit, 1, 0);
+        this.addFlame(xUnit, yUnit, 0, -1);
+        this.addFlame(xUnit, yUnit, 0, 1);
+    }
+
+    private void addFlame(int xUnit, int yUnit, int x, int y) {
+        Bomber bomber = (Bomber) bombers.get(0);
+
+        boolean add = true;
+
+        for (int i = 0; i < bomber.getFlame(); i++) {
+            String s;
+            if (x == -1) {
+                s = "left";
+            } else if (x == 1) {
+                s = "right";
+            } else if (y == -1) {
+                s = "up";
+            } else {
+                s = "down";
+            }
+
+            Entity flame;
+            if (i + 1 < bomber.getFlame()) {
+                if (x == 0) {
+                    flame = new Flame(xUnit + x * (i + 1), yUnit + y * (i + 1), Sprite.explosion_vertical.getFxImage(), "vertical");
+                } else {
+                    flame = new Flame(xUnit + x * (i + 1), yUnit + y * (i + 1), Sprite.explosion_horizontal.getFxImage(), "horizontal");
+                }
+            }
+            else {
+                if (x == -1) {
+                    flame = new Flame(xUnit + x * (i + 1), yUnit + y * (i + 1), Sprite.explosion_horizontal_left_last.getFxImage(), "left");
+                } else if (x == 1) {
+                    flame = new Flame(xUnit + x * (i + 1), yUnit + y * (i + 1), Sprite.explosion_horizontal_right_last.getFxImage(), "right");
+                } else if (y == -1) {
+                    flame = new Flame(xUnit + x * (i + 1), yUnit + y * (i + 1), Sprite.explosion_vertical_top_last.getFxImage(), "up");
+                } else {
+                    flame = new Flame(xUnit + x * (i + 1), yUnit + y * (i + 1), Sprite.explosion_vertical_down_last.getFxImage(), "down");
+                }
+            }
+
+            add = true;
+            for (int j = 0; j < walls.size(); j++) {
+                if (flame.intersects(walls.get(j))) {
+                    add = false;
+                    break;
+                }
+            }
+            if (add) {
+                for (int j = 0; j < bricks.size(); j++) {
+                    if (flame.intersects(bricks.get(j))) {
+                        bricks.get(j).setHp(0);
+                        add = false;
+                        break;
+                    }
+                }
+            }
+
+            if (!add) {
+                break;
+            }
+            flames.add(flame);
         }
     }
 }

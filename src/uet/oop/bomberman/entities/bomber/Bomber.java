@@ -29,7 +29,7 @@ public class Bomber extends MovingEntity {
     }
 
     public void setFlame(int flame) {
-        if (1 <= flame && flame <= 5) {
+        if (1 <= flame && flame <= 4) {
             this.flame = flame;
         }
     }

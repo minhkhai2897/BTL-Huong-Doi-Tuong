@@ -23,6 +23,12 @@ public class Flame extends Entity {
         this.animation = new FlameAnimation();
     }
 
+    public Flame(int x, int y, String classification) {
+        super(x, y);
+        this.classification = classification;
+        this.animation = new FlameAnimation();
+    }
+
     public void update() {
         this.animation.setSprite(this);
     }
