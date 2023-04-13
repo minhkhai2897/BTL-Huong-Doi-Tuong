@@ -1,17 +1,17 @@
 package uet.oop.bomberman.animation;
 
 import javafx.scene.image.Image;
-import uet.oop.bomberman.entities.stillObjects.Entity;
+import uet.oop.bomberman.entities.Entity;
 
 import java.util.List;
 
 public abstract class Animation {
+    private String id;
     private int count = 0;
     protected int countDeadFrames = 0;
-    protected int numberOfFrames = 8;
+    protected int numberOfFrames = 6;
     protected int numberOfDeadFrames = 32;
     protected boolean finishDeadAnimation = false;
-    private String id;
 
     public boolean isFinishDeadAnimation() {
         return finishDeadAnimation;

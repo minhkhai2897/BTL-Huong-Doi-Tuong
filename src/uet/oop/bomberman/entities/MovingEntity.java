@@ -1,8 +1,7 @@
-package uet.oop.bomberman.entities.enemies;
+package uet.oop.bomberman.entities;
 
 import javafx.scene.image.Image;
 import uet.oop.bomberman.entities.bomber.Bomber;
-import uet.oop.bomberman.entities.stillObjects.Entity;
 
 public abstract class MovingEntity extends Entity {
     protected int speed = 1;
@@ -11,11 +10,14 @@ public abstract class MovingEntity extends Entity {
     protected boolean moveRight = false;
     protected boolean moveUp = false;
     protected boolean moveDown = false;
-
     protected boolean ableToMoveLeft = true;
     protected boolean ableToMoveRight = true;
     protected boolean ableToMoveUp = true;
     protected boolean ableToMoveDown = true;
+
+    public MovingEntity(int x, int y, Image img) {
+        super( x, y, img);
+    }
 
     public boolean isWallPass() {
         return wallPass;
@@ -39,10 +41,6 @@ public abstract class MovingEntity extends Entity {
 
     public boolean isAbleToMoveDown() {
         return ableToMoveDown;
-    }
-
-    public MovingEntity(int x, int y, Image img) {
-        super( x, y, img);
     }
 
     public boolean isMoveLeft() {
@@ -104,14 +102,14 @@ public abstract class MovingEntity extends Entity {
         boolean left1, left2, right1, right2, up1, up2, down1, down2;
 
         if (this instanceof Bomber) {
-            left1 = this.intersects(obj, this.getX() + 1, this.getY() + 4);
-            left2 = this.intersects(obj, this.getX() + 1, this.getY() + this.getImg().getHeight() - 4);
-            right1 = this.intersects(obj, this.getX() + this.getImg().getWidth() - 7 , this.getY() + 4);
-            right2 = this.intersects(obj, this.getX() + this.getImg().getWidth() - 7, this.getY() + this. getImg().getHeight() - 4);
-            up1 = this.intersects(obj, this.getX() + 4, this.getY() + 2);
-            up2 = this.intersects(obj, this.getX() + this.getImg().getWidth() - 10, this .getY() + 2);
-            down1 = this.intersects(obj, this.getX() + 4, this.getY() + this.getImg().getHeight() - 2);
-            down2 = this.intersects(obj, this.getX() + this.getImg().getWidth() - 10, this .getY() + this.getImg().getHeight() - 2);
+            left1 = this.intersects(obj, this.getX() + 2, this.getY() + 5);
+            left2 = this.intersects(obj, this.getX() + 2, this.getY() + this.getImg().getHeight() - 5);
+            right1 = this.intersects(obj, this.getX() + this.getImg().getWidth() - 8 , this.getY() + 5);
+            right2 = this.intersects(obj, this.getX() + this.getImg().getWidth() - 8, this.getY() + this. getImg().getHeight() - 5);
+            up1 = this.intersects(obj, this.getX() + 5, this.getY() + 3);
+            up2 = this.intersects(obj, this.getX() + this.getImg().getWidth() - 11, this .getY() + 3);
+            down1 = this.intersects(obj, this.getX() + 5, this.getY() + this.getImg().getHeight() - 3);
+            down2 = this.intersects(obj, this.getX() + this.getImg().getWidth() - 11, this .getY() + this.getImg().getHeight() - 3);
         } else {
             left1 = this.intersects(obj, this.getX() , this.getY() + 1);
             left2 = this.intersects(obj, this.getX() , this.getY() + this.getImg().getHeight() - 1);

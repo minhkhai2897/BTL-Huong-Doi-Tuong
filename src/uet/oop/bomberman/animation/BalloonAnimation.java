@@ -1,8 +1,8 @@
 package uet.oop.bomberman.animation;
 
 import javafx.scene.image.Image;
-import uet.oop.bomberman.entities.enemies.MovingEntity;
-import uet.oop.bomberman.entities.stillObjects.Entity;
+import uet.oop.bomberman.entities.MovingEntity;
+import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.graphics.Sprite;
 import java.util.Arrays;
 import java.util.ArrayList;
@@ -18,9 +18,6 @@ public class BalloonAnimation extends Animation {
             Sprite.mob_dead1.getFxImage(), Sprite.mob_dead2.getFxImage(),
             Sprite.mob_dead3.getFxImage()));
 
-    /**
-     * Nhap du lieu anh vao cac mang
-     */
     public BalloonAnimation() {
     }
 

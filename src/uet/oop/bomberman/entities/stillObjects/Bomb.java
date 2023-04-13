@@ -3,11 +3,12 @@ package uet.oop.bomberman.entities.stillObjects;
 import javafx.scene.image.Image;
 import uet.oop.bomberman.animation.BombAnimation;
 import uet.oop.bomberman.entities.bomber.Bomber;
+import uet.oop.bomberman.entities.Entity;
 
 public class Bomb extends Entity {
-    private boolean isPassable = true;
     private static final int time = 150;
     private int count = 0;
+    private boolean isPassable = true;
     public Bomb(int x, int y, Image img) {
         super(x, y, img);
         animation = new BombAnimation();

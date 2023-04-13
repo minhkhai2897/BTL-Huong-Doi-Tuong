@@ -1,19 +1,16 @@
 package uet.oop.bomberman.animation;
 
 import javafx.scene.image.Image;
-import uet.oop.bomberman.entities.enemies.MovingEntity;
+import uet.oop.bomberman.entities.MovingEntity;
 import uet.oop.bomberman.graphics.Sprite;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import uet.oop.bomberman.entities.stillObjects.Entity;
+import uet.oop.bomberman.entities.Entity;
 
 
 public class BomberAnimation extends Animation{
 
-    /**
-     * cac list là cac trang thai
-     */
     private static List<Image> left = new ArrayList<>(Arrays.asList(Sprite.player_left.getFxImage(),Sprite.player_left_1.getFxImage()
        ,Sprite.player_left_2.getFxImage()));
     private static List<Image> right = new ArrayList<>(Arrays.asList(Sprite.player_right.getFxImage(),Sprite.player_right_1.getFxImage()
@@ -26,7 +23,6 @@ public class BomberAnimation extends Animation{
         ,Sprite.player_dead3.getFxImage()));
 
     public BomberAnimation() {
-
     }
 
     /**

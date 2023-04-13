@@ -5,7 +5,7 @@ import uet.oop.bomberman.graphics.Sprite;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import uet.oop.bomberman.entities.stillObjects.Entity;
+import uet.oop.bomberman.entities.Entity;
 
 
 public class BombAnimation extends Animation {

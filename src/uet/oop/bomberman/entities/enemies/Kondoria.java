@@ -1,9 +1,7 @@
 package uet.oop.bomberman.entities.enemies;
 
 import javafx.scene.image.Image;
-import uet.oop.bomberman.animation.BalloonAnimation;
 import uet.oop.bomberman.animation.KondoriaAnimation;
-import uet.oop.bomberman.entities.enemies.Balloon;
 
 public class Kondoria extends Balloon {
     public Kondoria(int x, int y, Image img) {

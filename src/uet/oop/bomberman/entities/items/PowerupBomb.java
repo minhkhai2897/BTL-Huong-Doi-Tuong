@@ -1,7 +1,7 @@
 package uet.oop.bomberman.entities.items;
 
 import javafx.scene.image.Image;
-import uet.oop.bomberman.entities.stillObjects.Entity;
+import uet.oop.bomberman.entities.Entity;
 
 public class PowerupBomb extends Entity {
 

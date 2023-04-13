@@ -2,36 +2,28 @@ package uet.oop.bomberman.entities.enemies;
 
 import javafx.scene.image.Image;
 import uet.oop.bomberman.MyMath;
-import uet.oop.bomberman.animation.BalloonAnimation;
+import uet.oop.bomberman.animation.MinvoAnimation;
 import uet.oop.bomberman.entities.MovingEntity;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Balloon extends MovingEntity {
-    public Balloon(int x, int y, Image img) {
+public class Minvo extends MovingEntity {
+    public Minvo(int x, int y, Image img) {
         super(x, y, img);
-        animation = new BalloonAnimation();
+        this.setSpeed(2);
+         animation = new MinvoAnimation();
     }
 
     public void update() {
         this.handleMove();
         this.move();
         this.animation.setSprite(this);
-        this.ableToMoveDown = true;
         this.ableToMoveLeft = true;
         this.ableToMoveRight = true;
-        this.ableToMoveUp = true;
     }
 
-    /**
-     * Ham di chuyen ngau nhien cho enemy.
-     *
-     * Khong di chuyen truc tiep cac nhan vat. cac nhan vat duoc dieu khien bang cach dieu chinh
-     * huong di (true/false): moveLeft (0), moveUp (1), moveDown (2), moveRight (3)
-     * va cac bien (true/false): ableToMoveLeft,... nhan gia tri tu viec kiem tra thuc te vi tri cua nhan vat
-     */
-    protected void handleMove() {
+    public void handleMove() {
         int last = -1;
 
         if (moveLeft) {
@@ -40,13 +32,6 @@ public class Balloon extends MovingEntity {
         } else if (moveRight) {
             last = 3;
             moveRight = false;
-        } else if (moveUp) {
-            last = 1;
-            moveUp = false;
-        }
-        else if (moveDown) {
-            last = 2;
-            moveDown = false;
         }
 
         List<Integer> directions = new ArrayList<>();
@@ -56,12 +41,6 @@ public class Balloon extends MovingEntity {
         }
         if (this.ableToMoveRight) {
             directions.add(3);
-        }
-        if (this.ableToMoveUp) {
-            directions.add(1);
-        }
-        if (this.ableToMoveDown) {
-            directions.add(2);
         }
 
         if (directions.size() == 0) {
@@ -82,10 +61,6 @@ public class Balloon extends MovingEntity {
             moveLeft = true;
         } else if (directions.get(randomNumber) == 3) {
             moveRight = true;
-        } else if (directions.get(randomNumber) == 1) {
-            moveUp = true;
-        } else if (directions.get(randomNumber) == 2) {
-            moveDown = true;
         }
     }
 }

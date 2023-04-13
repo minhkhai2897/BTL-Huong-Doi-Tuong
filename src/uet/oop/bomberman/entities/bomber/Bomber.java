@@ -3,21 +3,13 @@ package uet.oop.bomberman.entities.bomber;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
-import uet.oop.bomberman.animation.Animation;
 import uet.oop.bomberman.animation.BomberAnimation;
-import uet.oop.bomberman.entities.enemies.MovingEntity;
+import uet.oop.bomberman.entities.MovingEntity;
 
 public class Bomber extends MovingEntity {
-    private int createBomb = 0;
-
-    public int getCreateBomb() {
-        return createBomb;
-    }
-
     private int bomb = 1;
     private int flame = 1;
-
-
+    private int createBomb = 0;
 
     public Bomber(int x, int y, Image img) {
         super( x, y, img);
@@ -34,6 +26,10 @@ public class Bomber extends MovingEntity {
         }
     }
 
+    public int getCreateBomb() {
+        return createBomb;
+    }
+
     public int getBomb() {
         return bomb;
     }
@@ -46,7 +42,14 @@ public class Bomber extends MovingEntity {
 
     public void update() {
         this.move();
-        this.animation.setSprite(this);
+        if ((this.moveLeft && this.ableToMoveLeft)
+            || (this.moveRight && this.ableToMoveRight)
+            || (this.moveUp && this.ableToMoveUp)
+            || (this.moveDown && this.ableToMoveDown)
+            || (this.hp <= 0))
+        {
+            this.animation.setSprite(this);
+        }
         this.ableToMoveDown = true;
         this.ableToMoveLeft = true;
         this.ableToMoveRight = true;

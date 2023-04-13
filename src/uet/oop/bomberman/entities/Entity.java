@@ -1,15 +1,9 @@
-package uet.oop.bomberman.entities.stillObjects;
+package uet.oop.bomberman.entities;
 
-import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.paint.Color;
 import uet.oop.bomberman.animation.Animation;
-import uet.oop.bomberman.entities.bomber.Bomber;
 import uet.oop.bomberman.graphics.Sprite;
-
-import java.util.Random;
 
 
 public abstract class Entity {
@@ -18,6 +12,18 @@ public abstract class Entity {
     protected Image img;
     protected Animation animation;
     protected int hp = 1;
+
+    //Khởi tạo đối tượng, chuyển từ tọa độ đơn vị sang tọa độ trong canvas
+
+    public Entity(int xUnit, int yUnit, Image img) {
+        this.x = xUnit * Sprite.SCALED_SIZE;
+        this.y = yUnit * Sprite.SCALED_SIZE;
+        this.img = img;
+    }
+    public Entity(int xUnit, int yUnit) {
+        this.x = xUnit * Sprite.SCALED_SIZE;
+        this.y = yUnit * Sprite.SCALED_SIZE;
+    }
 
     public int getHp() {
         return hp;
@@ -58,18 +64,6 @@ public abstract class Entity {
         return animation;
     }
 
-    //Khởi tạo đối tượng, chuyển từ tọa độ đơn vị sang tọa độ trong canvas
-    public Entity(int xUnit, int yUnit, Image img) {
-        this.x = xUnit * Sprite.SCALED_SIZE;
-        this.y = yUnit * Sprite.SCALED_SIZE;
-        this.img = img;
-    }
-
-    public Entity(int xUnit, int yUnit) {
-        this.x = xUnit * Sprite.SCALED_SIZE;
-        this.y = yUnit * Sprite.SCALED_SIZE;
-    }
-
     public void render(GraphicsContext gc) {
         gc.drawImage(img, x, y);
     }
@@ -90,5 +84,4 @@ public abstract class Entity {
         return (entity.getX() <= x && x <= (entity.getX() + entity.getImg().getWidth())
                 && entity.getY() <= y && y <= (entity.getY() + entity.getImg().getHeight()));
     }
-
 }
