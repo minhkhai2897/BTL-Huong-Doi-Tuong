@@ -42,14 +42,7 @@ public class Bomber extends MovingEntity {
 
     public void update() {
         this.move();
-        if ((this.moveLeft && this.ableToMoveLeft)
-            || (this.moveRight && this.ableToMoveRight)
-            || (this.moveUp && this.ableToMoveUp)
-            || (this.moveDown && this.ableToMoveDown)
-            || (this.hp <= 0))
-        {
-            this.animation.setSprite(this);
-        }
+        this.animation.setSprite(this);
         this.ableToMoveDown = true;
         this.ableToMoveLeft = true;
         this.ableToMoveRight = true;

@@ -18,7 +18,7 @@ public class Doll extends MovingEntity {
     public void update() {
         this.handleMove();
         this.move();
-//        this.animation.setSprite(this);
+        this.animation.setSprite(this);
         this.ableToMoveDown = true;
         this.ableToMoveUp = true;
     }
