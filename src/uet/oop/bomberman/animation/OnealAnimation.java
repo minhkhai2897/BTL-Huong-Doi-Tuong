@@ -10,11 +10,11 @@ import uet.oop.bomberman.entities.Entity;
 
 
 public class OnealAnimation extends Animation {
-    private static List<Image> left = new ArrayList<>(Arrays.asList(Sprite.oneal_left1.getFxImage(),Sprite.oneal_left2.getFxImage()
+    private static final List<Image> left = new ArrayList<>(Arrays.asList(Sprite.oneal_left1.getFxImage(),Sprite.oneal_left2.getFxImage()
             ,Sprite.oneal_left3.getFxImage()));
-    private static List<Image> right = new ArrayList<>(Arrays.asList(Sprite.oneal_right1.getFxImage(),Sprite.oneal_right2.getFxImage()
+    private static final List<Image> right = new ArrayList<>(Arrays.asList(Sprite.oneal_right1.getFxImage(),Sprite.oneal_right2.getFxImage()
             ,Sprite.oneal_right3.getFxImage()));
-    private static List<Image> dead = new ArrayList<>(Arrays.asList(Sprite.oneal_dead.getFxImage(),Sprite.mob_dead1.getFxImage()
+    private static final List<Image> dead = new ArrayList<>(Arrays.asList(Sprite.oneal_dead.getFxImage(),Sprite.mob_dead1.getFxImage()
             ,Sprite.mob_dead2.getFxImage(),Sprite.mob_dead3.getFxImage()));
 
     public OnealAnimation() {

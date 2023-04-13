@@ -9,7 +9,7 @@ import uet.oop.bomberman.entities.Entity;
 
 
 public class BrickAnimation extends Animation {
-    private static List<Image> dead = new ArrayList<>(Arrays.asList(Sprite.brick_exploded.getFxImage(),Sprite.brick_exploded1.getFxImage()
+    private static final List<Image> dead = new ArrayList<>(Arrays.asList(Sprite.brick_exploded.getFxImage(),Sprite.brick_exploded1.getFxImage()
     ,Sprite.brick_exploded2.getFxImage()));
 
     public BrickAnimation() {

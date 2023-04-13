@@ -10,11 +10,11 @@ import uet.oop.bomberman.entities.Entity;
 
 
 public class KondoriaAnimation extends Animation {
-    private static List<Image> left = new ArrayList<>(Arrays.asList(Sprite.kondoria_left1.getFxImage(),Sprite.kondoria_left2.getFxImage()
+    private static final List<Image> left = new ArrayList<>(Arrays.asList(Sprite.kondoria_left1.getFxImage(),Sprite.kondoria_left2.getFxImage()
     ,Sprite.kondoria_left3.getFxImage()));
-    private static List<Image> right = new ArrayList<>(Arrays.asList(Sprite.kondoria_right1.getFxImage(),Sprite.kondoria_right2.getFxImage()
+    private static final List<Image> right = new ArrayList<>(Arrays.asList(Sprite.kondoria_right1.getFxImage(),Sprite.kondoria_right2.getFxImage()
     ,Sprite.kondoria_right3.getFxImage()));
-    private static List<Image> dead = new ArrayList<>(Arrays.asList(Sprite.kondoria_dead.getFxImage(),Sprite.mob_dead1.getFxImage()
+    private static final List<Image> dead = new ArrayList<>(Arrays.asList(Sprite.kondoria_dead.getFxImage(),Sprite.mob_dead1.getFxImage()
     ,Sprite.mob_dead2.getFxImage(),Sprite.mob_dead3.getFxImage()));
 
     public KondoriaAnimation() {

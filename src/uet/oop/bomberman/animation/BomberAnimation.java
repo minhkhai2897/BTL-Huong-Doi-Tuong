@@ -11,15 +11,15 @@ import uet.oop.bomberman.entities.Entity;
 
 public class BomberAnimation extends Animation{
 
-    private static List<Image> left = new ArrayList<>(Arrays.asList(Sprite.player_left.getFxImage(),Sprite.player_left_1.getFxImage()
+    private static final List<Image> left = new ArrayList<>(Arrays.asList(Sprite.player_left.getFxImage(),Sprite.player_left_1.getFxImage()
        ,Sprite.player_left_2.getFxImage()));
-    private static List<Image> right = new ArrayList<>(Arrays.asList(Sprite.player_right.getFxImage(),Sprite.player_right_1.getFxImage()
+    private static final List<Image> right = new ArrayList<>(Arrays.asList(Sprite.player_right.getFxImage(),Sprite.player_right_1.getFxImage()
        ,Sprite.player_right_2.getFxImage()));
-    private static List<Image> up = new ArrayList<>(Arrays.asList(Sprite.player_up.getFxImage(),Sprite.player_up_1.getFxImage()
+    private static final List<Image> up = new ArrayList<>(Arrays.asList(Sprite.player_up.getFxImage(),Sprite.player_up_1.getFxImage()
         ,Sprite.player_up_2.getFxImage()));
-    private static List<Image> down = new ArrayList<>(Arrays.asList(Sprite.player_down.getFxImage(),Sprite.player_down_1.getFxImage()
+    private static final List<Image> down = new ArrayList<>(Arrays.asList(Sprite.player_down.getFxImage(),Sprite.player_down_1.getFxImage()
         ,Sprite.player_down_2.getFxImage()));
-    private static List<Image> dead = new ArrayList<>(Arrays.asList(Sprite.player_dead1.getFxImage(),Sprite.player_dead2.getFxImage()
+    private static final List<Image> dead = new ArrayList<>(Arrays.asList(Sprite.player_dead1.getFxImage(),Sprite.player_dead2.getFxImage()
         ,Sprite.player_dead3.getFxImage()));
 
     public BomberAnimation() {

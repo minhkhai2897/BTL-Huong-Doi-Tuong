@@ -10,11 +10,11 @@ import java.util.List;
 
 
 public class BalloonAnimation extends Animation {
-    private static List<Image> left = new ArrayList<>(Arrays.asList(Sprite.balloom_left1.getFxImage(),
+    private static final List<Image> left = new ArrayList<>(Arrays.asList(Sprite.balloom_left1.getFxImage(),
             Sprite.balloom_left2.getFxImage(), Sprite.balloom_left3.getFxImage()));
-    private static List<Image> right = new ArrayList<>(Arrays.asList(Sprite.balloom_right1.getFxImage(),
+    private static final List<Image> right = new ArrayList<>(Arrays.asList(Sprite.balloom_right1.getFxImage(),
             Sprite.balloom_right2.getFxImage(), Sprite.balloom_right3.getFxImage()));
-    private static List<Image> dead = new ArrayList<>(Arrays.asList(Sprite.balloom_dead.getFxImage(),
+    private static final List<Image> dead = new ArrayList<>(Arrays.asList(Sprite.balloom_dead.getFxImage(),
             Sprite.mob_dead1.getFxImage(), Sprite.mob_dead2.getFxImage(),
             Sprite.mob_dead3.getFxImage()));
 

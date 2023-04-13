@@ -10,11 +10,11 @@ import uet.oop.bomberman.entities.Entity;
 
 
 public class DollAnimation extends Animation {
-    private static List<Image> left = new ArrayList<>(Arrays.asList(Sprite.doll_left1.getFxImage()
+    private static final List<Image> left = new ArrayList<>(Arrays.asList(Sprite.doll_left1.getFxImage()
     ,Sprite.doll_left2.getFxImage(),Sprite.doll_left3.getFxImage()));
-    private static List<Image> right = new ArrayList<>(Arrays.asList(Sprite.doll_right1.getFxImage()
+    private static final List<Image> right = new ArrayList<>(Arrays.asList(Sprite.doll_right1.getFxImage()
     ,Sprite.doll_right2.getFxImage(),Sprite.doll_right3.getFxImage()));
-    private static List<Image> dead = new ArrayList<>(Arrays.asList(Sprite.doll_dead.getFxImage()
+    private static final List<Image> dead = new ArrayList<>(Arrays.asList(Sprite.doll_dead.getFxImage()
     ,Sprite.mob_dead1.getFxImage(),Sprite.mob_dead2.getFxImage(),Sprite.mob_dead3.getFxImage()));
 
     public DollAnimation() {

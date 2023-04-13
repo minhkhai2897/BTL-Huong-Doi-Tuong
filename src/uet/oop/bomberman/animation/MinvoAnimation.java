@@ -10,11 +10,11 @@ import uet.oop.bomberman.entities.Entity;
 
 
 public class MinvoAnimation extends Animation {
-    private static List<Image> left = new ArrayList<>(Arrays.asList(Sprite.minvo_left1.getFxImage()
+    private static final List<Image> left = new ArrayList<>(Arrays.asList(Sprite.minvo_left1.getFxImage()
     ,Sprite.minvo_left2.getFxImage(),Sprite.minvo_left3.getFxImage()));
-    private static List<Image> right = new ArrayList<>(Arrays.asList(Sprite.minvo_right1.getFxImage()
+    private static final List<Image> right = new ArrayList<>(Arrays.asList(Sprite.minvo_right1.getFxImage()
     ,Sprite.minvo_right2.getFxImage(),Sprite.minvo_right3.getFxImage()));
-    private static List<Image> dead = new ArrayList<>(Arrays.asList(Sprite.minvo_dead.getFxImage()
+    private static final List<Image> dead = new ArrayList<>(Arrays.asList(Sprite.minvo_dead.getFxImage()
     ,Sprite.mob_dead1.getFxImage(),Sprite.mob_dead2.getFxImage(),Sprite.mob_dead3.getFxImage()));
 
     public MinvoAnimation() {
