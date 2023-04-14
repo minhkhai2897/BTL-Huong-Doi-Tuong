@@ -20,6 +20,7 @@ public class Bomber extends MovingEntity {
         super( x, y, img);
         this.animation = new BomberAnimation();
         this.setWallPass(true);
+        this.setSpeed(2);
     }
 
     public int getFlame() {
