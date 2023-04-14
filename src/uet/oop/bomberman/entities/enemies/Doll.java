@@ -1,67 +1,97 @@
 package uet.oop.bomberman.entities.enemies;
 
 import javafx.scene.image.Image;
+import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.MyMath;
 import uet.oop.bomberman.animation.DollAnimation;
+import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.MovingEntity;
+import uet.oop.bomberman.entities.bomber.Bomber;
+import uet.oop.bomberman.graphics.Sprite;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
-public class Doll extends MovingEntity {
+public class Doll extends Balloon {
+    private int k = 0;
     public Doll(int x, int y, Image img) {
         super(x, y, img);
         this.setSpeed(2);
-         animation = new DollAnimation();
+        this.wallPass = true;
+        this.animation = new DollAnimation();
     }
 
     public void update() {
+        this.handleCollision();
         this.handleMove();
         this.move();
         this.animation.setSprite(this);
         this.ableToMoveDown = true;
         this.ableToMoveUp = true;
+        this.ableToMoveLeft = true;
+        this.ableToMoveRight = true;
     }
 
     public void handleMove() {
-        int last = -1;
+        List<Entity> bombers = BombermanGame.getBombers();
 
-        if (moveUp) {
-            last = 1;
-            moveUp = false;
-        }
-        else if (moveDown) {
-            last = 2;
-            moveDown = false;
-        }
+        if (bombers.size() > 0) {
+            Bomber bomber = (Bomber) bombers.get(0);
+            int bomberX = bomber.getX();
+            int bomberY = bomber.getY();
+            int dooX = this.getX();
+            int dooY = this.getY();
 
-        List<Integer> directions = new ArrayList<>();
-        int t;
-        if (this.ableToMoveUp) {
-            directions.add(1);
-        }
-        if (this.ableToMoveDown) {
-            directions.add(2);
-        }
+            this.resetMoveVariable();
 
-        if (directions.size() == 0) {
-            return;
-        }
-
-        if (directions.size() > 1) {
-            for (int i = 0; i < directions.size(); i++) {
-                if (directions.get(i) + last == 3) {
-                    directions.remove(i);
-                    break;
+            if (k % 4 == 0) {
+                if (bomberX < dooX) {
+                    if (this.ableToMoveLeft) {
+                        this.moveLeft = true;
+                        return;
+                    }
+                    this.moveDown = true;
+                }
+                else {
+                    k++;
                 }
             }
-        }
+            else if (k % 4 == 1) {
+                if (bomberY < dooY) {
+                    if (this.ableToMoveUp) {
+                        this.moveUp = true;
+                        return;
+                    }
+                    this.moveLeft = true;
+                }
+                else {
+                    k++;
+                }
+            }
+            else if (k % 4 == 2) {
+                if (bomberX > dooX) {
+                    if (this.ableToMoveRight) {
+                        this.moveRight = true;
+                        return;
+                    }
+                    this.moveUp = true;
+                }
+                else {
+                    k++;
+                }
+            }
+            else {
+                if (bomberY > dooY) {
+                    if (this.ableToMoveDown) {
+                        this.moveDown = true;
+                        return;
+                    }
+                    this.moveRight = true;
+                }
+                else {
+                    k++;
+                }
+            }
 
-        int randomNumber = MyMath.getRandomNumber(0, directions.size() - 1);
-        if (directions.get(randomNumber) == 1) {
-            moveUp = true;
-        } else if (directions.get(randomNumber) == 2) {
-            moveDown = true;
         }
     }
 }

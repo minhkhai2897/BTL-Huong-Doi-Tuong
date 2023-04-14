@@ -1,8 +1,10 @@
 package uet.oop.bomberman.entities.enemies;
 
 import javafx.scene.image.Image;
+import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.MyMath;
 import uet.oop.bomberman.animation.BalloonAnimation;
+import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.MovingEntity;
 
 import java.util.ArrayList;
@@ -15,6 +17,7 @@ public class Balloon extends MovingEntity {
     }
 
     public void update() {
+        this.handleCollision();
         this.handleMove();
         this.move();
         this.animation.setSprite(this);
@@ -32,25 +35,39 @@ public class Balloon extends MovingEntity {
      * va cac bien (true/false): ableToMoveLeft,... nhan gia tri tu viec kiem tra thuc te vi tri cua nhan vat
      */
     protected void handleMove() {
-        int last = -1;
+        int last = this.getLastMove();
+        this.randomDirectionMove(last);
+    }
 
-        if (moveLeft) {
-            last = 0;
-            moveLeft = false;
-        } else if (moveRight) {
-            last = 3;
-            moveRight = false;
-        } else if (moveUp) {
-            last = 1;
-            moveUp = false;
-        }
-        else if (moveDown) {
-            last = 2;
-            moveDown = false;
+    protected void handleCollision() {
+        List<Entity> bricks = BombermanGame.getBricks();
+        if (!this.isWallPass()) {
+            for (int j = 0; j < bricks.size(); j++) {
+                this.checkObjectMovementAbility(bricks.get(j));
+            }
         }
 
+        List<Entity> bombs = BombermanGame.getBombs();
+        for (int j = 0; j < bombs.size(); j++) {
+            this.checkObjectMovementAbility(bombs.get(j));
+        }
+
+        List<Entity> walls = BombermanGame.getWalls();
+        for (int j = 0; j < walls.size(); j++) {
+            this.checkObjectMovementAbility(walls.get(j));
+        }
+
+        List<Entity> flames = BombermanGame.getFlames();
+        for (int j = 0; j < flames.size(); j++) {
+            if (this.intersects(flames.get(j))) {
+                this.setHp(0);
+            }
+        }
+    }
+
+    protected void randomDirectionMove(int last) {
+        this.resetMoveVariable();
         List<Integer> directions = new ArrayList<>();
-        int t;
         if (this.ableToMoveLeft) {
             directions.add(0);
         }
@@ -88,4 +105,23 @@ public class Balloon extends MovingEntity {
             moveDown = true;
         }
     }
+
+    protected int getLastMove() {
+        int last = -1;
+
+        if (moveLeft) {
+            last = 0;
+        } else if (moveRight) {
+            last = 3;
+        } else if (moveUp) {
+            last = 1;
+        }
+        else if (moveDown) {
+            last = 2;
+        }
+
+        return last;
+    }
+
+
 }

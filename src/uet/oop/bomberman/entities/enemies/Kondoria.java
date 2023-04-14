@@ -11,6 +11,7 @@ public class Kondoria extends Balloon {
     }
 
     public void update() {
+        this.handleCollision();
         this.handleMove();
         this.move();
         this.animation.setSprite(this);

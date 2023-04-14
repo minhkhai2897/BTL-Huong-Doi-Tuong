@@ -1,8 +1,5 @@
 package uet.oop.bomberman;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.animation.AnimationTimer;
@@ -18,7 +15,6 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import uet.oop.bomberman.entities.MovingEntity;
 import uet.oop.bomberman.entities.bomber.Bomber;
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.enemies.*;
@@ -32,41 +28,114 @@ import uet.oop.bomberman.graphics.Sprite;
 public class BombermanGame extends Application {
     private static int width = 31;
     private static int height = 13;
-    private Group root;
-    private Scene scene;
-    private Canvas canvas;
-    private GraphicsContext gc;
-    private Label label;
-    private MediaPlayer music;
+    private static Group root;
+    private static Scene scene;
+    private static Canvas canvas;
+    private static GraphicsContext gc;
+    private static Label label;
+    private static MediaPlayer music;
     private AudioClip bombExplosionSound;
-    private AudioClip placedBombSound;
-    private AudioClip moveSound;
-    private int level = 0;
+    private static AudioClip placedBombSound;
+    private static AudioClip moveSound;
+    private static int level = 0;
     private int time = 0;
     private boolean newLevel = true;
-    private boolean isLevelComplete = false;
+    private static boolean isLevelComplete = false;
     private boolean bombAdded = false;
     private boolean win = false;
     private boolean lose = false;
-    private List<String> mapList = new ArrayList<>();
-    private List<String> map = new ArrayList<>();
-    private List<Entity> grasses = new ArrayList<>();
-    private List<Entity> enemies = new ArrayList<>();
-    private List<Entity> items = new ArrayList<>();
-    private List<Entity> walls = new ArrayList<>();
-    private List<Entity> bricks = new ArrayList<>();
-    private List<Entity> portals = new ArrayList<>();
-    private List<Entity> bombers = new ArrayList<>();
-    private List<Entity> bombs = new ArrayList<>();
-    private List<Entity> deads = new ArrayList<>();
-    private List<Entity> flames = new ArrayList<>();
+    private static List<String> mapList = new ArrayList<>();
+    private static List<String> map = new ArrayList<>();
+    private static List<Entity> grasses = new ArrayList<>();
+    private static List<Entity> enemies = new ArrayList<>();
+    private static List<Entity> items = new ArrayList<>();
+    private static List<Entity> walls = new ArrayList<>();
+    private static List<Entity> bricks = new ArrayList<>();
+    private static List<Entity> portals = new ArrayList<>();
+    private static List<Entity> bombers = new ArrayList<>();
+    private static List<Entity> bombs = new ArrayList<>();
+    private static List<Entity> deads = new ArrayList<>();
+    private static List<Entity> flames = new ArrayList<>();
 
     public static void main(String[] args) {
         Application.launch(BombermanGame.class);
     }
 
+    public static Scene getScene() {
+        return scene;
+    }
+
+    public static void setLevelComplete(boolean levelComplete) {
+        isLevelComplete = levelComplete;
+    }
+
+    public static List<Entity> getEnemies() {
+        return enemies;
+    }
+
+    public static List<Entity> getItems() {
+        return items;
+    }
+
+    public static List<Entity> getWalls() {
+        return walls;
+    }
+
+    public static List<Entity> getBricks() {
+        return bricks;
+    }
+
+    public static List<Entity> getPortals() {
+        return portals;
+    }
+
+    public static List<Entity> getBombers() {
+        return bombers;
+    }
+
+    public static List<Entity> getBombs() {
+        return bombs;
+    }
+
+    public static List<Entity> getFlames() {
+        return flames;
+    }
+
+    public static void setWidth(int width) {
+        BombermanGame.width = width;
+    }
+
+    public static void setHeight(int height) {
+        BombermanGame.height = height;
+    }
+
+    public static int getLevel() {
+        return level;
+    }
+
+    public static void setLevel(int level) {
+        BombermanGame.level = level;
+    }
+
+    public static int getHeight() {
+        return height;
+    }
+
+    public static void setMap(List<String> map) {
+        BombermanGame.map = map;
+    }
+
+    public static void setMapList(List<String> mapList) {
+        BombermanGame.mapList = mapList;
+    }
+
+    public static List<String> getMapList() {
+        List<String> mapListCopy = new ArrayList<>(mapList);
+        return mapListCopy;
+    }
+
     public void start(Stage stage) {
-        this.loadMapListFromFile();
+        GamePlayData.loadMapListFromFile();
         canvas = new Canvas(Sprite.SCALED_SIZE * width, Sprite.SCALED_SIZE * height);
         gc = canvas.getGraphicsContext2D();
         root = new Group();
@@ -74,7 +143,7 @@ public class BombermanGame extends Application {
         scene = new Scene(root);
 
         scene.setFill(Color.BLACK);
-        label = new Label("");
+        label = new Label("STATE  1");
         label.setStyle("-fx-font-size: 36; -fx-text-fill: white;");
         root.getChildren().add(label);
         stage.setTitle("BTL_Bomberman");
@@ -117,25 +186,15 @@ public class BombermanGame extends Application {
     }
 
     public void update() {
+        flames.forEach(Entity::update);
         bombers.forEach(Entity::update);
         enemies.forEach(Entity::update);
-        deads.forEach(Entity::update);
         bombs.forEach(Entity::update);
         bricks.forEach(Entity::update);
-        flames.forEach(Entity::update);
-
-        for (int i = 0; i < bombers.size(); i++) {
-            ((Bomber)bombers.get(i)).handleKeyPress(this.scene);
-        }
-        for (int i = 0; i < bombs.size(); i++) {
-            for (int j = 0; j < bombers.size(); j++) {
-                Bomber bomber = (Bomber) bombers.get(j);
-                ((Bomb)bombs.get(i)).checkCharacterPassability(bomber);
-            }
-        }
+        deads.forEach(Entity::update);
+        items.forEach(Entity::update);
 
         this.addBomb();
-        this.handleCollision();
         handleSound();
         this.removeFinishedElements();
         removeDeadEntity();
@@ -154,11 +213,11 @@ public class BombermanGame extends Application {
         walls.forEach(g -> g.render(gc));
         bombs.forEach(g -> g.render(gc));
         deads.forEach(g -> g.render(gc));
-        flames.forEach(g -> g.render(gc));
         enemies.forEach(g -> g.render(gc));
         if (walls.size() > 0) {
             bombers.forEach(g -> g.render(gc));
         }
+        flames.forEach(g -> g.render(gc));
     }
 
     public void createMap() {
@@ -248,162 +307,6 @@ public class BombermanGame extends Application {
         else if (randomNumber < 12) {
             object = new PowerupFlame(x, y, Sprite.powerup_flames.getFxImage());
             items.add(object);
-        }
-    }
-
-    private void loadMapListFromFile() {
-        mapList.clear();
-        try {
-            File file = new File("res/levels/mapList.txt");
-            Scanner scanner = new Scanner(file);
-
-            while (scanner.hasNextLine()) {
-                String line = scanner.nextLine();
-                mapList.add(line);
-            }
-
-            scanner.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Doc du lieu tu file txt va ghi vao list map.
-     */
-    private void readDataFromFile() {
-        map.clear();
-
-        try {
-            File file = new File(mapList.get(level++));
-            Scanner scaner = new Scanner(file);
-            int L;
-            L = scaner.nextInt();
-            height = scaner.nextInt();
-            width = scaner.nextInt();
-
-            String line = scaner.nextLine();;
-            for (int i = 0; i < height; i++) {
-                line = scaner.nextLine();
-                map.add(line);
-            }
-            scaner.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Xu ly va cham (tat ca moi va cham deu xu ly o day).
-     */
-    public void handleCollision() {
-        // Nhan vat
-        ///////////////////////////////////////////////////////
-        if (bombers.size() > 0) {
-            Bomber bomber = (Bomber) bombers.get(0);
-
-            for (int i = 0; i < flames.size(); i++) {
-                if (bomber.intersects(flames.get(i))) {
-                    bomber.setHp(0);
-                    break;
-                }
-            }
-
-            for (int i = 0; i < enemies.size(); i++) {
-                if (bomber.intersects(enemies.get(i))) {
-                    bomber.setHp(0);
-                    break;
-                }
-            }
-            if (!bomber.isWallPass()) {
-                for (int i = 0; i < bricks.size(); i++) {
-                    bomber.checkObjectMovementAbility(bricks.get(i));
-                }
-            }
-            for (int i = 0; i < bombs.size(); i++) {
-                if (((Bomb)bombs.get(i)).isPassable()) {
-                    continue;
-                }
-                bomber.checkObjectMovementAbility(bombs.get(i));
-            }
-            for (int i = 0; i < walls.size(); i++) {
-                bomber.checkObjectMovementAbility(walls.get(i));
-            }
-            for (int i = 0; i < portals.size(); i++) {
-                if (!this.isLevelComplete) {
-                    if (bomber.intersects(portals.get(i)) && enemies.size() == 0) {
-                        boolean complete = true;
-                        for (int j = 0; j < bricks.size(); j++) {
-                            if (portals.get(i).getX() == bricks.get(j).getX() &&
-                                    portals.get(i).getY() == bricks.get(j).getY()) {
-                                complete = false;
-                                break;
-                            }
-                        }
-                        this.isLevelComplete = complete;
-                    }
-                }
-            }
-            for (int i = 0; i < items.size(); i++) {
-                if (bomber.intersects(items.get(i))) {
-                    if (items.get(i) instanceof PowerupSpeed) {
-                        bomber.setSpeed(bomber.getSpeed() + 1);
-                    }
-                    else if (items.get(i) instanceof PowerupWallPass) {
-                        bomber.setWallPass(true);
-                    }
-                    else if (items.get(i) instanceof PowerupFlame) {
-                        bomber.setFlame(bomber.getFlame() + 1);
-                    }
-                    else if (items.get(i) instanceof PowerupBomb) {
-                        bomber.setBomb(bomber.getBomb() + 1);
-                    }
-                    items.get(i).setHp(0);
-                    break;
-                }
-            }
-        }
-
-        // Cac enemy
-        ////////////////////////////////////////////////////////////////
-        for (int i = 0; i < enemies.size(); i++) {
-            MovingEntity movingEntity = (MovingEntity) enemies.get(i);
-            if (!movingEntity.isWallPass()) {
-                for (int j = 0; j < bricks.size(); j++) {
-                    movingEntity.checkObjectMovementAbility(bricks.get(j));
-                }
-            }
-            for (int j = 0; j < bombs.size(); j++) {
-                movingEntity.checkObjectMovementAbility(bombs.get(j));
-            }
-            for (int j = 0; j < walls.size(); j++) {
-                movingEntity.checkObjectMovementAbility(walls.get(j));
-            }
-            for (int j = 0; j < flames.size(); j++) {
-                if (movingEntity.intersects(flames.get(j))) {
-                    movingEntity.setHp(0);
-                }
-            }
-        }
-
-        // Bomb
-        for (int i = 0; i < bombs.size(); i++) {
-            for (int j = 0; j < flames.size(); j++) {
-                if (bombs.get(i).intersects(flames.get(j))) {
-                    bombs.get(i).setHp(0);
-                    break;
-                }
-            }
-        }
-
-        // Item
-        for (int i = 0; i < items.size(); i++) {
-            for (int j = 0; j < flames.size(); j++) {
-                if (items.get(i).intersects(flames.get(j))) {
-                    items.get(i).setHp(0);
-                    break;
-                }
-            }
         }
     }
 
@@ -576,11 +479,11 @@ public class BombermanGame extends Application {
         final int completionTime = 180;
 
         if (time == 0) {
+            if (music != null) {
+                music.stop();
+                music.dispose();
+            }
             try {
-                if (music != null) {
-                    music.stop();
-                    music.dispose();
-                }
                 music = new MediaPlayer(new Media(getClass().getResource("/sounds/level_complete.wav").toString()));
                 music.play();
             } catch (Exception e) {
@@ -619,8 +522,12 @@ public class BombermanGame extends Application {
                 music.stop();
                 music.dispose();
             }
-            music = new MediaPlayer(new Media(getClass().getResource("/sounds/just_died.wav").toString()));
-            music.play();
+            try {
+                music = new MediaPlayer(new Media(getClass().getResource("/sounds/just_died.wav").toString()));
+                music.play();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         time++;
 
@@ -630,8 +537,12 @@ public class BombermanGame extends Application {
                 music.stop();
                 music.dispose();
             }
-            music = new MediaPlayer(new Media(getClass().getResource("/sounds/kl-peach-game-over-iii-142453.mp3").toString()));
-            music.play();
+            try {
+                music = new MediaPlayer(new Media(getClass().getResource("/sounds/kl-peach-game-over-iii-142453.mp3").toString()));
+                music.play();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         if (time > 100000) {
             time = 100000;
@@ -642,11 +553,11 @@ public class BombermanGame extends Application {
         final int completionTime = 180;
 
         if (time == 0) {
+            if (music != null) {
+                music.stop();
+                music.dispose();
+            }
             try{
-                if (music != null) {
-                    music.stop();
-                    music.dispose();
-                }
                 music = new MediaPlayer(new Media(getClass().getResource("/sounds/new_level_music.mp3").toString()));
                 music.play();
             } catch (Exception e) {
@@ -665,16 +576,20 @@ public class BombermanGame extends Application {
             music.stop();
             music.dispose();
         }
-        music = new MediaPlayer(new Media(getClass().getResource("/sounds/backgroundMusic.m4a").toString()));
-        music.setOnEndOfMedia(new Runnable() {
-            public void run() {
-                music.seek(Duration.ZERO);
-                music.play();
-            }
-        });
-        music.play();
+        try {
+            music = new MediaPlayer(new Media(getClass().getResource("/sounds/backgroundMusic.m4a").toString()));
+            music.setOnEndOfMedia(new Runnable() {
+                public void run() {
+                    music.seek(Duration.ZERO);
+                    music.play();
+                }
+            });
+            music.play();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-        this.readDataFromFile();
+        GamePlayData.readDataFromFile();
         canvas.setHeight(Sprite.SCALED_SIZE * height);
         canvas.setWidth(Sprite.SCALED_SIZE * width);
         createMap();
@@ -689,7 +604,6 @@ public class BombermanGame extends Application {
         this.reset();
         label.setText(title);
         label.setVisible(true);
-
         double rootWidth = root.getBoundsInLocal().getWidth();
         double rootHeight = root.getBoundsInLocal().getHeight();
         double labelWidth = label.getBoundsInLocal().getWidth();

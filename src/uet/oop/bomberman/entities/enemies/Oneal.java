@@ -1,6 +1,7 @@
 package uet.oop.bomberman.entities.enemies;
 
 import javafx.scene.image.Image;
+import uet.oop.bomberman.MyMath;
 import uet.oop.bomberman.animation.OnealAnimation;
 
 public class Oneal extends Balloon {
@@ -11,6 +12,8 @@ public class Oneal extends Balloon {
     }
 
     public void update() {
+        this.speed = MyMath.getRandomNumber(1, 2);
+        this.handleCollision();
         this.handleMove();
         this.move();
         this.animation.setSprite(this);

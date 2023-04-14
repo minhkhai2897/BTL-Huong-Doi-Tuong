@@ -8,7 +8,7 @@ import uet.oop.bomberman.entities.MovingEntity;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Minvo extends MovingEntity {
+public class Minvo extends Balloon {
     public Minvo(int x, int y, Image img) {
         super(x, y, img);
         this.setSpeed(2);
@@ -16,6 +16,7 @@ public class Minvo extends MovingEntity {
     }
 
     public void update() {
+        this.handleCollision();
         this.handleMove();
         this.move();
         this.animation.setSprite(this);

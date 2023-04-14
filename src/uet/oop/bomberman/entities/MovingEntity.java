@@ -142,4 +142,11 @@ public abstract class MovingEntity extends Entity {
             }
         }
     }
+
+    protected void resetMoveVariable() {
+        this.moveLeft = false;
+        this.moveRight = false;
+        this.moveUp = false;
+        this.moveDown = false;
+    }
 }
