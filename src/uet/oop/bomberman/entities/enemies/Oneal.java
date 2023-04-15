@@ -7,12 +7,11 @@ import uet.oop.bomberman.animation.OnealAnimation;
 public class Oneal extends Balloon {
     public Oneal(int x, int y, Image img) {
         super(x, y, img);
-        this.setSpeed(2);
         animation = new OnealAnimation();
     }
 
     public void update() {
-        this.speed = MyMath.getRandomNumber(1, 2);
+        this.setSpeed(MyMath.getRandomNumber(1, 2));
         this.handleCollision();
         this.handleMove();
         this.move();
@@ -21,5 +20,10 @@ public class Oneal extends Balloon {
         this.ableToMoveLeft = true;
         this.ableToMoveRight = true;
         this.ableToMoveUp = true;
+    }
+
+    public void handleMove() {
+        int last = this.getLastMove();
+        this.randomDirectionMove(last);
     }
 }

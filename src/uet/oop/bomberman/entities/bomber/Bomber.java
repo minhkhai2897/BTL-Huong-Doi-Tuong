@@ -19,8 +19,6 @@ public class Bomber extends MovingEntity {
     public Bomber(int x, int y, Image img) {
         super( x, y, img);
         this.animation = new BomberAnimation();
-        this.setWallPass(true);
-        this.setSpeed(2);
     }
 
     public int getFlame() {

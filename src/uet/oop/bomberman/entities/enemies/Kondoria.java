@@ -20,4 +20,9 @@ public class Kondoria extends Balloon {
         this.ableToMoveRight = true;
         this.ableToMoveUp = true;
     }
+
+    public void handleMove() {
+        int last = this.getLastMove();
+        this.randomDirectionMove(last);
+    }
 }

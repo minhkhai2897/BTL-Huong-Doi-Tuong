@@ -6,11 +6,15 @@ import uet.oop.bomberman.MyMath;
 import uet.oop.bomberman.animation.BalloonAnimation;
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.MovingEntity;
+import uet.oop.bomberman.entities.bomber.Bomber;
+import uet.oop.bomberman.graphics.Sprite;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Balloon extends MovingEntity {
+    protected boolean useSpecialMove = true;
+    protected int actionCode = 0;
     public Balloon(int x, int y, Image img) {
         super(x, y, img);
         animation = new BalloonAnimation();
@@ -128,5 +132,116 @@ public class Balloon extends MovingEntity {
         return last;
     }
 
+    public void autoMoveToPlayer() {
+        // last: huong di chuyen cua lan di gan nhat (duoc chuyen thanh dang so de de xu ly)
+        int last = this.getLastMove();
+
+        // Khi tu dong di chuyen ve phia nguoi choi thi se co mot doan duong khong the di tiếp,
+        // không thể đi sang hai bên va chi co the quay lai
+        // phan nay de xu ly viec do
+        if (this.useSpecialMove) {
+            if ((last == 0 && ableToMoveLeft == false && ableToMoveUp == false && ableToMoveDown == false)
+                    || (last == 3 && ableToMoveRight == false && ableToMoveUp == false && ableToMoveDown == false)
+                    || (last == 1 && ableToMoveUp == false && ableToMoveLeft == false && ableToMoveRight == false)
+                    || (last == 2 && ableToMoveDown == false && ableToMoveLeft == false && ableToMoveRight == false))
+            {
+                this.useSpecialMove = false;
+            }
+        }
+
+        if (!this.useSpecialMove) {
+            if (last == 0) {
+                if (this.ableToMoveUp || this.ableToMoveDown) {
+                    this.ableToMoveLeft = false;
+                    this.useSpecialMove = true;
+                }
+            }
+            else if (last == 3) {
+                if (this.ableToMoveUp || this.ableToMoveDown) {
+                    this.ableToMoveRight = false;
+                    this.useSpecialMove = true;
+                }
+            }
+            else if (last == 1) {
+                if (this.ableToMoveLeft || this.ableToMoveRight) {
+                    this.ableToMoveUp = false;
+                    this.useSpecialMove = true;
+                }
+            }
+            else if (last == 2) {
+                if (this.ableToMoveLeft || this.ableToMoveRight) {
+                    this.ableToMoveDown = false;
+                    this.useSpecialMove = true;
+                }
+            }
+
+            this.randomDirectionMove(last);
+            return;
+        }
+
+        // Phan tu dong di chuyen ve phia nguoi choi
+        List<Entity> bombers = BombermanGame.getBombers();
+        if (bombers.size() > 0) {
+            Bomber bomber = (Bomber) bombers.get(0);
+
+            this.resetMoveVariable();
+            int bomberX = ((bomber.getX() + (int)bomber.getImg().getWidth() / 2) / Sprite.SCALED_SIZE) * Sprite.SCALED_SIZE;
+            int bomberY = ((bomber.getY() + (int)bomber.getImg().getHeight() / 2) / Sprite.SCALED_SIZE) * Sprite.SCALED_SIZE;
+            int minvoX = this.getX();
+            int minvoY = this.getY();
+
+            if (actionCode % 4 == 0) {
+                if (bomberX + Sprite.SCALED_SIZE < minvoX + this.img.getWidth()) {
+                    if (this.ableToMoveLeft) {
+                        this.moveLeft = true;
+                    } else {
+                        this.randomDirectionMove(last);
+                    }
+                }
+                else {
+                    actionCode = (actionCode + 1) % 4;
+                }
+            }
+            if (actionCode % 4 == 1) {
+                if (bomberY + Sprite.SCALED_SIZE < minvoY + this.img.getHeight()) {
+                    if (this.ableToMoveUp) {
+                        this.moveUp = true;
+                    }
+                    else {
+                        this.randomDirectionMove(last);
+                    }
+                }
+                else {
+                    actionCode = (actionCode + 1) % 4;
+                }
+            }
+            if (actionCode % 4 == 2) {
+                if (bomberX > minvoX) {
+                    if (this.ableToMoveRight) {
+                        this.moveRight = true;
+                    }
+                    else {
+                        this.randomDirectionMove(last);
+                    }
+                }
+                else {
+                    actionCode = (actionCode + 1) % 4;
+                }
+            }
+            if (actionCode % 4 == 3){
+                if (bomberY > minvoY) {
+                    if (this.ableToMoveDown) {
+                        this.moveDown = true;
+                    }
+                    else {
+                        this.randomDirectionMove(last);
+                    }
+                }
+                else {
+                    actionCode = (actionCode + 1) % 4;
+                }
+            }
+        }
+    }
 
 }
