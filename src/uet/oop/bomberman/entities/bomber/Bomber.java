@@ -26,7 +26,7 @@ public class Bomber extends MovingEntity {
     }
 
     public void setFlame(int flame) {
-        if (1 <= flame && flame <= 4) {
+        if (1 <= flame && flame <= 3) {
             this.flame = flame;
         }
     }
@@ -40,7 +40,7 @@ public class Bomber extends MovingEntity {
     }
 
     public void setBomb(int bomb) {
-        if (1 <= bomb && bomb <= 5) {
+        if (1 <= bomb && bomb <= 4) {
             this.bomb = bomb;
         }
     }

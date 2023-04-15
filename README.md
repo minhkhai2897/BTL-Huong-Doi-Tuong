@@ -19,6 +19,7 @@ Mô phỏng lại trò chơi [Bomberman](https://www.youtube.com/watch?v=mKIOVwq
 - ![](res/sprites/portal.png) *Portal* là đối tượng được giấu phía sau một đối tượng Brick. Khi Brick đó bị phá hủy, Portal sẽ hiện ra và nếu tất cả Enemy đã bị tiêu diệt thì người chơi có thể qua Level khác bằng cách di chuyển vào vị trí của Portal.
 
 Các *Item* cũng được giấu phía sau Brick và chỉ hiện ra khi Brick bị phá hủy. Bomber có thể sử dụng Item bằng cách di chuyển vào vị trí của Item. Thông tin về chức năng của các Item được liệt kê như dưới đây:
+(Nếu màn chơi khó quá thì ngươời chơi có thể sẽ nhận được một số item hiện ra sẵn)
 - ![](res/sprites/powerup_speed.png) *SpeedItem* Khi sử dụng Item này, Bomber sẽ được tăng vận tốc di chuyển thêm một giá trị thích hợp
 - ![](res/sprites/powerup_flames.png) *FlameItem* Item này giúp tăng phạm vi ảnh hưởng của Bomb khi nổ (độ dài các Flame lớn hơn)
 - ![](res/sprites/powerup_bombs.png) *BombItem* Thông thường, nếu không có đối tượng Bomb nào đang trong trạng thái kích hoạt, Bomber sẽ được đặt và kích hoạt duy nhất một đối tượng Bomb. Item này giúp tăng số lượng Bomb có thể đặt thêm một.
@@ -26,10 +27,10 @@ Các *Item* cũng được giấu phía sau Brick và chỉ hiện ra khi Brick 
 
 Có nhiều loại Enemy trong Bomberman. Gồm các loại sau:
 - ![](res/sprites/balloom_left1.png) *Balloon:* Di chuyển ngẫu nhiên với vận tốc bình thường
-- ![](res/sprites/oneal_left1.png) *Oneal:* Di chuyển ngẫu nhiên với vận tốc gấp đôi *Balloon*
-- ![](res/sprites/kondoria_left1.png) *Kondoria:* Di chuyển ngẫu nhiên với tốc độ bình thường, có thể đi xuyên tường
-- ![](res/sprites/minvo_left1.png) *Minvo:* Di chuyển ngẫu nhiên với tốc độ gấp đôi bình thường, chỉ di chuyển trái, phải
-- ![](res/sprites/doll_left1.png) *Doll:* Di chuyển ngẫu nhiên với tốc độ gấp đôi bình thường, chỉ di chuyển lên, xuống
+- ![](res/sprites/oneal_left1.png) *Oneal:* Di chuyển ngẫu nhiên với vận tốc ngẫu nhiên*
+- ![](res/sprites/kondoria_left1.png) *Kondoria:* Di chuyển ngẫu nhiên với vận tốc ngẫu nhiên, có thể đi xuyên tường
+- ![](res/sprites/minvo_left1.png) *Minvo:* Di chuyển đến vị trí của người chơi với tốc độ gấp đôi bình thường, có thể đi xuyên tường
+- ![](res/sprites/doll_left1.png) *Doll:* Di chuyển đến vị trí của người chơi với tốc độ gấp đôi bình thường
 
 ## Mô tả game play, xử lý va chạm và xử lý bom nổ
 - Trong một màn chơi, Bomber sẽ được người chơi di chuyển, đặt và kích hoạt Bomb với mục tiêu chính là tiêu diệt tất cả Enemy và tìm ra vị trí Portal để có thể qua màn mới
@@ -41,5 +42,5 @@ Có nhiều loại Enemy trong Bomberman. Gồm các loại sau:
 - Game hiện có 15 màn chơi.
 
 ## Hướng dẫn người chơi:
-- Di chuyển: A, S, D, W
+- Di chuyển: A, S, D, W Hoặc các phím mũi tên
 - Đặt bom: Space

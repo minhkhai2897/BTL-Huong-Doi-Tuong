@@ -1,6 +1,7 @@
 package uet.oop.bomberman.entities.enemies;
 
 import javafx.scene.image.Image;
+import uet.oop.bomberman.MyMath;
 import uet.oop.bomberman.animation.KondoriaAnimation;
 
 public class Kondoria extends Balloon {
@@ -11,6 +12,7 @@ public class Kondoria extends Balloon {
     }
 
     public void update() {
+        this.setSpeed(MyMath.getRandomNumber(1, 2));
         this.handleCollision();
         this.handleMove();
         this.move();
