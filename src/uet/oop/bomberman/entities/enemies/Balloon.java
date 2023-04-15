@@ -106,6 +106,11 @@ public class Balloon extends MovingEntity {
         }
     }
 
+    /**
+     * Left 0  Right 3  Up 1  Down 2.
+     * Con lai la -1.
+     * @return
+     */
     protected int getLastMove() {
         int last = -1;
 
