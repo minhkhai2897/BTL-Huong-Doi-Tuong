@@ -133,65 +133,69 @@ public class Balloon extends MovingEntity {
     }
 
     public void autoMoveToPlayer() {
-        // last: huong di chuyen cua lan di gan nhat (duoc chuyen thanh dang so de de xu ly)
-        int last = this.getLastMove();
-
-        // Khi tu dong di chuyen ve phia nguoi choi thi se co mot doan duong khong the di tiếp,
-        // không thể đi sang hai bên va chi co the quay lai
-        // phan nay de xu ly viec do
-        if (this.useSpecialMove) {
-            if ((last == 0 && ableToMoveLeft == false && ableToMoveUp == false && ableToMoveDown == false)
-                    || (last == 3 && ableToMoveRight == false && ableToMoveUp == false && ableToMoveDown == false)
-                    || (last == 1 && ableToMoveUp == false && ableToMoveLeft == false && ableToMoveRight == false)
-                    || (last == 2 && ableToMoveDown == false && ableToMoveLeft == false && ableToMoveRight == false))
-            {
-                this.useSpecialMove = false;
-            }
-        }
-
-        if (!this.useSpecialMove) {
-            if (last == 0) {
-                if (this.ableToMoveUp || this.ableToMoveDown) {
-                    this.ableToMoveLeft = false;
-                    this.useSpecialMove = true;
-                }
-            }
-            else if (last == 3) {
-                if (this.ableToMoveUp || this.ableToMoveDown) {
-                    this.ableToMoveRight = false;
-                    this.useSpecialMove = true;
-                }
-            }
-            else if (last == 1) {
-                if (this.ableToMoveLeft || this.ableToMoveRight) {
-                    this.ableToMoveUp = false;
-                    this.useSpecialMove = true;
-                }
-            }
-            else if (last == 2) {
-                if (this.ableToMoveLeft || this.ableToMoveRight) {
-                    this.ableToMoveDown = false;
-                    this.useSpecialMove = true;
-                }
-            }
-
-            this.randomDirectionMove(last);
-            return;
-        }
-
-        // Phan tu dong di chuyen ve phia nguoi choi
         List<Entity> bombers = BombermanGame.getBombers();
         if (bombers.size() > 0) {
             Bomber bomber = (Bomber) bombers.get(0);
 
-            this.resetMoveVariable();
-            int bomberX = ((bomber.getX() + (int)bomber.getImg().getWidth() / 2) / Sprite.SCALED_SIZE) * Sprite.SCALED_SIZE;
-            int bomberY = ((bomber.getY() + (int)bomber.getImg().getHeight() / 2) / Sprite.SCALED_SIZE) * Sprite.SCALED_SIZE;
-            int minvoX = this.getX();
-            int minvoY = this.getY();
+            int bomberX = ((bomber.getX() + (int) bomber.getImg().getWidth() / 2) / Sprite.SCALED_SIZE) * Sprite.SCALED_SIZE;
+            int bomberY = ((bomber.getY() + (int) bomber.getImg().getHeight() / 2) / Sprite.SCALED_SIZE) * Sprite.SCALED_SIZE;
+            int enemyX = this.getX();
+            int enemyY = this.getY();
 
+            // last: huong di chuyen cua lan di gan nhat (duoc chuyen thanh dang so de de xu ly)
+            int last = this.getLastMove();
+            this.resetMoveVariable();
+
+            // Khi tu dong di chuyen ve phia nguoi choi thi se co mot doan duong khong the di tiếp,
+            // không thể đi sang hai bên va chi co the quay lai
+            // phan nay de xu ly viec do
+            if (this.useSpecialMove) {
+                if ((actionCode == 0 && ableToMoveLeft == false && ableToMoveUp == false && ableToMoveDown == false)
+                        || (actionCode == 2 && ableToMoveRight == false && ableToMoveUp == false && ableToMoveDown == false)
+                        || (actionCode == 1 && ableToMoveUp == false && ableToMoveLeft == false && ableToMoveRight == false)
+                        || (actionCode == 3 && ableToMoveDown == false && ableToMoveLeft == false && ableToMoveRight == false))
+                {
+                    this.useSpecialMove = false;
+                }
+            }
+            if (!this.useSpecialMove) {
+                if (last == 0) {
+                    if (this.ableToMoveUp || this.ableToMoveDown) {
+                        this.useSpecialMove = true;
+                        this.ableToMoveLeft = false;
+                        updateBomberVerticalMovementLimits(bomberY, enemyY);
+                    }
+                }
+                else if (last == 3) {
+                    if (this.ableToMoveUp || this.ableToMoveDown) {
+                        this.useSpecialMove = true;
+                        this.ableToMoveRight = false;
+                        updateBomberVerticalMovementLimits(bomberY, enemyY);
+                    }
+                }
+                else if (last == 1) {
+                    if (this.ableToMoveLeft || this.ableToMoveRight) {
+                        this.useSpecialMove = true;
+                        this.ableToMoveUp = false;
+                        updateBomberHorizontalMovementLimits(bomberX, enemyX);
+                    }
+                }
+                else if (last == 2) {
+                    if (this.ableToMoveLeft || this.ableToMoveRight) {
+                        this.useSpecialMove = true;
+                        this.ableToMoveDown = false;
+                        updateBomberHorizontalMovementLimits(bomberX, enemyX);
+                    }
+                }
+
+                this.randomDirectionMove(last);
+                return;
+            }
+
+
+            // Phan tu dong di chuyen ve phia nguoi choi
             if (actionCode % 4 == 0) {
-                if (bomberX + Sprite.SCALED_SIZE < minvoX + this.img.getWidth()) {
+                if (bomberX + Sprite.SCALED_SIZE < enemyX + this.img.getWidth()) {
                     if (this.ableToMoveLeft) {
                         this.moveLeft = true;
                     } else {
@@ -203,7 +207,7 @@ public class Balloon extends MovingEntity {
                 }
             }
             if (actionCode % 4 == 1) {
-                if (bomberY + Sprite.SCALED_SIZE < minvoY + this.img.getHeight()) {
+                if (bomberY + Sprite.SCALED_SIZE < enemyY + this.img.getHeight()) {
                     if (this.ableToMoveUp) {
                         this.moveUp = true;
                     }
@@ -216,7 +220,7 @@ public class Balloon extends MovingEntity {
                 }
             }
             if (actionCode % 4 == 2) {
-                if (bomberX > minvoX) {
+                if (bomberX > enemyX) {
                     if (this.ableToMoveRight) {
                         this.moveRight = true;
                     }
@@ -229,7 +233,7 @@ public class Balloon extends MovingEntity {
                 }
             }
             if (actionCode % 4 == 3){
-                if (bomberY > minvoY) {
+                if (bomberY > enemyY) {
                     if (this.ableToMoveDown) {
                         this.moveDown = true;
                     }
@@ -244,4 +248,19 @@ public class Balloon extends MovingEntity {
         }
     }
 
+    protected void updateBomberVerticalMovementLimits(int bomberY, int enemyY) {
+        if (ableToMoveUp && bomberY + Sprite.SCALED_SIZE < enemyY + this.img.getHeight()) {
+            ableToMoveDown = false;
+        } else if (ableToMoveDown && bomberY > enemyY) {
+            ableToMoveUp = false;
+        }
+    }
+
+    protected void updateBomberHorizontalMovementLimits(int bomberX, int enemyX) {
+        if (ableToMoveLeft && bomberX + Sprite.SCALED_SIZE < enemyX + this.img.getWidth()) {
+            ableToMoveRight = false;
+        } else if (ableToMoveRight && bomberX > enemyX) {
+            ableToMoveLeft = false;
+        }
+    }
 }
