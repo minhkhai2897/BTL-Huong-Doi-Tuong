@@ -46,14 +46,14 @@ public class Bomber extends MovingEntity {
     }
 
     public void update() {
-        this.handleKeyPress(BombermanGame.getScene());
-        this.handleCollision();
-        this.move();
-        this.animation.setSprite(this);
         this.ableToMoveDown = true;
         this.ableToMoveLeft = true;
         this.ableToMoveRight = true;
         this.ableToMoveUp = true;
+        this.handleKeyPress(BombermanGame.getScene());
+        this.handleCollision();
+        this.move();
+        this.animation.setSprite(this);
     }
 
     /**
@@ -73,7 +73,8 @@ public class Bomber extends MovingEntity {
                 this.moveUp = true;
             } else if (event.getCode() == KeyCode.S || event.getCode() == KeyCode.DOWN) {
                 this.moveDown = true;
-            } else if (event.getCode() == KeyCode.A || event.getCode() == KeyCode.LEFT) {
+            }
+            if (event.getCode() == KeyCode.A || event.getCode() == KeyCode.LEFT) {
                 this.moveLeft = true;
             } else if (event.getCode() == KeyCode.D || event.getCode() == KeyCode.RIGHT) {
                 this.moveRight = true;
@@ -87,12 +88,14 @@ public class Bomber extends MovingEntity {
 
             if (event.getCode() == KeyCode.W || event.getCode() == KeyCode.UP) {
                 this.moveUp = false;
-            } else if (event.getCode() == KeyCode.S || event.getCode() == KeyCode.DOWN) {
+            }
+            if (event.getCode() == KeyCode.S || event.getCode() == KeyCode.DOWN) {
                 this.moveDown = false;
             }
             if (event.getCode() == KeyCode.A || event.getCode() == KeyCode.LEFT) {
                 this.moveLeft = false;
-            } else if (event.getCode() == KeyCode.D || event.getCode() == KeyCode.RIGHT) {
+            }
+            if (event.getCode() == KeyCode.D || event.getCode() == KeyCode.RIGHT) {
                 this.moveRight = false;
             }
         });

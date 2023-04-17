@@ -11,15 +11,15 @@ public class Oneal extends Balloon {
     }
 
     public void update() {
+        this.ableToMoveDown = true;
+        this.ableToMoveLeft = true;
+        this.ableToMoveRight = true;
+        this.ableToMoveUp = true;
         this.setSpeed(MyMath.getRandomNumber(1, 2));
         this.handleCollision();
         this.handleMove();
         this.move();
         this.animation.setSprite(this);
-        this.ableToMoveDown = true;
-        this.ableToMoveLeft = true;
-        this.ableToMoveRight = true;
-        this.ableToMoveUp = true;
     }
 
     public void handleMove() {

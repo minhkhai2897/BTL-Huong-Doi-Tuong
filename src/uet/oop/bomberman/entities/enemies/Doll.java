@@ -11,14 +11,14 @@ public class Doll extends Balloon {
     }
 
     public void update() {
-        this.handleCollision();
-        this.handleMove();
-        this.move();
-        this.animation.setSprite(this);
         this.ableToMoveDown = true;
         this.ableToMoveUp = true;
         this.ableToMoveLeft = true;
         this.ableToMoveRight = true;
+        this.handleCollision();
+        this.handleMove();
+        this.move();
+        this.animation.setSprite(this);
     }
     public void handleMove() {
         this.autoMoveToPlayer();

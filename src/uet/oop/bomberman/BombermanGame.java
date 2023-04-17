@@ -34,7 +34,7 @@ public class BombermanGame extends Application {
     private static GraphicsContext gc;
     private static Label label;
     private static MediaPlayer music;
-    private AudioClip bombExplosionSound;
+    private static AudioClip bombExplosionSound;
     private static AudioClip placedBombSound;
     private static AudioClip moveSound;
     private static int level = 0;

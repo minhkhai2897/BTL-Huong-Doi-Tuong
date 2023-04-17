@@ -21,14 +21,14 @@ public class Balloon extends MovingEntity {
     }
 
     public void update() {
-        this.handleCollision();
-        this.handleMove();
-        this.move();
-        this.animation.setSprite(this);
         this.ableToMoveDown = true;
         this.ableToMoveLeft = true;
         this.ableToMoveRight = true;
         this.ableToMoveUp = true;
+        this.handleCollision();
+        this.handleMove();
+        this.move();
+        this.animation.setSprite(this);
     }
 
     /**
