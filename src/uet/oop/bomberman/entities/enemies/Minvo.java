@@ -3,7 +3,7 @@ package uet.oop.bomberman.entities.enemies;
 import javafx.scene.image.Image;
 import uet.oop.bomberman.animation.MinvoAnimation;
 
-public class Minvo extends Balloon {
+public class Minvo extends Enemy {
     public void update() {
         this.ableToMoveLeft = true;
         this.ableToMoveRight = true;

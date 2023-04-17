@@ -4,7 +4,7 @@ import javafx.scene.image.Image;
 import uet.oop.bomberman.MyMath;
 import uet.oop.bomberman.animation.OnealAnimation;
 
-public class Oneal extends Balloon {
+public class Oneal extends Enemy {
     public Oneal(int x, int y, Image img) {
         super(x, y, img);
         animation = new OnealAnimation();

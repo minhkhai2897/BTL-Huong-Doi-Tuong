@@ -4,7 +4,7 @@ import javafx.scene.image.Image;
 import uet.oop.bomberman.MyMath;
 import uet.oop.bomberman.animation.KondoriaAnimation;
 
-public class Kondoria extends Balloon {
+public class Kondoria extends Enemy {
     public Kondoria(int x, int y, Image img) {
         super(x, y, img);
         this.wallPass = true;
