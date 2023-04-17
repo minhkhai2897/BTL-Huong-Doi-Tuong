@@ -62,7 +62,7 @@ public class Bomber extends MovingEntity {
      */
     public void handleKeyPress(Scene scene) {
         scene.setOnKeyPressed(event -> {
-            if (event.getCode() == KeyCode.SPACE) {
+            if (event.getCode() == KeyCode.SPACE || event.getCode() == KeyCode.X) {
                 this.createBomb++;
                 if (this.createBomb > 100000) {
                     this.createBomb = 10;
@@ -71,18 +71,20 @@ public class Bomber extends MovingEntity {
 
             if (event.getCode() == KeyCode.W || event.getCode() == KeyCode.UP) {
                 this.moveUp = true;
-            } else if (event.getCode() == KeyCode.S || event.getCode() == KeyCode.DOWN) {
+            }
+            if (event.getCode() == KeyCode.S || event.getCode() == KeyCode.DOWN) {
                 this.moveDown = true;
             }
             if (event.getCode() == KeyCode.A || event.getCode() == KeyCode.LEFT) {
                 this.moveLeft = true;
-            } else if (event.getCode() == KeyCode.D || event.getCode() == KeyCode.RIGHT) {
+            }
+            if (event.getCode() == KeyCode.D || event.getCode() == KeyCode.RIGHT) {
                 this.moveRight = true;
             }
         });
 
         scene.setOnKeyReleased(event -> {
-            if (event.getCode() == KeyCode.SPACE) {
+            if (event.getCode() == KeyCode.SPACE || event.getCode() == KeyCode.X) {
                 this.createBomb = 0;
             }
 

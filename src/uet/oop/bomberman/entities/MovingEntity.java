@@ -78,12 +78,14 @@ public abstract class MovingEntity extends Entity {
         }
         if (moveLeft && this.ableToMoveLeft) {
             this.x -= this.getSpeed();
-        } else if (moveRight && this.ableToMoveRight) {
+        }
+        if (moveRight && this.ableToMoveRight) {
             this.x += this.getSpeed();
         }
         if (moveUp && this.ableToMoveUp) {
             this.y -= this.getSpeed();
-        } else if (moveDown && this.ableToMoveDown) {
+        }
+        if (moveDown && this.ableToMoveDown) {
             this.y += this.getSpeed();
         }
     }

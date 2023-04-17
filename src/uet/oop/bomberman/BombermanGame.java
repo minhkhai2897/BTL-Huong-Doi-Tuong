@@ -518,31 +518,13 @@ public class BombermanGame extends Application {
     public void handleLose(Stage stage) {
         final int completionTime = 120;
         if (time == 0) {
-            if (music != null) {
-                music.stop();
-                music.dispose();
-            }
-            try {
-                music = new MediaPlayer(new Media(getClass().getResource("/sounds/just_died.wav").toString()));
-                music.play();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            music = AudioManager.setAndPlayMusic(music, getClass().getResource("/sounds/just_died.wav").toString());
         }
         time++;
 
         if (time == completionTime) {
             this.initializeTitleScreen("YOU LOSE!");
-            if (music != null) {
-                music.stop();
-                music.dispose();
-            }
-            try {
-                music = new MediaPlayer(new Media(getClass().getResource("/sounds/kl-peach-game-over-iii-142453.mp3").toString()));
-                music.play();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            music = AudioManager.setAndPlayMusic(music, getClass().getResource("/sounds/kl-peach-game-over-iii-142453.mp3").toString());
         }
         if (time > 100000) {
             time = 100000;
@@ -553,16 +535,7 @@ public class BombermanGame extends Application {
         final int completionTime = 180;
 
         if (time == 0) {
-            if (music != null) {
-                music.stop();
-                music.dispose();
-            }
-            try{
-                music = new MediaPlayer(new Media(getClass().getResource("/sounds/new_level_music.mp3").toString()));
-                music.play();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            music = AudioManager.setAndPlayMusic(music, getClass().getResource("/sounds/new_level_music.mp3").toString());
             this.initializeTitleScreen("STAGE  " + (this.level + 1));
         }
         time++;
@@ -572,23 +545,7 @@ public class BombermanGame extends Application {
 
         label.setVisible(false);
 
-        if (music != null) {
-            music.stop();
-            music.dispose();
-        }
-        try {
-            music = new MediaPlayer(new Media(getClass().getResource("/sounds/backgroundMusic.m4a").toString()));
-            music.setOnEndOfMedia(new Runnable() {
-                public void run() {
-                    music.seek(Duration.ZERO);
-                    music.play();
-                }
-            });
-            music.play();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
+        music = AudioManager.setAndPlayMusicLoop(music, getClass().getResource("/sounds/backgroundMusic.m4a").toString());
         GamePlayData.readDataFromFile();
         canvas.setHeight(Sprite.SCALED_SIZE * height);
         canvas.setWidth(Sprite.SCALED_SIZE * width);
@@ -630,28 +587,16 @@ public class BombermanGame extends Application {
             if ((bomber.isMoveLeft() && bomber.isAbleToMoveLeft())
                 || (bomber.isMoveRight() && bomber.isAbleToMoveRight()))
             {
-                try {
-                    if (moveSound != null && moveSound.isPlaying()) {
-                        break;
-                    }
-                    this.moveSound = new AudioClip(getClass().getResource( "/sounds/src_main_resources_assets_sounds_walk_1.wav").toString());
-                    this.moveSound.play();
-                } catch (Exception e) {
-                    e.printStackTrace();
+                if (moveSound == null || !moveSound.isPlaying()) {
+                    moveSound = AudioManager.setAndPlaySound(moveSound, getClass().getResource( "/sounds/src_main_resources_assets_sounds_walk_1.wav").toString());
                 }
             }
 
             if ((bomber.isMoveUp() && bomber.isAbleToMoveUp())
                 || (bomber.isMoveDown() && bomber.isAbleToMoveDown()))
             {
-                try {
-                    if (moveSound != null && moveSound.isPlaying()) {
-                        break;
-                    }
-                    this.moveSound = new AudioClip(getClass().getResource( "/sounds/Bomberman SFX (2).wav").toString());
-                    this.moveSound.play();
-                } catch (Exception e) {
-                    e.printStackTrace();
+                if (moveSound == null || !moveSound.isPlaying()) {
+                    moveSound = AudioManager.setAndPlaySound(moveSound, getClass().getResource( "/sounds/Bomberman SFX (2).wav").toString());
                 }
             }
         }
@@ -660,23 +605,11 @@ public class BombermanGame extends Application {
             if (bombs.get(i).getHp() > 0) {
                 break;
             }
-            try {
-                this.bombExplosionSound = new AudioClip(getClass().getResource("/sounds/bomb_explosion.wav").toString());
-                this.bombExplosionSound.play();
-            }
-            catch (Exception e) {
-                e.printStackTrace();
-            }
+            this.bombExplosionSound = AudioManager.setAndPlaySound(this.bombExplosionSound, getClass().getResource("/sounds/bomb_explosion.wav").toString());
         }
 
         if (this.bombAdded) {
-            try {
-                this.placedBombSound = new AudioClip(getClass().getResource("/sounds/src_main_resources_assets_sounds_placed_bomb.wav").toString());
-                this.placedBombSound.play();
-            }
-            catch (Exception e) {
-                e.printStackTrace();
-            }
+            this.placedBombSound = AudioManager.setAndPlaySound(placedBombSound, getClass().getResource("/sounds/src_main_resources_assets_sounds_placed_bomb.wav").toString());
         }
     }
 }

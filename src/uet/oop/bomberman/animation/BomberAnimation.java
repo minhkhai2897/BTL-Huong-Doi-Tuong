@@ -49,10 +49,10 @@ public class BomberAnimation extends Animation{
             movingEntity.setImg(this.handle(left, "left"));
         } else if (movingEntity.isMoveRight() && movingEntity.isAbleToMoveRight()) {
             movingEntity.setImg(this.handle(right, "right"));
-        } else if (movingEntity.isMoveUp() && movingEntity.isAbleToMoveUp()) {
-            movingEntity.setImg(this.handle(up, "up"));
         } else if (movingEntity.isMoveDown() && movingEntity.isAbleToMoveDown()) {
             movingEntity.setImg(this.handle(down, "down"));
+        } else if (movingEntity.isMoveUp() && movingEntity.isAbleToMoveUp()) {
+            movingEntity.setImg(this.handle(up, "up"));
         }
     }
 }
