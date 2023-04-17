@@ -44,6 +44,11 @@ public class BomberAnimation extends Animation{
             }
             return;
         }
+        else {
+            this.numberOfFrames = 6;
+            this.countDeadFrames = 0;
+            this.setFinishDeadAnimation(false);
+        }
 
         if (movingEntity.isMoveLeft() && movingEntity.isAbleToMoveLeft()) {
             movingEntity.setImg(this.handle(left, "left"));

@@ -17,6 +17,10 @@ public abstract class Animation {
         return finishDeadAnimation;
     }
 
+    public void setFinishDeadAnimation(boolean finishDeadAnimation) {
+        this.finishDeadAnimation = finishDeadAnimation;
+    }
+
     /**
      * Truyen vao mot danh sach cac anh va sau đó tra ve anh duoc chon.
      * sau numberOfFrames khung hình thì sẽ thay 1 anh moi. den het thi lai quay ve anh dau

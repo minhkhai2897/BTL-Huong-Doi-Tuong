@@ -33,10 +33,13 @@ public class BombermanGame extends Application {
     private static Canvas canvas;
     private static GraphicsContext gc;
     private static Label label;
+    private static Label levelLabel;
+    private static Label livesLeftLabel;
     private static MediaPlayer music;
     private static AudioClip bombExplosionSound;
     private static AudioClip placedBombSound;
     private static AudioClip moveSound;
+    private static int livesLeft = 2;
     private static int level = 0;
     private int time = 0;
     private boolean newLevel = true;
@@ -136,16 +139,27 @@ public class BombermanGame extends Application {
 
     public void start(Stage stage) {
         GamePlayData.loadMapListFromFile();
-        canvas = new Canvas(Sprite.SCALED_SIZE * width, Sprite.SCALED_SIZE * height);
+        canvas = new Canvas(Sprite.SCALED_SIZE * width, Sprite.SCALED_SIZE * (height + 2));
         gc = canvas.getGraphicsContext2D();
         root = new Group();
         root.getChildren().add(canvas);
         scene = new Scene(root);
-
         scene.setFill(Color.BLACK);
+
         label = new Label("STATE  1");
         label.setStyle("-fx-font-size: 36; -fx-text-fill: white;");
         root.getChildren().add(label);
+        levelLabel = new Label("  STAGE  " + (this.level + 1));
+        levelLabel.setStyle("-fx-font-size: 24; -fx-text-fill: white;");
+        levelLabel.setLayoutX(24); levelLabel.setLayoutY(15);
+        levelLabel.setVisible(false);
+        root.getChildren().add(levelLabel);
+        livesLeftLabel = new Label("LEFT  " + this.livesLeft);
+        livesLeftLabel.setStyle("-fx-font-size: 24; -fx-text-fill: white;");
+        livesLeftLabel.setLayoutX(892); livesLeftLabel.setLayoutY(15);
+        livesLeftLabel.setVisible(false);
+        root.getChildren().add(livesLeftLabel);
+
         stage.setTitle("BTL_Bomberman");
         stage.setScene(scene);
         stage.show();
@@ -156,26 +170,26 @@ public class BombermanGame extends Application {
                 render();
 
                 if (isLevelComplete) {
-                    boolean continueProcess = handleLevelCompletion(stage);
+                    boolean continueProcess = handleLevelCompletion();
                     if (!continueProcess) {
                         return;
                     }
                 }
 
                 if (newLevel) {
-                    boolean continueProcess = initializeGameView(stage);
+                    boolean continueProcess = initializeGameView();
                     if (!continueProcess) {
                         return;
                     }
                 }
 
                 if (win) {
-                    handleWin(stage);
+                    handleWin();
                     return;
                 }
 
                 if (lose) {
-                    handleLose(stage);
+                    handleLose();
                     return;
                 }
 
@@ -196,11 +210,15 @@ public class BombermanGame extends Application {
 
         this.addBomb();
         handleSound();
-        this.removeFinishedElements();
         removeDeadEntity();
+        this.removeFinishedElements();
 
-        if (bombers.size() == 0 && deads.size() == 0) {
-            lose = true;
+        if (deads.size() == 0) {
+            for (int i = 0; i < bombers.size(); i++) {
+                if ((bombers.get(i)).getHp() == 0 ) {
+                    lose = true;
+                }
+            }
         }
     }
 
@@ -215,7 +233,11 @@ public class BombermanGame extends Application {
         deads.forEach(g -> g.render(gc));
         enemies.forEach(g -> g.render(gc));
         if (walls.size() > 0) {
-            bombers.forEach(g -> g.render(gc));
+            for (int i = 0; i < bombers.size(); i++) {
+                if (bombers.get(i).getHp() > 0) {
+                    bombers.get(i).render(gc);
+                }
+            }
         }
         flames.forEach(g -> g.render(gc));
     }
@@ -226,58 +248,59 @@ public class BombermanGame extends Application {
         for (int i = 0; i < height; i++) {
             String s = map.get(i);
             for (int j = 0; j < width; j++) {
-                Entity object = new Grass(j, i, Sprite.grass.getFxImage());
+                Entity object = new Grass(j, i + 2, Sprite.grass.getFxImage());
                 grasses.add(object);
                 char c = s.charAt(j);
 
                 if (c == 'p') {
                     if (bombers.size() != 0) {
                         bombers.get(0).setX(j);
-                        bombers.get(0).setY(i);
+                        bombers.get(0).setY(i + 2);
+                        bombers.get(0).setImg(Sprite.player_down.getFxImage());
                     }
                     else {
-                        object = new Bomber(j, i, Sprite.player_down.getFxImage());
+                        object = new Bomber(j, i + 2, Sprite.player_down.getFxImage());
                         bombers.add(object);
                     }
                 }
                 else if ('0' <= c && c <= '9') {
                     if (c == '1') {
-                        object = new Balloon(j, i, Sprite.balloom_left1.getFxImage());
+                        object = new Balloon(j, i + 2, Sprite.balloom_left1.getFxImage());
                     }
                     else if (c == '2') {
-                        object = new Oneal(j, i, Sprite.oneal_right1.getFxImage());
+                        object = new Oneal(j, i + 2, Sprite.oneal_right1.getFxImage());
                     } else if (c == '3') {
-                        object = new Kondoria(j, i, Sprite.kondoria_left1.getFxImage());
+                        object = new Kondoria(j, i + 2, Sprite.kondoria_left1.getFxImage());
                     } else if (c == '4') {
-                        object = new Minvo(j, i, Sprite.minvo_left1.getFxImage());
+                        object = new Minvo(j, i + 2, Sprite.minvo_left1.getFxImage());
                     } else if (c == '5') {
-                        object = new Doll(j, i, Sprite.doll_left1.getFxImage());
+                        object = new Doll(j, i + 2, Sprite.doll_left1.getFxImage());
                     } else {
-                        object = new Balloon(j, i, Sprite.balloom_left1.getFxImage());
+                        object = new Balloon(j, i + 2, Sprite.balloom_left1.getFxImage());
                     }
                     enemies.add(object);
                 }
                 else {
                     if (c == '#') {
-                        object = new Wall(j, i, Sprite.wall.getFxImage());
+                        object = new Wall(j, i + 2, Sprite.wall.getFxImage());
                         walls.add(object);
                     } else if (c == '*') {
-                        object = new Brick(j, i, Sprite.brick.getFxImage());
+                        object = new Brick(j, i + 2, Sprite.brick.getFxImage());
                         bricks.add(object);
                     } else if (c == 'x') {
-                        object = new Portal(j, i, Sprite.portal.getFxImage());
+                        object = new Portal(j, i + 2, Sprite.portal.getFxImage());
                         portals.add(object);
                     } else if (c == 'b') {
-                        object = new PowerupBomb(j, i, Sprite.powerup_bombs.getFxImage());
+                        object = new PowerupBomb(j, i + 2, Sprite.powerup_bombs.getFxImage());
                         items.add(object);
                     } else if (c == 'f') {
-                        object = new PowerupFlame(j, i, Sprite.powerup_flames.getFxImage());
+                        object = new PowerupFlame(j, i + 2, Sprite.powerup_flames.getFxImage());
                         items.add(object);
                     } else if (c == 's') {
-                        object = new PowerupSpeed(j, i, Sprite.powerup_speed.getFxImage());
+                        object = new PowerupSpeed(j, i + 2, Sprite.powerup_speed.getFxImage());
                         items.add(object);
                     }   else if (c == 'w') {
-                        object = new PowerupWallPass(j, i, Sprite.powerup_wallpass.getFxImage());
+                        object = new PowerupWallPass(j, i + 2, Sprite.powerup_wallpass.getFxImage());
                         items.add(object);
                     }
                 }
@@ -349,6 +372,9 @@ public class BombermanGame extends Application {
     public void removeFinishedElements() {
         for (int i = 0; i < deads.size(); i++) {
             if (deads.get(i).getAnimation().isFinishDeadAnimation()) {
+                if (deads.get(i) instanceof Bomber) {
+                    bombers.add(deads.get(i));
+                }
                 deads.remove(i--);
             }
         }
@@ -475,7 +501,7 @@ public class BombermanGame extends Application {
         }
     }
 
-    public boolean handleLevelCompletion(Stage stage) {
+    public boolean handleLevelCompletion() {
         final int completionTime = 180;
 
         if (time == 0) {
@@ -507,7 +533,7 @@ public class BombermanGame extends Application {
         return true;
     }
 
-    public void handleWin(Stage stage) {
+    public void handleWin() {
         if (time == 0) {
             this.initializeTitleScreen("YOU WIN!");
             // them nhac va lap lai nhac mai mai
@@ -515,28 +541,41 @@ public class BombermanGame extends Application {
         time = 1;
     }
 
-    public void handleLose(Stage stage) {
+    public void handleLose() {
         final int completionTime = 120;
         if (time == 0) {
             music = AudioManager.setAndPlayMusic(music, getClass().getResource("/sounds/just_died.wav").toString());
         }
-        time++;
+        time = (time < 10000 ? (time + 1) : 10000);
+
+        if (time == completionTime && livesLeft > 0) {
+            this.time = 0;
+            this.lose = false;
+            this.level--;
+            this.livesLeft--;
+            livesLeftLabel.setText("LEFT  " + this.livesLeft);
+            this.newLevel = true;
+            for (int i = 0; i < bombers.size(); i++) {
+                bombers.get(i).setHp(1);
+                bombers.get(i).setImg(Sprite.player_down_1.getFxImage());
+            }
+        }
 
         if (time == completionTime) {
             this.initializeTitleScreen("YOU LOSE!");
             music = AudioManager.setAndPlayMusic(music, getClass().getResource("/sounds/kl-peach-game-over-iii-142453.mp3").toString());
         }
-        if (time > 100000) {
-            time = 100000;
-        }
     }
 
-    public boolean initializeGameView(Stage stage) {
+    public boolean initializeGameView() {
         final int completionTime = 180;
 
         if (time == 0) {
+            levelLabel.setVisible(false);
+            livesLeftLabel.setVisible(false);
             music = AudioManager.setAndPlayMusic(music, getClass().getResource("/sounds/new_level_music.mp3").toString());
             this.initializeTitleScreen("STAGE  " + (this.level + 1));
+            levelLabel.setText("STAGE  " + (this.level + 1));
         }
         time++;
         if (time < completionTime) {
@@ -544,10 +583,12 @@ public class BombermanGame extends Application {
         }
 
         label.setVisible(false);
+        levelLabel.setVisible(true);
+        livesLeftLabel.setVisible(true);
 
         music = AudioManager.setAndPlayMusicLoop(music, getClass().getResource("/sounds/backgroundMusic.m4a").toString());
         GamePlayData.readDataFromFile();
-        canvas.setHeight(Sprite.SCALED_SIZE * height);
+        canvas.setHeight(Sprite.SCALED_SIZE * (height + 2));
         canvas.setWidth(Sprite.SCALED_SIZE * width);
         createMap();
 
@@ -558,6 +599,8 @@ public class BombermanGame extends Application {
     }
 
     public void initializeTitleScreen(String title) {
+        levelLabel.setVisible(false);
+        livesLeftLabel.setVisible(false);
         this.reset();
         label.setText(title);
         label.setVisible(true);
