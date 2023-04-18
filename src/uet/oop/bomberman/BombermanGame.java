@@ -39,6 +39,8 @@ public class BombermanGame extends Application {
     private static AudioClip bombExplosionSound;
     private static AudioClip placedBombSound;
     private static AudioClip moveSound;
+    private static AudioClip powerup;
+    private static AudioClip playerDeath;
     private static int livesLeft = 2;
     private static int level = 0;
     private int time = 0;
@@ -495,6 +497,18 @@ public class BombermanGame extends Application {
             }
 
             if (!add) {
+                for (int j = 0; j < bombers.size(); j++) {
+                    if (flame.intersects(bombers.get(j))) {
+                        bombers.get(j).setHp(0);
+                        break;
+                    }
+                }
+                for (int j = 0; j < enemies.size(); j++) {
+                    if (flame.intersects(enemies.get(j))) {
+                        enemies.get(j).setHp(0);
+                        break;
+                    }
+                }
                 break;
             }
             flames.add(flame);
@@ -536,7 +550,7 @@ public class BombermanGame extends Application {
     public void handleWin() {
         if (time == 0) {
             this.initializeTitleScreen("YOU WIN!");
-            // them nhac va lap lai nhac mai mai
+            music = AudioManager.setAndPlayMusic(music, getClass().getResource("/sounds/src_main_resources_assets_sounds_ending (2).wav").toString());
         }
         time = 1;
     }
@@ -563,7 +577,7 @@ public class BombermanGame extends Application {
 
         if (time == completionTime) {
             this.initializeTitleScreen("YOU LOSE!");
-            music = AudioManager.setAndPlayMusic(music, getClass().getResource("/sounds/kl-peach-game-over-iii-142453.mp3").toString());
+            music = AudioManager.setAndPlayMusic(music, getClass().getResource("/sounds/src_main_resources_sounds_Game_Over.wav").toString());
         }
     }
 
@@ -586,7 +600,7 @@ public class BombermanGame extends Application {
         levelLabel.setVisible(true);
         livesLeftLabel.setVisible(true);
 
-        music = AudioManager.setAndPlayMusicLoop(music, getClass().getResource("/sounds/backgroundMusic.m4a").toString());
+        music = AudioManager.setAndPlayMusicLoop(music, getClass().getResource("/sounds/src_main_resources_assets_music_stage_theme.mp3").toString());
         GamePlayData.readDataFromFile();
         canvas.setHeight(Sprite.SCALED_SIZE * (height + 2));
         canvas.setWidth(Sprite.SCALED_SIZE * width);
@@ -648,11 +662,24 @@ public class BombermanGame extends Application {
             if (bombs.get(i).getHp() > 0) {
                 break;
             }
-            this.bombExplosionSound = AudioManager.setAndPlaySound(this.bombExplosionSound, getClass().getResource("/sounds/bomb_explosion.wav").toString());
+            this.bombExplosionSound = AudioManager.setAndPlaySound(this.bombExplosionSound, getClass().getResource("/sounds/src_main_resources_assets_sounds_explosion.wav").toString());
         }
 
         if (this.bombAdded) {
-            this.placedBombSound = AudioManager.setAndPlaySound(placedBombSound, getClass().getResource("/sounds/src_main_resources_assets_sounds_placed_bomb.wav").toString());
+            this.placedBombSound = AudioManager.setAndPlaySound(this.placedBombSound, getClass().getResource("/sounds/src_main_resources_assets_sounds_placed_bomb.wav").toString());
+        }
+
+        for (int i = 0; i < items.size(); i++) {
+            if (items.get(i).getHp() < 1) {
+                this.powerup = AudioManager.setAndPlaySound(this.powerup, getClass().getResource("/sounds/src_main_resources_assets_sounds_powerup.wav").toString());
+            }
+        }
+        for (int i = 0; i < bombers.size(); i++) {
+            if (bombers.get(i).getHp() < 1) {
+                if (this.playerDeath == null || !this.playerDeath.isPlaying()) {
+                    this.playerDeath = AudioManager.setAndPlaySound(this.playerDeath, getClass().getResource("/sounds/src_main_resources_sounds_sound effects_death.wav").toString());
+                }
+            }
         }
     }
 }
