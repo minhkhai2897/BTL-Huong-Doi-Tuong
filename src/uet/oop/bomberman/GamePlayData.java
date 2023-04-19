@@ -1,14 +1,34 @@
 package uet.oop.bomberman;
 
+import javafx.scene.SubScene;
+import javafx.scene.text.Font;
 import uet.oop.bomberman.entities.Entity;
+import uet.oop.bomberman.entities.bomber.Bomber;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class GamePlayData {
+
+    public static Font loadFont(String path) {
+        Font font = null;
+        try {
+            URL url = new URL(path);
+            InputStream inputStream = url.openStream();
+            font = Font.loadFont(inputStream, 24);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return font;
+    }
+
     public static void loadMapListFromFile() {
         List<String> mapList = new ArrayList<>();
         mapList.clear();
@@ -29,7 +49,6 @@ public class GamePlayData {
     }
 
     public static void readDataFromFile() {
-        List<String> map = new ArrayList<>();
         List<String> mapList = BombermanGame.getMapList();
 
         try {
@@ -41,10 +60,16 @@ public class GamePlayData {
             BombermanGame.setHeight(scaner.nextInt());
             BombermanGame.setWidth(scaner.nextInt());
 
-            String line = scaner.nextLine();;
+            String line = scaner.nextLine();
+            List<List<Character>> map = new ArrayList<>();
             for (int i = 0; i < BombermanGame.getHeight(); i++) {
+                List<Character> list = new ArrayList<>();
                 line = scaner.nextLine();
-                map.add(line);
+                for (int j = 0; j < BombermanGame.getWidth(); j++) {
+                    char c = line.charAt(j);
+                    list.add(c);
+                }
+                map.add(list);
             }
             BombermanGame.setMap(map);
             scaner.close();

@@ -13,6 +13,8 @@ import javafx.scene.media.AudioClip;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import uet.oop.bomberman.entities.bomber.Bomber;
@@ -32,6 +34,7 @@ public class BombermanGame extends Application {
     private static Scene scene;
     private static Canvas canvas;
     private static GraphicsContext gc;
+    private static Font font;
     private static Label label;
     private static Label levelLabel;
     private static Label livesLeftLabel;
@@ -44,13 +47,15 @@ public class BombermanGame extends Application {
     private static int livesLeft = 2;
     private static int level = 0;
     private int time = 0;
-    private boolean newLevel = true;
     private static boolean isLevelComplete = false;
+    private boolean ableToPlayFindTheDoorMusic = true;
+    private boolean ableToPlayPlayerDeathSound = false;
+    private boolean newLevel = true;
     private boolean bombAdded = false;
     private boolean win = false;
     private boolean lose = false;
     private static List<String> mapList = new ArrayList<>();
-    private static List<String> map = new ArrayList<>();
+    private static List<List<Character>> map = new ArrayList<>();
     private static List<Entity> grasses = new ArrayList<>();
     private static List<Entity> enemies = new ArrayList<>();
     private static List<Entity> items = new ArrayList<>();
@@ -80,6 +85,14 @@ public class BombermanGame extends Application {
 
     public static List<Entity> getItems() {
         return items;
+    }
+
+    public static void setMap(List<List<Character>> map) {
+        BombermanGame.map = map;
+    }
+
+    public static int getWidth() {
+        return width;
     }
 
     public static List<Entity> getWalls() {
@@ -126,10 +139,6 @@ public class BombermanGame extends Application {
         return height;
     }
 
-    public static void setMap(List<String> map) {
-        BombermanGame.map = map;
-    }
-
     public static void setMapList(List<String> mapList) {
         BombermanGame.mapList = mapList;
     }
@@ -141,6 +150,8 @@ public class BombermanGame extends Application {
 
     public void start(Stage stage) {
         GamePlayData.loadMapListFromFile();
+        font = GamePlayData.loadFont(getClass().getResource("/font/calibrib.ttf").toString());
+
         canvas = new Canvas(Sprite.SCALED_SIZE * width, Sprite.SCALED_SIZE * (height + 2));
         gc = canvas.getGraphicsContext2D();
         root = new Group();
@@ -151,17 +162,22 @@ public class BombermanGame extends Application {
         label = new Label("STATE  1");
         label.setStyle("-fx-font-size: 36; -fx-text-fill: white;");
         root.getChildren().add(label);
+
         levelLabel = new Label("  STAGE  " + (this.level + 1));
-        levelLabel.setStyle("-fx-font-size: 24; -fx-text-fill: white;");
-        levelLabel.setLayoutX(24); levelLabel.setLayoutY(15);
+        levelLabel.setFont(font);
+        levelLabel.setStyle("-fx-text-fill: white;");
+        levelLabel.setLayoutX(24); levelLabel.setLayoutY(17);
         levelLabel.setVisible(false);
         root.getChildren().add(levelLabel);
+
         livesLeftLabel = new Label("LEFT  " + this.livesLeft);
-        livesLeftLabel.setStyle("-fx-font-size: 24; -fx-text-fill: white;");
-        livesLeftLabel.setLayoutX(892); livesLeftLabel.setLayoutY(15);
+        livesLeftLabel.setFont(font);
+        livesLeftLabel.setStyle("-fx-text-fill: white;");
+        livesLeftLabel.setLayoutX(892); livesLeftLabel.setLayoutY(17);
         livesLeftLabel.setVisible(false);
         root.getChildren().add(livesLeftLabel);
 
+        stage.setResizable(false);
         stage.setTitle("BTL_Bomberman");
         stage.setScene(scene);
         stage.show();
@@ -248,11 +264,10 @@ public class BombermanGame extends Application {
         this.reset();
 
         for (int i = 0; i < height; i++) {
-            String s = map.get(i);
             for (int j = 0; j < width; j++) {
                 Entity object = new Grass(j, i + 2, Sprite.grass.getFxImage());
                 grasses.add(object);
-                char c = s.charAt(j);
+                char c = map.get(i).get(j);
 
                 if (c == 'p') {
                     if (bombers.size() != 0) {
@@ -418,6 +433,7 @@ public class BombermanGame extends Application {
             if (bombers.get(i).getHp() <= 0) {
                 deads.add(bombers.get(i));
                 bombers.remove(i--);
+                ableToPlayPlayerDeathSound = true;
             }
         }
 
@@ -599,7 +615,9 @@ public class BombermanGame extends Application {
         label.setVisible(false);
         levelLabel.setVisible(true);
         livesLeftLabel.setVisible(true);
+        scene.setFill(Color.web("#bdbebd"));
 
+        ableToPlayFindTheDoorMusic = true;
         music = AudioManager.setAndPlayMusicLoop(music, getClass().getResource("/sounds/src_main_resources_assets_music_stage_theme.mp3").toString());
         GamePlayData.readDataFromFile();
         canvas.setHeight(Sprite.SCALED_SIZE * (height + 2));
@@ -613,6 +631,7 @@ public class BombermanGame extends Application {
     }
 
     public void initializeTitleScreen(String title) {
+        scene.setFill(Color.BLACK);
         levelLabel.setVisible(false);
         livesLeftLabel.setVisible(false);
         this.reset();
@@ -674,12 +693,15 @@ public class BombermanGame extends Application {
                 this.powerup = AudioManager.setAndPlaySound(this.powerup, getClass().getResource("/sounds/src_main_resources_assets_sounds_powerup.wav").toString());
             }
         }
-        for (int i = 0; i < bombers.size(); i++) {
-            if (bombers.get(i).getHp() < 1) {
-                if (this.playerDeath == null || !this.playerDeath.isPlaying()) {
-                    this.playerDeath = AudioManager.setAndPlaySound(this.playerDeath, getClass().getResource("/sounds/src_main_resources_sounds_sound effects_death.wav").toString());
-                }
-            }
+
+        if (ableToPlayPlayerDeathSound) {
+            this.playerDeath = AudioManager.setAndPlaySound(this.playerDeath, getClass().getResource("/sounds/src_main_resources_sounds_sound effects_death.wav").toString());
+            ableToPlayPlayerDeathSound = false;
+        }
+
+        if (enemies.size() < 1 && ableToPlayFindTheDoorMusic) {
+            this.music = AudioManager.setAndPlayMusicLoop(music,  getClass().getResource("/sounds/Find_The_Door.wav").toString());
+            ableToPlayFindTheDoorMusic = false;
         }
     }
 }
