@@ -1,7 +1,10 @@
 package uet.oop.bomberman;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Group;
@@ -66,6 +69,8 @@ public class BombermanGame extends Application {
     private static List<Entity> bombs = new ArrayList<>();
     private static List<Entity> deads = new ArrayList<>();
     private static List<Entity> flames = new ArrayList<>();
+    private static List<List<Integer>> adjList = new ArrayList<>();
+    private static List<List<Integer>> adjListWallpass = new ArrayList<>();
 
     public static void main(String[] args) {
         Application.launch(BombermanGame.class);
@@ -141,6 +146,14 @@ public class BombermanGame extends Application {
 
     public static void setMapList(List<String> mapList) {
         BombermanGame.mapList = mapList;
+    }
+
+    public static List<List<Integer>> getAdjList() {
+        return adjList;
+    }
+
+    public static List<List<Integer>> getAdjListWallpass() {
+        return adjListWallpass;
     }
 
     public static List<String> getMapList() {
@@ -327,6 +340,8 @@ public class BombermanGame extends Application {
         Entity portal = new Portal(bricks.get(randomNumber).getX() / Sprite.SCALED_SIZE,
                 bricks.get(randomNumber).getY() / Sprite.SCALED_SIZE, Sprite.portal.getFxImage());
         portals.add(portal);
+
+        createAdjList();
     }
 
     public void addRandomItem(int x, int y) {
@@ -412,6 +427,9 @@ public class BombermanGame extends Application {
                 break;
             }
             this.addFlame(bombs.get(i).getX() / Sprite.SCALED_SIZE, bombs.get(i).getY() / Sprite.SCALED_SIZE);
+            Point position = bombs.get(i).getPosition();
+            this.addNeighbor(adjList, position);
+            this.addNeighbor(adjListWallpass, position);
             bombs.remove(i--);
         }
 
@@ -425,6 +443,8 @@ public class BombermanGame extends Application {
             if (bricks.get(i).getHp() <= 0) {
                 deads.add(bricks.get(i));
                 this.addRandomItem(bricks.get(i).getX() / Sprite.SCALED_SIZE, bricks.get(i).getY() / Sprite.SCALED_SIZE);
+                Point position = bricks.get(i).getPosition();
+                this.addNeighbor(adjList, position);
                 bricks.remove(i--);
             }
         }
@@ -655,6 +675,7 @@ public class BombermanGame extends Application {
         items.clear();
         bricks.clear();
         portals.clear();
+        adjList.clear();
     }
 
     public void handleSound() {
@@ -703,5 +724,130 @@ public class BombermanGame extends Application {
             this.music = AudioManager.setAndPlayMusicLoop(music,  getClass().getResource("/sounds/Find_The_Door.wav").toString());
             ableToPlayFindTheDoorMusic = false;
         }
+    }
+
+    public void createAdjList() {
+        for (int i = 0; i < map.size(); i++) {
+            for (int j = 0; j < map.get(i).size(); j++) {
+                adjList.add(new ArrayList<>());
+                adjListWallpass.add(new ArrayList<>());
+            }
+        }
+        for (int i = 0; i < map.size(); i++) {
+            for (int j = 0; j < map.get(i).size(); j++) {
+                if (map.get(i).get(j) != '#' && map.get(i).get(j) != '*') {
+                    this.addNeighbor(adjList, j, i);
+                    this.addNeighbor(adjListWallpass, j, i);
+                }
+            }
+        }
+
+        for (int i = 0; i < map.size(); i++) {
+            for (int j = 0; j < map.get(i).size(); j++) {
+                if (map.get(i).get(j) == '*') {
+                    this.addNeighbor(adjListWallpass, j, i);
+                }
+            }
+        }
+    }
+
+    public static void addNeighbor(List<List<Integer>> list, int x, int y) {
+        int n = MyMath.converPointToInt(x, y);
+        if (n - BombermanGame.getWidth() >= 0) {
+            boolean k = true;
+            for (int i = 0; i < list.get(n - BombermanGame.getWidth()).size(); i++) {
+                if (list.get(n - BombermanGame.getWidth()).get(i) == n) {
+                    k = false;
+                    break;
+                }
+            }
+            if (k) {
+                list.get(n - BombermanGame.getWidth()).add(n);
+            }
+        }
+        if (n - 1 >= 0 && ((n - 1) / BombermanGame.getWidth()) == (n / BombermanGame.getWidth())) {
+            boolean k = true;
+            for (int i = 0; i < list.get(n - 1).size(); i++) {
+                if (list.get(n - 1).get(i) == n) {
+                    k = false;
+                    break;
+                }
+            }
+            if (k) {
+                list.get(n - 1).add(n);
+            }
+        }
+        if (n + 1 < BombermanGame.getWidth() * BombermanGame.getHeight()
+             && ((n + 1) / BombermanGame.getWidth() == (n / BombermanGame.getWidth())))
+        {
+            boolean k = true;
+            for (int i = 0; i < list.get(n + 1).size(); i++) {
+                if (list.get(n + 1).get(i) == n) {
+                    k = false;
+                    break;
+                }
+            }
+            if (k) {
+                list.get(n + 1).add(n);
+            }
+        }
+        if (n + BombermanGame.getWidth() < BombermanGame.getWidth() * BombermanGame.getHeight()) {
+            boolean k = true;
+            for (int i = 0; i < list.get(n + BombermanGame.getWidth()).size(); i++) {
+                if (list.get(n + BombermanGame.getWidth()).get(i) == n) {
+                    k = false;
+                    break;
+                }
+            }
+            if (k) {
+                list.get(n + BombermanGame.getWidth()).add(n);
+            }
+        }
+    }
+
+    public static void addNeighbor(List<List<Integer>> list, Point p) {
+        addNeighbor(list, p.x, p.y);
+    }
+
+    public static void removeNeighbor(List<List<Integer>> list, int x, int y) {
+        int n = MyMath.converPointToInt(x, y);
+        if (n - BombermanGame.getWidth() >= 0) {
+            for (int i = 0; i < list.get(n - BombermanGame.getWidth()).size(); i++) {
+                if (list.get(n - BombermanGame.getWidth()).get(i) == n) {
+                    list.get(n - BombermanGame.getWidth()).remove(i);
+                    break;
+                }
+            }
+        }
+        if (n - 1 >= 0 && ((n - 1) / BombermanGame.getWidth()) == (n / BombermanGame.getWidth())) {
+            for (int i = 0; i < list.get(n - 1).size(); i++) {
+                if (list.get(n - 1).get(i) == n) {
+                    list.get(n - 1).remove(i);
+                    break;
+                }
+            }
+        }
+        if (n + 1 < BombermanGame.getWidth() * BombermanGame.getHeight()
+                && ((n + 1) / BombermanGame.getWidth() == (n / BombermanGame.getWidth())))
+        {
+            for (int i = 0; i < list.get(n + 1).size(); i++) {
+                if (list.get(n + 1).get(i) == n) {
+                    list.get(n + 1).remove(i);
+                    break;
+                }
+            }
+        }
+        if (n + BombermanGame.getWidth() < BombermanGame.getWidth() * BombermanGame.getHeight()) {
+            for (int i = 0; i < list.get(n + BombermanGame.getWidth()).size(); i++) {
+                if (list.get(n + BombermanGame.getWidth()).get(i) == n) {
+                    list.get(n + BombermanGame.getWidth()).remove(i);
+                    break;
+                }
+            }
+        }
+    }
+
+    public static void removeNeighbor(List<List<Integer>> list, Point p) {
+        removeNeighbor(list, p.x, p.y);
     }
 }

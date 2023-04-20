@@ -5,6 +5,8 @@ import javafx.scene.image.Image;
 import uet.oop.bomberman.animation.Animation;
 import uet.oop.bomberman.graphics.Sprite;
 
+import java.awt.*;
+
 
 public abstract class Entity {
     protected int x;
@@ -83,5 +85,11 @@ public abstract class Entity {
     public static boolean intersects(Entity entity, double x, double y) {
         return (entity.getX() <= x && x <= (entity.getX() + entity.getImg().getWidth())
                 && entity.getY() <= y && y <= (entity.getY() + entity.getImg().getHeight()));
+    }
+
+    public Point getPosition() {
+        int x = (this.x + (int)this.img.getWidth() / 2) / Sprite.SCALED_SIZE;
+        int y = (this.y + (int)this.img.getHeight() / 2) / Sprite.SCALED_SIZE - 2;
+        return new Point(x, y);
     }
 }

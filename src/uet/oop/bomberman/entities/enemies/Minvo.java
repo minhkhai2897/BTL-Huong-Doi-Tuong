@@ -1,7 +1,14 @@
 package uet.oop.bomberman.entities.enemies;
 
 import javafx.scene.image.Image;
+import uet.oop.bomberman.BombermanGame;
+import uet.oop.bomberman.MyMath;
 import uet.oop.bomberman.animation.MinvoAnimation;
+import uet.oop.bomberman.entities.Entity;
+import uet.oop.bomberman.entities.bomber.Bomber;
+
+import java.awt.*;
+import java.util.List;
 
 public class Minvo extends Enemy {
     public void update() {
@@ -23,6 +30,23 @@ public class Minvo extends Enemy {
     }
 
     public void handleMove() {
-        this.autoMoveToPlayer();
+        List<Entity> bombers = BombermanGame.getBombers();
+        List<List<Integer>> adjListWallpass = BombermanGame.getAdjListWallpass();
+        if (bombers.size() < 1) {
+            return;
+        }
+        Bomber bomber = (Bomber) bombers.get(0);
+
+        int u = MyMath.converPointToInt(this.getPosition());
+        int v = MyMath.converPointToInt(bomber.getPosition());
+        int n = this.findFirstVertexOnShortestPathDijkstra(adjListWallpass, u, v);
+        if (n != -1) {
+            boolean moved = this.moveToCell(n);
+            if (!moved) {
+                Point p = MyMath.convertIntToPoint(n);
+                BombermanGame.removeNeighbor(adjListWallpass, p);
+                this.handleMove();
+            }
+        }
     }
 }

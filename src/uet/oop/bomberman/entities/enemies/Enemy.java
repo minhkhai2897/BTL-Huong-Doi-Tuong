@@ -3,17 +3,16 @@ package uet.oop.bomberman.entities.enemies;
 import javafx.scene.image.Image;
 import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.MyMath;
-import uet.oop.bomberman.animation.BalloonAnimation;
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.MovingEntity;
 import uet.oop.bomberman.entities.bomber.Bomber;
 import uet.oop.bomberman.graphics.Sprite;
 
-import java.util.ArrayList;
+import java.awt.*;
+import java.util.*;
 import java.util.List;
 
 public abstract class Enemy extends MovingEntity {
-
     protected boolean useSpecialMove = true;
     protected int actionCode = 0;
     public Enemy(int x, int y, Image img) {
@@ -176,8 +175,8 @@ public abstract class Enemy extends MovingEntity {
                 return;
             }
 
-
-            // Phan tu dong di chuyen ve phia nguoi choi
+            // Phan tu dong di chuyen ve phia nguoi cho
+            // bomber o ben trai enemy
             if (actionCode % 4 == 0) {
                 if (bomberX + Sprite.SCALED_SIZE < enemyX + this.img.getWidth()) {
                     if (this.ableToMoveLeft) {
@@ -190,6 +189,7 @@ public abstract class Enemy extends MovingEntity {
                     actionCode = (actionCode + 1) % 4;
                 }
             }
+            // bomber o ben tren enemy
             if (actionCode % 4 == 1) {
                 if (bomberY + Sprite.SCALED_SIZE < enemyY + this.img.getHeight()) {
                     if (this.ableToMoveUp) {
@@ -203,6 +203,7 @@ public abstract class Enemy extends MovingEntity {
                     actionCode = (actionCode + 1) % 4;
                 }
             }
+            // bomber o ben phai enemy
             if (actionCode % 4 == 2) {
                 if (bomberX > enemyX) {
                     if (this.ableToMoveRight) {
@@ -216,6 +217,7 @@ public abstract class Enemy extends MovingEntity {
                     actionCode = (actionCode + 1) % 4;
                 }
             }
+            // bomber o ben duoi enemy
             if (actionCode % 4 == 3){
                 if (bomberY > enemyY) {
                     if (this.ableToMoveDown) {
@@ -246,5 +248,85 @@ public abstract class Enemy extends MovingEntity {
         } else if (ableToMoveRight && bomberX > enemyX) {
             ableToMoveLeft = false;
         }
+    }
+
+    public int findFirstVertexOnShortestPathDijkstra(List<List<Integer>> adjList, int u, int v) {
+        List<Boolean> visited = new ArrayList<>(Collections.nCopies(BombermanGame.getWidth() * BombermanGame.getHeight(), false));
+        List<Integer> distTo = new ArrayList<>(Collections.nCopies(BombermanGame.getWidth() * BombermanGame.getHeight(), Integer.MAX_VALUE));
+        List<Integer> predecessors  = new ArrayList<>(Collections.nCopies(BombermanGame.getWidth() * BombermanGame.getHeight(), -1));
+        Queue<Integer> pq = new PriorityQueue<>(new Comparator<Integer>() {
+            public int compare(Integer n1, Integer n2) {
+                return distTo.get(n1) - distTo.get(n2);
+            }
+        });
+
+        pq.add(u);
+        distTo.set(u, 0);
+        predecessors.set(u, u);
+        while (pq.size() > 0) {
+            int t = pq.remove();
+            visited.set(t, true);
+            if (t == v) {
+                break;
+            }
+            for (int i = 0; i < adjList.get(t).size(); i++) {
+                if (!visited.get(adjList.get(t).get(i))) {
+                    if (distTo.get(adjList.get(t).get(i)) > distTo.get(t) + 1) {
+                        distTo.set(adjList.get(t).get(i), distTo.get(t) + 1);
+                        predecessors.set(adjList.get(t).get(i), t);
+                    }
+                    pq.add(adjList.get(t).get(i));
+                }
+            }
+        }
+
+        if (predecessors.get(v) != -1) {
+            int t = v;
+            while (predecessors.get(t) != u) {
+                t = predecessors.get(t);
+            }
+            return t;
+        }
+
+        return -1;
+    }
+
+    public boolean moveToCell(int n) {
+        this.resetMoveVariable();
+        Point p = MyMath.convertIntToPoint(n);
+        int cellX = p.x * Sprite.SCALED_SIZE;
+        int cellY = (p.y + 2) * Sprite.SCALED_SIZE;
+        int enemyX = this.getX();
+        int enemyY = this.getY();
+
+        // trai
+        if (cellX + Sprite.SCALED_SIZE < enemyX + this.img.getWidth()) {
+            if (this.ableToMoveLeft) {
+                this.moveLeft = true;
+                return true;
+            }
+        }
+        // tren
+        if (cellY + Sprite.SCALED_SIZE < enemyY + this.img.getHeight()) {
+            if (this.ableToMoveUp) {
+                this.moveUp = true;
+                return true;
+            }
+        }
+        // phai
+        if (cellX > enemyX) {
+            if (ableToMoveRight) {
+                this.moveRight = true;
+                return true;
+            }
+        }
+        // duoi
+        if (cellY > enemyY) {
+            if (ableToMoveDown) {
+                this.moveDown = true;
+                return true;
+            }
+        }
+        return false;
     }
 }
