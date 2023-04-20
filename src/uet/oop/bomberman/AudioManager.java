@@ -37,7 +37,6 @@ public class AudioManager {
 
     public static AudioClip setAndPlaySound(AudioClip sound, String path) {
         try {
-
             sound = new AudioClip(path);
             sound.play();
         } catch (Exception e) {

@@ -26,6 +26,7 @@ public class Doll extends Enemy {
         this.move();
         this.animation.setSprite(this);
     }
+
     public void handleMove() {
         List<Entity> bombers = BombermanGame.getBombers();
         List<List<Integer>> adjList = BombermanGame.getAdjList();
@@ -42,6 +43,10 @@ public class Doll extends Enemy {
             if (!moved) {
                 Point p = MyMath.convertIntToPoint(n);
                 BombermanGame.removeNeighbor(adjList, p);
+                if (u == n) {
+                    this.autoMoveToPlayer();
+                    return;
+                }
                 this.handleMove();
             }
             return;

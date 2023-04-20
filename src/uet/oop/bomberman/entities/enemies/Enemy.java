@@ -116,6 +116,12 @@ public abstract class Enemy extends MovingEntity {
     }
 
     public void autoMoveToPlayer() {
+        if (ableToMoveDown == false && ableToMoveLeft == false
+            && ableToMoveUp == false && ableToMoveRight == false)
+        {
+            return;
+        }
+
         List<Entity> bombers = BombermanGame.getBombers();
         if (bombers.size() > 0) {
             Bomber bomber = (Bomber) bombers.get(0);
@@ -127,16 +133,14 @@ public abstract class Enemy extends MovingEntity {
 
             // last: huong di chuyen cua lan di gan nhat (duoc chuyen thanh dang so de de xu ly)
             int last = this.getLastMove();
-            this.resetMoveVariable();
-
             // Khi tu dong di chuyen ve phia nguoi choi thi se co mot doan duong khong the di tiếp,
             // không thể đi sang hai bên va chi co the quay lai
             // phan nay de xu ly viec do
             if (this.useSpecialMove) {
-                if ((actionCode == 0 && ableToMoveLeft == false && ableToMoveUp == false && ableToMoveDown == false)
-                        || (actionCode == 2 && ableToMoveRight == false && ableToMoveUp == false && ableToMoveDown == false)
-                        || (actionCode == 1 && ableToMoveUp == false && ableToMoveLeft == false && ableToMoveRight == false)
-                        || (actionCode == 3 && ableToMoveDown == false && ableToMoveLeft == false && ableToMoveRight == false))
+                if ((last == 0 && ableToMoveLeft == false && ableToMoveUp == false && ableToMoveDown == false)
+                        || (last == 3 && ableToMoveRight == false && ableToMoveUp == false && ableToMoveDown == false)
+                        || (last == 1 && ableToMoveUp == false && ableToMoveLeft == false && ableToMoveRight == false)
+                        || (last == 2 && ableToMoveDown == false && ableToMoveLeft == false && ableToMoveRight == false))
                 {
                     this.useSpecialMove = false;
                 }
@@ -146,6 +150,7 @@ public abstract class Enemy extends MovingEntity {
                     if (this.ableToMoveUp || this.ableToMoveDown) {
                         this.useSpecialMove = true;
                         this.ableToMoveLeft = false;
+                        actionCode = 2;
                         updateBomberVerticalMovementLimits(bomberY, enemyY);
                     }
                 }
@@ -153,6 +158,7 @@ public abstract class Enemy extends MovingEntity {
                     if (this.ableToMoveUp || this.ableToMoveDown) {
                         this.useSpecialMove = true;
                         this.ableToMoveRight = false;
+                        actionCode = 0;
                         updateBomberVerticalMovementLimits(bomberY, enemyY);
                     }
                 }
@@ -160,6 +166,7 @@ public abstract class Enemy extends MovingEntity {
                     if (this.ableToMoveLeft || this.ableToMoveRight) {
                         this.useSpecialMove = true;
                         this.ableToMoveUp = false;
+                        actionCode = 3;
                         updateBomberHorizontalMovementLimits(bomberX, enemyX);
                     }
                 }
@@ -167,10 +174,12 @@ public abstract class Enemy extends MovingEntity {
                     if (this.ableToMoveLeft || this.ableToMoveRight) {
                         this.useSpecialMove = true;
                         this.ableToMoveDown = false;
+                        actionCode = 1;
                         updateBomberHorizontalMovementLimits(bomberX, enemyX);
                     }
                 }
 
+                this.resetMoveVariable();
                 this.randomDirectionMove(last);
                 return;
             }
@@ -180,10 +189,14 @@ public abstract class Enemy extends MovingEntity {
             if (actionCode % 4 == 0) {
                 if (bomberX + Sprite.SCALED_SIZE < enemyX + this.img.getWidth()) {
                     if (this.ableToMoveLeft) {
+                        this.resetMoveVariable();
                         this.moveLeft = true;
-                    } else {
-                        this.randomDirectionMove(last);
+                        return;
                     }
+                    this.resetMoveVariable();
+                    this.ableToMoveRight = false;
+                    this.randomDirectionMove(last);
+                    return;
                 }
                 else {
                     actionCode = (actionCode + 1) % 4;
@@ -193,10 +206,15 @@ public abstract class Enemy extends MovingEntity {
             if (actionCode % 4 == 1) {
                 if (bomberY + Sprite.SCALED_SIZE < enemyY + this.img.getHeight()) {
                     if (this.ableToMoveUp) {
+                        this.resetMoveVariable();
                         this.moveUp = true;
+                        return;
                     }
                     else {
+                        this.resetMoveVariable();
+                        this.ableToMoveDown = false;
                         this.randomDirectionMove(last);
+                        return;
                     }
                 }
                 else {
@@ -207,11 +225,14 @@ public abstract class Enemy extends MovingEntity {
             if (actionCode % 4 == 2) {
                 if (bomberX > enemyX) {
                     if (this.ableToMoveRight) {
+                        this.resetMoveVariable();
                         this.moveRight = true;
+                        return;
                     }
-                    else {
-                        this.randomDirectionMove(last);
-                    }
+                    this.resetMoveVariable();
+                    this.ableToMoveLeft = false;
+                    this.randomDirectionMove(last);
+                    return;
                 }
                 else {
                     actionCode = (actionCode + 1) % 4;
@@ -221,17 +242,21 @@ public abstract class Enemy extends MovingEntity {
             if (actionCode % 4 == 3){
                 if (bomberY > enemyY) {
                     if (this.ableToMoveDown) {
+                        this.resetMoveVariable();
                         this.moveDown = true;
+                        return;
                     }
-                    else {
-                        this.randomDirectionMove(last);
-                    }
+                    this.resetMoveVariable();
+                    this.ableToMoveUp = false;
+                    this.randomDirectionMove(last);
+                    return;
                 }
                 else {
                     actionCode = (actionCode + 1) % 4;
                 }
             }
         }
+        autoMoveToPlayer();
     }
 
     protected void updateBomberVerticalMovementLimits(int bomberY, int enemyY) {
@@ -292,7 +317,6 @@ public abstract class Enemy extends MovingEntity {
     }
 
     public boolean moveToCell(int n) {
-        this.resetMoveVariable();
         Point p = MyMath.convertIntToPoint(n);
         int cellX = p.x * Sprite.SCALED_SIZE;
         int cellY = (p.y + 2) * Sprite.SCALED_SIZE;
@@ -302,6 +326,7 @@ public abstract class Enemy extends MovingEntity {
         // trai
         if (cellX + Sprite.SCALED_SIZE < enemyX + this.img.getWidth()) {
             if (this.ableToMoveLeft) {
+                this.resetMoveVariable();
                 this.moveLeft = true;
                 return true;
             }
@@ -309,6 +334,7 @@ public abstract class Enemy extends MovingEntity {
         // tren
         if (cellY + Sprite.SCALED_SIZE < enemyY + this.img.getHeight()) {
             if (this.ableToMoveUp) {
+                this.resetMoveVariable();
                 this.moveUp = true;
                 return true;
             }
@@ -316,6 +342,7 @@ public abstract class Enemy extends MovingEntity {
         // phai
         if (cellX > enemyX) {
             if (ableToMoveRight) {
+                this.resetMoveVariable();
                 this.moveRight = true;
                 return true;
             }
@@ -323,6 +350,7 @@ public abstract class Enemy extends MovingEntity {
         // duoi
         if (cellY > enemyY) {
             if (ableToMoveDown) {
+                this.resetMoveVariable();
                 this.moveDown = true;
                 return true;
             }

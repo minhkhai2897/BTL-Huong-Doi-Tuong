@@ -406,8 +406,11 @@ public class BombermanGame extends Application {
             if (deads.get(i).getAnimation().isFinishDeadAnimation()) {
                 if (deads.get(i) instanceof Bomber) {
                     bombers.add(deads.get(i));
+                    deads.clear();
                 }
-                deads.remove(i--);
+                else {
+                    deads.remove(i--);
+                }
             }
         }
 
@@ -716,7 +719,9 @@ public class BombermanGame extends Application {
         }
 
         if (ableToPlayPlayerDeathSound) {
-            this.playerDeath = AudioManager.setAndPlaySound(this.playerDeath, getClass().getResource("/sounds/src_main_resources_sounds_sound effects_death.wav").toString());
+            if (playerDeath == null || !playerDeath.isPlaying()) {
+                playerDeath = AudioManager.setAndPlaySound(playerDeath, getClass().getResource("/sounds/src_main_resources_sounds_sound effects_death.wav").toString());
+            }
             ableToPlayPlayerDeathSound = false;
         }
 
@@ -804,7 +809,6 @@ public class BombermanGame extends Application {
             }
         }
     }
-
     public static void addNeighbor(List<List<Integer>> list, Point p) {
         addNeighbor(list, p.x, p.y);
     }

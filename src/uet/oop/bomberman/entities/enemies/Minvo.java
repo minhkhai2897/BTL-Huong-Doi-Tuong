@@ -11,6 +11,13 @@ import java.awt.*;
 import java.util.List;
 
 public class Minvo extends Enemy {
+    public Minvo(int x, int y, Image img) {
+        super(x, y, img);
+        this.setSpeed(2);
+        this.wallPass = true;
+        this.animation = new MinvoAnimation();
+    }
+
     public void update() {
         this.ableToMoveLeft = true;
         this.ableToMoveRight = true;
@@ -20,13 +27,6 @@ public class Minvo extends Enemy {
         this.handleMove();
         this.move();
         this.animation.setSprite(this);
-    }
-
-    public Minvo(int x, int y, Image img) {
-        super(x, y, img);
-        this.wallPass = true;
-        this.setSpeed(2);
-        this.animation = new MinvoAnimation();
     }
 
     public void handleMove() {
@@ -45,8 +45,14 @@ public class Minvo extends Enemy {
             if (!moved) {
                 Point p = MyMath.convertIntToPoint(n);
                 BombermanGame.removeNeighbor(adjListWallpass, p);
+                if (u == n) {
+                    this.autoMoveToPlayer();
+                    return;
+                }
                 this.handleMove();
             }
+            return;
         }
+        this.autoMoveToPlayer();
     }
 }
