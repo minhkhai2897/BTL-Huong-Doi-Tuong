@@ -429,6 +429,9 @@ public class BombermanGame extends Application {
 
         for (int i = 0; i < flames.size(); i++) {
             if (flames.get(i).getAnimation().isFinishDeadAnimation()) {
+                Point position = flames.get(i).getPosition();
+                this.addNeighbor(adjList, position);
+                this.addNeighbor(adjListWallpass, position);
                 flames.remove(i--);
             }
         }
@@ -443,9 +446,6 @@ public class BombermanGame extends Application {
                 break;
             }
             this.addFlame(bombs.get(i).getX() / Sprite.SCALED_SIZE, bombs.get(i).getY() / Sprite.SCALED_SIZE);
-            Point position = bombs.get(i).getPosition();
-            this.addNeighbor(adjList, position);
-            this.addNeighbor(adjListWallpass, position);
             bombs.remove(i--);
         }
 
