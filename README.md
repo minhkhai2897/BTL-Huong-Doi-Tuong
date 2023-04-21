@@ -43,4 +43,8 @@ Có nhiều loại Enemy trong Bomberman. Gồm các loại sau:
 
 ## Hướng dẫn người chơi:
 - Di chuyển: A, S, D, W Hoặc các phím mũi tên
-- Đặt bom: Space
+- Đặt bom: Space hoặc X
+
+Ghi Chú: Thuật toán di chuyển của Doll và Minvo có một phần là thuật toán Dijkstra
+
+Link youtube: https://www.youtube.com/watch?v=3aZaHjUJeCI
