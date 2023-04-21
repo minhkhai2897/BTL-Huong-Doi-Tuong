@@ -16,12 +16,12 @@ import java.util.Scanner;
 
 public class GamePlayData {
 
-    public static Font loadFont(String path) {
+    public static Font loadFont(String path, int size) {
         Font font = null;
         try {
             URL url = new URL(path);
             InputStream inputStream = url.openStream();
-            font = Font.loadFont(inputStream, 24);
+            font = Font.loadFont(inputStream, size);
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -48,23 +48,18 @@ public class GamePlayData {
         }
     }
 
-    public static void readDataFromFile() {
+    public static void readMapFromFile() {
         List<String> mapList = BombermanGame.getMapList();
 
         try {
             File file = new File(mapList.get(BombermanGame.getLevel()));
             BombermanGame.setLevel(BombermanGame.getLevel() + 1);
             Scanner scaner = new Scanner(file);
-            int L;
-            L = scaner.nextInt();
-            BombermanGame.setHeight(scaner.nextInt());
-            BombermanGame.setWidth(scaner.nextInt());
-
-            String line = scaner.nextLine();
+            scaner.nextLine();
             List<List<Character>> map = new ArrayList<>();
             for (int i = 0; i < BombermanGame.getHeight(); i++) {
                 List<Character> list = new ArrayList<>();
-                line = scaner.nextLine();
+                String line = scaner.nextLine();
                 for (int j = 0; j < BombermanGame.getWidth(); j++) {
                     char c = line.charAt(j);
                     list.add(c);

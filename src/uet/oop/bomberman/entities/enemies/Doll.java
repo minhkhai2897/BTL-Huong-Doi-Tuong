@@ -27,6 +27,11 @@ public class Doll extends Enemy {
         this.animation.setSprite(this);
     }
 
+    /*
+     * Ham nay duoc chia lam hai phan
+     * Neu ham tim duong di ngan nhat bang thuat toan dijkstra tra ve duong di thì se di chuyen theo duong do
+     * Neu ko se di chuyen theo ham autoMoveToPlayer
+     */
     public void handleMove() {
         List<Entity> bombers = BombermanGame.getBombers();
         List<List<Integer>> adjList = BombermanGame.getAdjList();

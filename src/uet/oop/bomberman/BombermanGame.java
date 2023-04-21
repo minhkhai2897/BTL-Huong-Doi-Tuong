@@ -3,8 +3,6 @@ package uet.oop.bomberman;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Group;
@@ -12,14 +10,13 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
+import javafx.scene.input.KeyCode;
 import javafx.scene.media.AudioClip;
-import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 import uet.oop.bomberman.entities.bomber.Bomber;
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.enemies.*;
@@ -31,13 +28,15 @@ import uet.oop.bomberman.entities.stillObjects.*;
 import uet.oop.bomberman.graphics.Sprite;
 
 public class BombermanGame extends Application {
-    private static int width = 31;
-    private static int height = 13;
+    public final static int width = 31;
+    public final static int height = 13;
+    public static Image introImage;
     private static Group root;
     private static Scene scene;
     private static Canvas canvas;
     private static GraphicsContext gc;
     private static Font font;
+    private static Font gameFont;
     private static Label label;
     private static Label levelLabel;
     private static Label livesLeftLabel;
@@ -49,14 +48,15 @@ public class BombermanGame extends Application {
     private static AudioClip playerDeath;
     private static int livesLeft = 2;
     private static int level = 0;
-    private int time = 0;
+    private static int time = 0;
+    private static boolean isIntroFinished = false;
     private static boolean isLevelComplete = false;
-    private boolean ableToPlayFindTheDoorMusic = true;
-    private boolean ableToPlayPlayerDeathSound = false;
-    private boolean newLevel = true;
-    private boolean bombAdded = false;
-    private boolean win = false;
-    private boolean lose = false;
+    private static boolean ableToPlayFindTheDoorMusic = true;
+    private static boolean ableToPlayPlayerDeathSound = false;
+    private static boolean newLevel = true;
+    private static boolean bombAdded = false;
+    private static boolean win = false;
+    private static boolean lose = false;
     private static List<String> mapList = new ArrayList<>();
     private static List<List<Character>> map = new ArrayList<>();
     private static List<Entity> grasses = new ArrayList<>();
@@ -86,10 +86,6 @@ public class BombermanGame extends Application {
 
     public static List<Entity> getEnemies() {
         return enemies;
-    }
-
-    public static List<Entity> getItems() {
-        return items;
     }
 
     public static void setMap(List<List<Character>> map) {
@@ -124,14 +120,6 @@ public class BombermanGame extends Application {
         return flames;
     }
 
-    public static void setWidth(int width) {
-        BombermanGame.width = width;
-    }
-
-    public static void setHeight(int height) {
-        BombermanGame.height = height;
-    }
-
     public static int getLevel() {
         return level;
     }
@@ -163,7 +151,8 @@ public class BombermanGame extends Application {
 
     public void start(Stage stage) {
         GamePlayData.loadMapListFromFile();
-        font = GamePlayData.loadFont(getClass().getResource("/font/calibrib.ttf").toString());
+        font = GamePlayData.loadFont(getClass().getResource("/font/calibrib.ttf").toString(), 24);
+        gameFont = GamePlayData.loadFont(getClass().getResource("/font/game_font.ttf").toString(), 24);
 
         canvas = new Canvas(Sprite.SCALED_SIZE * width, Sprite.SCALED_SIZE * (height + 2));
         gc = canvas.getGraphicsContext2D();
@@ -173,7 +162,9 @@ public class BombermanGame extends Application {
         scene.setFill(Color.BLACK);
 
         label = new Label("STATE  1");
-        label.setStyle("-fx-font-size: 36; -fx-text-fill: white;");
+        label.setFont(gameFont);
+        label.setStyle("-fx-text-fill: white;");
+        label.setVisible(false);
         root.getChildren().add(label);
 
         levelLabel = new Label("  STAGE  " + (this.level + 1));
@@ -198,6 +189,11 @@ public class BombermanGame extends Application {
         AnimationTimer timer = new AnimationTimer() {
             @Override
             public void handle(long l) {
+                if (!isIntroFinished) {
+                    startIntro();
+                    return;
+                }
+
                 render();
 
                 if (isLevelComplete) {
@@ -228,6 +224,23 @@ public class BombermanGame extends Application {
             }
         };
         timer.start();
+    }
+
+    public void startIntro() {
+        scene.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER || event.getCode() == KeyCode.X) {
+                isIntroFinished = true;
+            }
+        });
+        if (introImage == null) {
+            introImage = new Image(getClass().getResource("/sprites/introImage.png").toString());
+        }
+        if (music == null) {
+            music = AudioManager.setAndPlayMusic(music, getClass().getResource("/sounds/src_main_resources_sounds_Presentation.wav").toString());
+        }
+
+        gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        gc.drawImage(introImage, 0, 0);
     }
 
     public void update() {
@@ -558,16 +571,8 @@ public class BombermanGame extends Application {
         final int completionTime = 180;
 
         if (time == 0) {
-            if (music != null) {
-                music.stop();
-                music.dispose();
-            }
-            try {
-                music = new MediaPlayer(new Media(getClass().getResource("/sounds/level_complete.wav").toString()));
-                music.play();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            livesLeft = (livesLeft < 9 ? livesLeft + 1 : 9);
+            music = AudioManager.setAndPlayMusic(music, getClass().getResource("/sounds/level_complete.wav").toString());
         }
         time++;
         if (time < completionTime) { // sau 180 khung hình thì map mới sẽ được tạo
@@ -606,7 +611,6 @@ public class BombermanGame extends Application {
             this.lose = false;
             this.level--;
             this.livesLeft--;
-            livesLeftLabel.setText("LEFT  " + this.livesLeft);
             this.newLevel = true;
             for (int i = 0; i < bombers.size(); i++) {
                 bombers.get(i).setHp(1);
@@ -637,12 +641,13 @@ public class BombermanGame extends Application {
 
         label.setVisible(false);
         levelLabel.setVisible(true);
+        livesLeftLabel.setText("LEFT  " + livesLeft);
         livesLeftLabel.setVisible(true);
         scene.setFill(Color.web("#bdbebd"));
 
         ableToPlayFindTheDoorMusic = true;
         music = AudioManager.setAndPlayMusicLoop(music, getClass().getResource("/sounds/src_main_resources_assets_music_stage_theme.mp3").toString());
-        GamePlayData.readDataFromFile();
+        GamePlayData.readMapFromFile();
         canvas.setHeight(Sprite.SCALED_SIZE * (height + 2));
         canvas.setWidth(Sprite.SCALED_SIZE * width);
         createMap();
@@ -679,6 +684,7 @@ public class BombermanGame extends Application {
         bricks.clear();
         portals.clear();
         adjList.clear();
+        adjListWallpass.clear();
     }
 
     public void handleSound() {

@@ -131,6 +131,15 @@ public abstract class Enemy extends MovingEntity {
             int enemyX = this.getX();
             int enemyY = this.getY();
 
+            if ((bomberX + Sprite.SCALED_SIZE >= enemyX + this.img.getWidth())
+                    && (bomberY + Sprite.SCALED_SIZE >= enemyY + this.img.getHeight())
+                    && (bomberX <= enemyX)
+                    && (bomberY <= enemyY)) {
+                return;
+            }
+
+
+
             // last: huong di chuyen cua lan di gan nhat (duoc chuyen thanh dang so de de xu ly)
             int last = this.getLastMove();
             // Khi tu dong di chuyen ve phia nguoi choi thi se co mot doan duong khong the di tiếp,
@@ -184,79 +193,81 @@ public abstract class Enemy extends MovingEntity {
                 return;
             }
 
-            // Phan tu dong di chuyen ve phia nguoi cho
-            // bomber o ben trai enemy
-            if (actionCode % 4 == 0) {
-                if (bomberX + Sprite.SCALED_SIZE < enemyX + this.img.getWidth()) {
-                    if (this.ableToMoveLeft) {
+
+            while (true) {
+                // Phan tu dong di chuyen ve phia nguoi cho
+                // bomber o ben trai enemy
+                if (actionCode % 4 == 0) {
+                    if (bomberX + Sprite.SCALED_SIZE < enemyX + this.img.getWidth()) {
+                        if (this.ableToMoveLeft) {
+                            this.resetMoveVariable();
+                            this.moveLeft = true;
+                            return;
+                        }
                         this.resetMoveVariable();
-                        this.moveLeft = true;
-                        return;
-                    }
-                    this.resetMoveVariable();
-                    this.ableToMoveRight = false;
-                    this.randomDirectionMove(last);
-                    return;
-                }
-                else {
-                    actionCode = (actionCode + 1) % 4;
-                }
-            }
-            // bomber o ben tren enemy
-            if (actionCode % 4 == 1) {
-                if (bomberY + Sprite.SCALED_SIZE < enemyY + this.img.getHeight()) {
-                    if (this.ableToMoveUp) {
-                        this.resetMoveVariable();
-                        this.moveUp = true;
-                        return;
-                    }
-                    else {
-                        this.resetMoveVariable();
-                        this.ableToMoveDown = false;
+                        this.ableToMoveRight = false;
                         this.randomDirectionMove(last);
                         return;
                     }
+                    else {
+                        actionCode = (actionCode + 1) % 4;
+                    }
                 }
-                else {
-                    actionCode = (actionCode + 1) % 4;
+                // bomber o ben tren enemy
+                if (actionCode % 4 == 1) {
+                    if (bomberY + Sprite.SCALED_SIZE < enemyY + this.img.getHeight()) {
+                        if (this.ableToMoveUp) {
+                            this.resetMoveVariable();
+                            this.moveUp = true;
+                            return;
+                        }
+                        else {
+                            this.resetMoveVariable();
+                            this.ableToMoveDown = false;
+                            this.randomDirectionMove(last);
+                            return;
+                        }
+                    }
+                    else {
+                        actionCode = (actionCode + 1) % 4;
+                    }
                 }
-            }
-            // bomber o ben phai enemy
-            if (actionCode % 4 == 2) {
-                if (bomberX > enemyX) {
-                    if (this.ableToMoveRight) {
+                // bomber o ben phai enemy
+                if (actionCode % 4 == 2) {
+                    if (bomberX > enemyX) {
+                        if (this.ableToMoveRight) {
+                            this.resetMoveVariable();
+                            this.moveRight = true;
+                            return;
+                        }
                         this.resetMoveVariable();
-                        this.moveRight = true;
+                        this.ableToMoveLeft = false;
+                        this.randomDirectionMove(last);
                         return;
                     }
-                    this.resetMoveVariable();
-                    this.ableToMoveLeft = false;
-                    this.randomDirectionMove(last);
-                    return;
+                    else {
+                        actionCode = (actionCode + 1) % 4;
+                    }
                 }
-                else {
-                    actionCode = (actionCode + 1) % 4;
-                }
-            }
-            // bomber o ben duoi enemy
-            if (actionCode % 4 == 3){
-                if (bomberY > enemyY) {
-                    if (this.ableToMoveDown) {
+                // bomber o ben duoi enemy
+                if (actionCode % 4 == 3){
+                    if (bomberY > enemyY) {
+                        if (this.ableToMoveDown) {
+                            this.resetMoveVariable();
+                            this.moveDown = true;
+                            return;
+                        }
                         this.resetMoveVariable();
-                        this.moveDown = true;
+                        this.ableToMoveUp = false;
+                        this.randomDirectionMove(last);
                         return;
                     }
-                    this.resetMoveVariable();
-                    this.ableToMoveUp = false;
-                    this.randomDirectionMove(last);
-                    return;
-                }
-                else {
-                    actionCode = (actionCode + 1) % 4;
+                    else {
+                        actionCode = (actionCode + 1) % 4;
+                    }
                 }
             }
         }
-        autoMoveToPlayer();
     }
 
     protected void updateBomberVerticalMovementLimits(int bomberY, int enemyY) {
