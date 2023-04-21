@@ -146,16 +146,16 @@ public abstract class Enemy extends MovingEntity {
             // không thể đi sang hai bên va chi co the quay lai
             // phan nay de xu ly viec do
             if (this.useSpecialMove) {
-                if ((last == 0 && ableToMoveLeft == false && ableToMoveUp == false && ableToMoveDown == false)
-                        || (last == 3 && ableToMoveRight == false && ableToMoveUp == false && ableToMoveDown == false)
-                        || (last == 1 && ableToMoveUp == false && ableToMoveLeft == false && ableToMoveRight == false)
-                        || (last == 2 && ableToMoveDown == false && ableToMoveLeft == false && ableToMoveRight == false))
+                if ((ableToMoveLeft == false && ableToMoveUp == false && ableToMoveDown == false)
+                        || (ableToMoveRight == false && ableToMoveUp == false && ableToMoveDown == false)
+                        || (ableToMoveUp == false && ableToMoveLeft == false && ableToMoveRight == false)
+                        || (ableToMoveDown == false && ableToMoveLeft == false && ableToMoveRight == false))
                 {
                     this.useSpecialMove = false;
                 }
             }
             if (!this.useSpecialMove) {
-                if (last == 0) {
+                if (last == 0 || (ableToMoveLeft == false && ableToMoveUp == false && ableToMoveDown == false)) {
                     if (this.ableToMoveUp || this.ableToMoveDown) {
                         this.useSpecialMove = true;
                         this.ableToMoveLeft = false;
@@ -163,7 +163,7 @@ public abstract class Enemy extends MovingEntity {
                         updateBomberVerticalMovementLimits(bomberY, enemyY);
                     }
                 }
-                else if (last == 3) {
+                else if (last == 3 || (ableToMoveRight == false && ableToMoveUp == false && ableToMoveDown == false)) {
                     if (this.ableToMoveUp || this.ableToMoveDown) {
                         this.useSpecialMove = true;
                         this.ableToMoveRight = false;
@@ -171,7 +171,7 @@ public abstract class Enemy extends MovingEntity {
                         updateBomberVerticalMovementLimits(bomberY, enemyY);
                     }
                 }
-                else if (last == 1) {
+                else if (last == 1 || (ableToMoveUp == false && ableToMoveLeft == false && ableToMoveRight == false)) {
                     if (this.ableToMoveLeft || this.ableToMoveRight) {
                         this.useSpecialMove = true;
                         this.ableToMoveUp = false;
@@ -179,7 +179,7 @@ public abstract class Enemy extends MovingEntity {
                         updateBomberHorizontalMovementLimits(bomberX, enemyX);
                     }
                 }
-                else if (last == 2) {
+                else if (last == 2 || (ableToMoveDown == false && ableToMoveLeft == false && ableToMoveRight == false)) {
                     if (this.ableToMoveLeft || this.ableToMoveRight) {
                         this.useSpecialMove = true;
                         this.ableToMoveDown = false;
