@@ -36,6 +36,7 @@ public class Minvo extends Enemy {
      */
     public void handleMove() {
         List<Entity> bombers = BombermanGame.getBombers();
+        List<List<Integer>> adjList = BombermanGame.getAdjList();
         List<List<Integer>> adjListWallpass = BombermanGame.getAdjListWallpass();
         if (bombers.size() < 1) {
             return;
@@ -49,6 +50,7 @@ public class Minvo extends Enemy {
             boolean moved = this.moveToCell(n);
             if (!moved) {
                 Point p = MyMath.convertIntToPoint(n);
+                BombermanGame.removeNeighbor(adjList, p);
                 BombermanGame.removeNeighbor(adjListWallpass, p);
                 if (u == n) {
                     this.autoMoveToPlayer();

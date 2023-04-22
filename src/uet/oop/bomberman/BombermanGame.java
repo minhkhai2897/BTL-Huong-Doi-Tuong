@@ -44,8 +44,8 @@ public class BombermanGame extends Application {
     private static AudioClip bombExplosionSound;
     private static AudioClip placedBombSound;
     private static AudioClip moveSound;
-    private static AudioClip powerup;
-    private static AudioClip playerDeath;
+    private static AudioClip powerupSound;
+    private static AudioClip playerDeathSound;
     private static int livesLeft = 2;
     private static int level = 0;
     private static int time = 0;
@@ -54,9 +54,8 @@ public class BombermanGame extends Application {
     private static boolean ableToPlayFindTheDoorMusic = true;
     private static boolean ableToPlayPlayerDeathSound = false;
     private static boolean newLevel = true;
-    private static boolean bombAdded = false;
     private static boolean win = false;
-    private static boolean lose = false;
+    private static boolean playerDeath = false;
     private static List<String> mapList = new ArrayList<>();
     private static List<List<Character>> map = new ArrayList<>();
     private static List<Entity> grasses = new ArrayList<>();
@@ -215,8 +214,8 @@ public class BombermanGame extends Application {
                     return;
                 }
 
-                if (lose) {
-                    handleLose();
+                if (playerDeath) {
+                    handleAfterPlayerDeath();
                     return;
                 }
 
@@ -228,7 +227,7 @@ public class BombermanGame extends Application {
 
     public void startIntro() {
         scene.setOnKeyPressed(event -> {
-            if (event.getCode() == KeyCode.ENTER || event.getCode() == KeyCode.X) {
+            if (event.getCode() == KeyCode.ENTER) {
                 isIntroFinished = true;
             }
         });
@@ -252,7 +251,6 @@ public class BombermanGame extends Application {
         deads.forEach(Entity::update);
         items.forEach(Entity::update);
 
-        this.addBomb();
         handleSound();
         removeDeadEntity();
         this.removeFinishedElements();
@@ -260,7 +258,7 @@ public class BombermanGame extends Application {
         if (deads.size() == 0) {
             for (int i = 0; i < bombers.size(); i++) {
                 if ((bombers.get(i)).getHp() == 0 ) {
-                    lose = true;
+                    playerDeath = true;
                 }
             }
         }
@@ -375,42 +373,6 @@ public class BombermanGame extends Application {
         else if (randomNumber < 12) {
             object = new PowerupFlame(x, y, Sprite.powerup_flames.getFxImage());
             items.add(object);
-        }
-    }
-
-    /**
-     * Them bomb khi nhan duoc lenh tu ban phim va co du dieu kien.
-     */
-    public void addBomb() {
-        this.bombAdded = false;
-        if (bombers.size() <= 0) {
-            return;
-        }
-        Bomber bomber = (Bomber) bombers.get(0);
-        if ((bomber.getCreateBomb() != 1) || bombs.size() >= bomber.getBomb()) {
-            return;
-        }
-
-        Bomb bomb = new Bomb((bomber.getX() + (int)(bomber.getImg().getWidth() / 2))/ Sprite.SCALED_SIZE,
-                (bomber.getY() + (int)(bomber.getImg().getHeight() / 2)) / Sprite.SCALED_SIZE, Sprite.bomb.getFxImage());
-        boolean add = true;
-        for (int i = 0; i < bombs.size(); i++) {
-            if (bombs.get(i).equals(bomb)) {
-                add = false;
-                break;
-            }
-        }
-        if (bomber.isWallPass() && add) {
-            for (int i = 0; i < bricks.size(); i++) {
-                if (bricks.get(i).getX() == bomb.getX() && bricks.get(i).getY() == bomb.getY()) {
-                    add = false;
-                    break;
-                }
-            }
-        }
-        if (add) {
-            this.bombAdded = true;
-            bombs.add(bomb);
         }
     }
 
@@ -531,7 +493,6 @@ public class BombermanGame extends Application {
                 }
             }
 
-            add = true;
             for (int j = 0; j < walls.size(); j++) {
                 if (flame.intersects(walls.get(j))) {
                     add = false;
@@ -596,9 +557,15 @@ public class BombermanGame extends Application {
             music = AudioManager.setAndPlayMusic(music, getClass().getResource("/sounds/src_main_resources_assets_sounds_ending (2).wav").toString());
         }
         time = 1;
+        scene.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                resetGame();
+                isIntroFinished = false;
+            }
+        });
     }
 
-    public void handleLose() {
+    public void handleAfterPlayerDeath() {
         final int completionTime = 120;
         if (time == 0) {
             music = AudioManager.setAndPlayMusic(music, getClass().getResource("/sounds/just_died.wav").toString());
@@ -606,21 +573,57 @@ public class BombermanGame extends Application {
         time = (time < 10000 ? (time + 1) : 10000);
 
         if (time == completionTime && livesLeft > 0) {
-            this.time = 0;
-            this.lose = false;
-            this.level--;
-            this.livesLeft--;
-            this.newLevel = true;
-            for (int i = 0; i < bombers.size(); i++) {
-                bombers.get(i).setHp(1);
-                bombers.get(i).setImg(Sprite.player_down_1.getFxImage());
-            }
+            reserAfterPlayerDeath();
+            return;
         }
 
         if (time == completionTime) {
             this.initializeTitleScreen("YOU LOSE!");
             music = AudioManager.setAndPlayMusic(music, getClass().getResource("/sounds/src_main_resources_sounds_Game_Over.wav").toString());
         }
+        if (time > completionTime) {
+            scene.setOnKeyPressed(event -> {
+                if (event.getCode() == KeyCode.ENTER) {
+                    resetGame();
+                    isIntroFinished = false;
+                }
+            });
+        }
+    }
+
+    public void reserAfterPlayerDeath() {
+        this.time = 0;
+        this.playerDeath = false;
+        this.level--;
+        this.livesLeft--;
+        this.newLevel = true;
+        for (int i = 0; i < bombers.size(); i++) {
+            bombers.get(i).setHp(1);
+            bombers.get(i).setImg(Sprite.player_down_1.getFxImage());
+        }
+    }
+
+    public void resetGame() {
+        reset();
+        bombers.clear();
+        livesLeft = 2;
+        level = 0;
+        time = 0;
+        isIntroFinished = false;
+        isLevelComplete = false;
+        ableToPlayFindTheDoorMusic = true;
+        ableToPlayPlayerDeathSound = false;
+        newLevel = true;
+        this.win = false;
+        this.playerDeath = false;
+        if (music != null && music.getStatus() == MediaPlayer.Status.PLAYING) {
+            music.stop();
+            music.dispose();
+        }
+        music = null;
+        label.setVisible(false);
+        levelLabel.setVisible(false);
+        livesLeftLabel.setVisible(false);
     }
 
     public boolean initializeGameView() {
@@ -713,19 +716,22 @@ public class BombermanGame extends Application {
             this.bombExplosionSound = AudioManager.setAndPlaySound(this.bombExplosionSound, getClass().getResource("/sounds/src_main_resources_assets_sounds_explosion.wav").toString());
         }
 
-        if (this.bombAdded) {
-            this.placedBombSound = AudioManager.setAndPlaySound(this.placedBombSound, getClass().getResource("/sounds/src_main_resources_assets_sounds_placed_bomb.wav").toString());
+        for (int i = 0; i < bombers.size(); i++) {
+            if (((Bomber)bombers.get(i)).isBombAdded()) {
+                ((Bomber) bombers.get(i)).setBombAdded(false);
+                this.placedBombSound = AudioManager.setAndPlaySound(this.placedBombSound, getClass().getResource("/sounds/src_main_resources_assets_sounds_placed_bomb.wav").toString());
+            }
         }
 
         for (int i = 0; i < items.size(); i++) {
             if (items.get(i).getHp() < 1) {
-                this.powerup = AudioManager.setAndPlaySound(this.powerup, getClass().getResource("/sounds/src_main_resources_assets_sounds_powerup.wav").toString());
+                this.powerupSound = AudioManager.setAndPlaySound(this.powerupSound, getClass().getResource("/sounds/src_main_resources_assets_sounds_powerup.wav").toString());
             }
         }
 
         if (ableToPlayPlayerDeathSound) {
-            if (playerDeath == null || !playerDeath.isPlaying()) {
-                playerDeath = AudioManager.setAndPlaySound(playerDeath, getClass().getResource("/sounds/src_main_resources_sounds_sound effects_death.wav").toString());
+            if (playerDeathSound == null || !playerDeathSound.isPlaying()) {
+                playerDeathSound = AudioManager.setAndPlaySound(playerDeathSound, getClass().getResource("/sounds/src_main_resources_sounds_sound effects_death.wav").toString());
             }
             ableToPlayPlayerDeathSound = false;
         }

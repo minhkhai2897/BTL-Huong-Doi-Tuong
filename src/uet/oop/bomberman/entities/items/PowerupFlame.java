@@ -29,7 +29,7 @@ public class PowerupFlame extends Entity {
         List<Entity> bombers = BombermanGame.getBombers();
         for (int i = 0; i < bombers.size(); i++) {
             Bomber bomber = (Bomber) bombers.get(i);
-            if (bomber.intersects(this)) {
+            if (bomber.isBomberInCell(this.x, this.y)) {
                 bomber.setFlame(bomber.getFlame() + 1);
                 this.setHp(0);
                 break;

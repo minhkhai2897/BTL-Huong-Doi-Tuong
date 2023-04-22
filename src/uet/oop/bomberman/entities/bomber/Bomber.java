@@ -8,6 +8,7 @@ import uet.oop.bomberman.animation.BomberAnimation;
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.MovingEntity;
 import uet.oop.bomberman.entities.stillObjects.Bomb;
+import uet.oop.bomberman.graphics.Sprite;
 
 import java.util.List;
 
@@ -15,10 +16,19 @@ public class Bomber extends MovingEntity {
     private int bomb = 1;
     private int flame = 1;
     private int createBomb = 0;
+    private boolean bombAdded = false;
 
     public Bomber(int x, int y, Image img) {
         super( x, y, img);
         this.animation = new BomberAnimation();
+    }
+
+    public boolean isBombAdded() {
+        return bombAdded;
+    }
+
+    public void setBombAdded(boolean bombAdded) {
+        this.bombAdded = bombAdded;
     }
 
     public int getFlame() {
@@ -31,10 +41,6 @@ public class Bomber extends MovingEntity {
         }
     }
 
-    public int getCreateBomb() {
-        return createBomb;
-    }
-
     public int getBomb() {
         return bomb;
     }
@@ -45,12 +51,19 @@ public class Bomber extends MovingEntity {
         }
     }
 
+    public void setCreateBomb(int createBomb) {
+        if (createBomb > 100000) {
+            createBomb = 10;
+        }
+        this.createBomb = createBomb;
+    }
+
     public void update() {
         this.ableToMoveDown = true;
         this.ableToMoveLeft = true;
         this.ableToMoveRight = true;
         this.ableToMoveUp = true;
-        this.handleKeyPress(BombermanGame.getScene());
+        this.handleKeyPress();
         this.handleCollision();
         this.move();
         this.animation.setSprite(this);
@@ -58,14 +71,14 @@ public class Bomber extends MovingEntity {
 
     /**
      * Xu ly khi cac phim duoc nhan, nha.
-     * @param scene
      */
-    public void handleKeyPress(Scene scene) {
+    public void handleKeyPress() {
+        Scene scene = BombermanGame.getScene();
         scene.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.SPACE || event.getCode() == KeyCode.X) {
-                this.createBomb++;
-                if (this.createBomb > 100000) {
-                    this.createBomb = 10;
+                this.setCreateBomb(createBomb + 1);
+                if (createBomb == 1) {
+                    this.addBomb();
                 }
             }
 
@@ -142,7 +155,7 @@ public class Bomber extends MovingEntity {
 
         List<Entity> portals = BombermanGame.getPortals();
         for (int i = 0; i < portals.size(); i++) {
-            if (this.intersects(portals.get(i)) && enemies.size() == 0) {
+            if (this.isBomberInCell(portals.get(i).getX(), portals.get(i).getY()) && enemies.size() == 0) {
                 boolean complete = true;
                 for (int j = 0; j < bricks.size(); j++) {
                     if (portals.get(i).getX() == bricks.get(j).getX() &&
@@ -153,6 +166,57 @@ public class Bomber extends MovingEntity {
                 }
                 BombermanGame.setLevelComplete(complete);
             }
+        }
+    }
+
+    public boolean isBomberInCell(int cellX, int cellY) {
+        if ((cellX + Sprite.SCALED_SIZE + 9 >= this.x + this.img.getWidth())
+                && (cellY + Sprite.SCALED_SIZE + 4 >= this.y + this.img.getHeight())
+                && (cellX <= this.x + 4)
+                && (cellY <= this.y + 4)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Them bomb khi nhan duoc lenh tu ban phim va co du dieu kien.
+     */
+    public void addBomb() {
+        List<Entity> bombs = BombermanGame.getBombs();
+        List<Entity> bricks = BombermanGame.getBricks();
+        List<Entity> portals = BombermanGame.getPortals();
+
+        if (bombs.size() >= this.getBomb()) {
+            return;
+        }
+
+        Bomb bomb = new Bomb((this.getX() + (int)(this.getImg().getWidth() / 2))/ Sprite.SCALED_SIZE,
+                (this.getY() + (int)(this.getImg().getHeight() / 2)) / Sprite.SCALED_SIZE, Sprite.bomb.getFxImage());
+        boolean add = true;
+        for (int i = 0; i < bombs.size(); i++) {
+            if (bombs.get(i).equals(bomb)) {
+                add = false;
+                break;
+            }
+        }
+        for (int i = 0; i < portals.size(); i++) {
+            if (portals.get(i).getX() == bomb.getX() && portals.get(i).getY() == bomb.getY()) {
+                add = false;
+                break;
+            }
+        }
+        if (this.isWallPass() && add) {
+            for (int i = 0; i < bricks.size(); i++) {
+                if (bricks.get(i).getX() == bomb.getX() && bricks.get(i).getY() == bomb.getY()) {
+                    add = false;
+                    break;
+                }
+            }
+        }
+        if (add) {
+            this.bombAdded = true;
+            bombs.add(bomb);
         }
     }
 }
