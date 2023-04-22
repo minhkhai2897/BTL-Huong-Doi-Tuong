@@ -558,7 +558,6 @@ public class BombermanGame extends Application {
                 for (int j = 0; j < enemies.size(); j++) {
                     if (flame.intersects(enemies.get(j))) {
                         enemies.get(j).setHp(0);
-                        break;
                     }
                 }
                 break;
