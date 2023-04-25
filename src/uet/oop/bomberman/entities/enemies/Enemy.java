@@ -286,18 +286,16 @@ public abstract class Enemy extends MovingEntity {
         }
     }
 
-    public static int heuristic(int u, int v) {
-        List<Integer> priorityScores = BombermanGame.getPriorityScores();
-        return priorityScores.get(u) + MyMath.distanceManhattan(u, v);
-    }
-
     public int findFirstVertexOnShortestPathDijkstra(List<List<Integer>> adjList, int u, int v) {
         List<Boolean> visited = new ArrayList<>(Collections.nCopies(BombermanGame.WIDTH * BombermanGame.HEIGHT, false));
         List<Integer> distTo = new ArrayList<>(Collections.nCopies(BombermanGame.WIDTH * BombermanGame.HEIGHT, Integer.MAX_VALUE));
         List<Integer> predecessors  = new ArrayList<>(Collections.nCopies(BombermanGame.WIDTH * BombermanGame.HEIGHT, -1));
+        List<Integer> priorityScores = BombermanGame.getPriorityScores();
         Queue<Integer> pq = new PriorityQueue<>(new Comparator<Integer>() {
-            public int compare(Integer n1, Integer n2) {
-                return (distTo.get(n1) + heuristic(n1, v)) - (distTo.get(n2) + heuristic(n2, v));
+            public int compare(Integer n1, Integer n2)
+            {
+                return (distTo.get(n1) + priorityScores.get(n1) + MyMath.distanceManhattan(n1, v))
+                        - (distTo.get(n2) + priorityScores.get(n2) + MyMath.distanceManhattan(n2, v));
             }
         });
 
