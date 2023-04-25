@@ -57,10 +57,10 @@ public class GamePlayData {
             Scanner scaner = new Scanner(file);
             scaner.nextLine();
             List<List<Character>> map = new ArrayList<>();
-            for (int i = 0; i < BombermanGame.getHeight(); i++) {
+            for (int i = 0; i < BombermanGame.HEIGHT; i++) {
                 List<Character> list = new ArrayList<>();
                 String line = scaner.nextLine();
-                for (int j = 0; j < BombermanGame.getWidth(); j++) {
+                for (int j = 0; j < BombermanGame.WIDTH; j++) {
                     char c = line.charAt(j);
                     list.add(c);
                 }

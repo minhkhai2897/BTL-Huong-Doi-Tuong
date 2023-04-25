@@ -286,13 +286,18 @@ public abstract class Enemy extends MovingEntity {
         }
     }
 
+    public static int heuristic(int u, int v) {
+        List<Integer> priorityScores = BombermanGame.getPriorityScores();
+        return priorityScores.get(u) + MyMath.distanceManhattan(u, v);
+    }
+
     public int findFirstVertexOnShortestPathDijkstra(List<List<Integer>> adjList, int u, int v) {
-        List<Boolean> visited = new ArrayList<>(Collections.nCopies(BombermanGame.getWidth() * BombermanGame.getHeight(), false));
-        List<Integer> distTo = new ArrayList<>(Collections.nCopies(BombermanGame.getWidth() * BombermanGame.getHeight(), Integer.MAX_VALUE));
-        List<Integer> predecessors  = new ArrayList<>(Collections.nCopies(BombermanGame.getWidth() * BombermanGame.getHeight(), -1));
+        List<Boolean> visited = new ArrayList<>(Collections.nCopies(BombermanGame.WIDTH * BombermanGame.HEIGHT, false));
+        List<Integer> distTo = new ArrayList<>(Collections.nCopies(BombermanGame.WIDTH * BombermanGame.HEIGHT, Integer.MAX_VALUE));
+        List<Integer> predecessors  = new ArrayList<>(Collections.nCopies(BombermanGame.WIDTH * BombermanGame.HEIGHT, -1));
         Queue<Integer> pq = new PriorityQueue<>(new Comparator<Integer>() {
             public int compare(Integer n1, Integer n2) {
-                return distTo.get(n1) - distTo.get(n2);
+                return (distTo.get(n1) + heuristic(n1, v)) - (distTo.get(n2) + heuristic(n2, v));
             }
         });
 
@@ -307,8 +312,8 @@ public abstract class Enemy extends MovingEntity {
             }
             for (int i = 0; i < adjList.get(t).size(); i++) {
                 if (!visited.get(adjList.get(t).get(i))) {
-                    if (distTo.get(adjList.get(t).get(i)) > distTo.get(t) + 1) {
-                        distTo.set(adjList.get(t).get(i), distTo.get(t) + 1);
+                    if (distTo.get(adjList.get(t).get(i)) > distTo.get(t) + Sprite.SCALED_SIZE) {
+                        distTo.set(adjList.get(t).get(i), distTo.get(t) + Sprite.SCALED_SIZE);
                         predecessors.set(adjList.get(t).get(i), t);
                     }
                     pq.add(adjList.get(t).get(i));

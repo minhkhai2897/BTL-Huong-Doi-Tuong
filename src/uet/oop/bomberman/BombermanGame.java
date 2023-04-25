@@ -28,8 +28,8 @@ import uet.oop.bomberman.entities.stillObjects.*;
 import uet.oop.bomberman.graphics.Sprite;
 
 public class BombermanGame extends Application {
-    public final static int width = 31;
-    public final static int height = 13;
+    public final static int WIDTH = 31;
+    public final static int HEIGHT = 13;
     public static Image introImage;
     private static Group root;
     private static Scene scene;
@@ -56,6 +56,7 @@ public class BombermanGame extends Application {
     private static boolean newLevel = true;
     private static boolean win = false;
     private static boolean playerDeath = false;
+    private static List<Integer> priorityScores;
     private static List<String> mapList = new ArrayList<>();
     private static List<List<Character>> map = new ArrayList<>();
     private static List<Entity> grasses = new ArrayList<>();
@@ -91,8 +92,8 @@ public class BombermanGame extends Application {
         BombermanGame.map = map;
     }
 
-    public static int getWidth() {
-        return width;
+    public static List<Integer> getPriorityScores() {
+        return priorityScores;
     }
 
     public static List<Entity> getWalls() {
@@ -126,11 +127,6 @@ public class BombermanGame extends Application {
     public static void setLevel(int level) {
         BombermanGame.level = level;
     }
-
-    public static int getHeight() {
-        return height;
-    }
-
     public static void setMapList(List<String> mapList) {
         BombermanGame.mapList = mapList;
     }
@@ -150,10 +146,11 @@ public class BombermanGame extends Application {
 
     public void start(Stage stage) {
         GamePlayData.loadMapListFromFile();
+        priorityScores = MyMath.assign_priority_scores_to_vertices(BombermanGame.WIDTH, BombermanGame.HEIGHT);
         font = GamePlayData.loadFont(getClass().getResource("/font/calibrib.ttf").toString(), 24);
         gameFont = GamePlayData.loadFont(getClass().getResource("/font/game_font.ttf").toString(), 24);
 
-        canvas = new Canvas(Sprite.SCALED_SIZE * width, Sprite.SCALED_SIZE * (height + 2));
+        canvas = new Canvas(Sprite.SCALED_SIZE * WIDTH, Sprite.SCALED_SIZE * (HEIGHT + 2));
         gc = canvas.getGraphicsContext2D();
         root = new Group();
         root.getChildren().add(canvas);
@@ -287,8 +284,8 @@ public class BombermanGame extends Application {
     public void createMap() {
         this.reset();
 
-        for (int i = 0; i < height; i++) {
-            for (int j = 0; j < width; j++) {
+        for (int i = 0; i < HEIGHT; i++) {
+            for (int j = 0; j < WIDTH; j++) {
                 Entity object = new Grass(j, i + 2, Sprite.grass.getFxImage());
                 grasses.add(object);
                 char c = map.get(i).get(j);
@@ -650,8 +647,8 @@ public class BombermanGame extends Application {
         ableToPlayFindTheDoorMusic = true;
         music = AudioManager.setAndPlayMusicLoop(music, getClass().getResource("/sounds/src_main_resources_assets_music_stage_theme.mp3").toString());
         GamePlayData.readMapFromFile();
-        canvas.setHeight(Sprite.SCALED_SIZE * (height + 2));
-        canvas.setWidth(Sprite.SCALED_SIZE * width);
+        canvas.setHeight(Sprite.SCALED_SIZE * (HEIGHT + 2));
+        canvas.setWidth(Sprite.SCALED_SIZE * WIDTH);
         createMap();
 
         time = 0;
@@ -769,19 +766,19 @@ public class BombermanGame extends Application {
 
     public static void addNeighbor(List<List<Integer>> list, int x, int y) {
         int n = MyMath.converPointToInt(x, y);
-        if (n - BombermanGame.getWidth() >= 0) {
+        if (n - BombermanGame.WIDTH >= 0) {
             boolean k = true;
-            for (int i = 0; i < list.get(n - BombermanGame.getWidth()).size(); i++) {
-                if (list.get(n - BombermanGame.getWidth()).get(i) == n) {
+            for (int i = 0; i < list.get(n - BombermanGame.WIDTH).size(); i++) {
+                if (list.get(n - BombermanGame.WIDTH).get(i) == n) {
                     k = false;
                     break;
                 }
             }
             if (k) {
-                list.get(n - BombermanGame.getWidth()).add(n);
+                list.get(n - BombermanGame.WIDTH).add(n);
             }
         }
-        if (n - 1 >= 0 && ((n - 1) / BombermanGame.getWidth()) == (n / BombermanGame.getWidth())) {
+        if (n - 1 >= 0 && ((n - 1) / BombermanGame.WIDTH) == (n / BombermanGame.WIDTH)) {
             boolean k = true;
             for (int i = 0; i < list.get(n - 1).size(); i++) {
                 if (list.get(n - 1).get(i) == n) {
@@ -793,8 +790,8 @@ public class BombermanGame extends Application {
                 list.get(n - 1).add(n);
             }
         }
-        if (n + 1 < BombermanGame.getWidth() * BombermanGame.getHeight()
-             && ((n + 1) / BombermanGame.getWidth() == (n / BombermanGame.getWidth())))
+        if (n + 1 < BombermanGame.WIDTH * BombermanGame.HEIGHT
+             && ((n + 1) / BombermanGame.WIDTH == (n / BombermanGame.WIDTH)))
         {
             boolean k = true;
             for (int i = 0; i < list.get(n + 1).size(); i++) {
@@ -807,16 +804,16 @@ public class BombermanGame extends Application {
                 list.get(n + 1).add(n);
             }
         }
-        if (n + BombermanGame.getWidth() < BombermanGame.getWidth() * BombermanGame.getHeight()) {
+        if (n + BombermanGame.WIDTH < BombermanGame.WIDTH * BombermanGame.HEIGHT) {
             boolean k = true;
-            for (int i = 0; i < list.get(n + BombermanGame.getWidth()).size(); i++) {
-                if (list.get(n + BombermanGame.getWidth()).get(i) == n) {
+            for (int i = 0; i < list.get(n + BombermanGame.WIDTH).size(); i++) {
+                if (list.get(n + BombermanGame.WIDTH).get(i) == n) {
                     k = false;
                     break;
                 }
             }
             if (k) {
-                list.get(n + BombermanGame.getWidth()).add(n);
+                list.get(n + BombermanGame.WIDTH).add(n);
             }
         }
     }
@@ -826,15 +823,15 @@ public class BombermanGame extends Application {
 
     public static void removeNeighbor(List<List<Integer>> list, int x, int y) {
         int n = MyMath.converPointToInt(x, y);
-        if (n - BombermanGame.getWidth() >= 0) {
-            for (int i = 0; i < list.get(n - BombermanGame.getWidth()).size(); i++) {
-                if (list.get(n - BombermanGame.getWidth()).get(i) == n) {
-                    list.get(n - BombermanGame.getWidth()).remove(i);
+        if (n - BombermanGame.WIDTH >= 0) {
+            for (int i = 0; i < list.get(n - BombermanGame.WIDTH).size(); i++) {
+                if (list.get(n - BombermanGame.WIDTH).get(i) == n) {
+                    list.get(n - BombermanGame.WIDTH).remove(i);
                     break;
                 }
             }
         }
-        if (n - 1 >= 0 && ((n - 1) / BombermanGame.getWidth()) == (n / BombermanGame.getWidth())) {
+        if (n - 1 >= 0 && ((n - 1) / BombermanGame.WIDTH) == (n / BombermanGame.WIDTH)) {
             for (int i = 0; i < list.get(n - 1).size(); i++) {
                 if (list.get(n - 1).get(i) == n) {
                     list.get(n - 1).remove(i);
@@ -842,8 +839,8 @@ public class BombermanGame extends Application {
                 }
             }
         }
-        if (n + 1 < BombermanGame.getWidth() * BombermanGame.getHeight()
-                && ((n + 1) / BombermanGame.getWidth() == (n / BombermanGame.getWidth())))
+        if (n + 1 < BombermanGame.WIDTH * BombermanGame.HEIGHT
+                && ((n + 1) / BombermanGame.WIDTH == (n / BombermanGame.WIDTH)))
         {
             for (int i = 0; i < list.get(n + 1).size(); i++) {
                 if (list.get(n + 1).get(i) == n) {
@@ -852,10 +849,10 @@ public class BombermanGame extends Application {
                 }
             }
         }
-        if (n + BombermanGame.getWidth() < BombermanGame.getWidth() * BombermanGame.getHeight()) {
-            for (int i = 0; i < list.get(n + BombermanGame.getWidth()).size(); i++) {
-                if (list.get(n + BombermanGame.getWidth()).get(i) == n) {
-                    list.get(n + BombermanGame.getWidth()).remove(i);
+        if (n + BombermanGame.WIDTH < BombermanGame.WIDTH * BombermanGame.HEIGHT) {
+            for (int i = 0; i < list.get(n + BombermanGame.WIDTH).size(); i++) {
+                if (list.get(n + BombermanGame.WIDTH).get(i) == n) {
+                    list.get(n + BombermanGame.WIDTH).remove(i);
                     break;
                 }
             }
