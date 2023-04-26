@@ -45,17 +45,17 @@ public class Minvo extends Enemy {
 
         int u = MyMath.converPointToInt(this.getPosition());
         int v = MyMath.converPointToInt(bomber.getPosition());
-        int n = this.findFirstVertexOnShortestPathDijkstra(adjListWallpass, u, v);
+        int n = this.findFirstVertexOnShortestPathAstar(adjListWallpass, u, v);
         if (n != -1) {
             boolean moved = this.moveToCell(n);
             if (!moved) {
                 Point p = MyMath.convertIntToPoint(n);
                 BombermanGame.removeNeighbor(adjList, p);
                 BombermanGame.removeNeighbor(adjListWallpass, p);
-                if (u == n) {
-                    this.autoMoveToPlayer();
-                    return;
-                }
+//                if (u == n) {
+//                    this.autoMoveToPlayer();
+//                    return;
+//                }
                 this.handleMove();
             }
             return;

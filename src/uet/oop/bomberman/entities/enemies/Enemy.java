@@ -13,10 +13,15 @@ import java.util.*;
 import java.util.List;
 
 public abstract class Enemy extends MovingEntity {
+    protected int id = 0;
     protected boolean useSpecialMove = true;
     protected int actionCode = 0;
     public Enemy(int x, int y, Image img) {
         super(x, y, img);
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     protected void handleCollision() {
@@ -270,7 +275,7 @@ public abstract class Enemy extends MovingEntity {
         }
     }
 
-    protected void updateBomberVerticalMovementLimits(int bomberY, int enemyY) {
+    protected void updateBomberVerticalMovementLimits(Integer bomberY, Integer enemyY) {
         if (ableToMoveUp && bomberY + Sprite.SCALED_SIZE < enemyY + this.img.getHeight()) {
             ableToMoveDown = false;
         } else if (ableToMoveDown && bomberY > enemyY) {
@@ -278,7 +283,7 @@ public abstract class Enemy extends MovingEntity {
         }
     }
 
-    protected void updateBomberHorizontalMovementLimits(int bomberX, int enemyX) {
+    protected void updateBomberHorizontalMovementLimits(Integer bomberX, Integer enemyX) {
         if (ableToMoveLeft && bomberX + Sprite.SCALED_SIZE < enemyX + this.img.getWidth()) {
             ableToMoveRight = false;
         } else if (ableToMoveRight && bomberX > enemyX) {
@@ -286,22 +291,30 @@ public abstract class Enemy extends MovingEntity {
         }
     }
 
-    public int findFirstVertexOnShortestPathDijkstra(List<List<Integer>> adjList, int u, int v) {
+    public int findFirstVertexOnShortestPathAstar(List<List<Integer>> adjList, Integer u, Integer v) {
         List<Boolean> visited = new ArrayList<>(Collections.nCopies(BombermanGame.WIDTH * BombermanGame.HEIGHT, false));
-        List<Integer> distTo = new ArrayList<>(Collections.nCopies(BombermanGame.WIDTH * BombermanGame.HEIGHT, Integer.MAX_VALUE));
+        List<Integer> distTo = new ArrayList<>(Collections.nCopies(BombermanGame.WIDTH * BombermanGame.HEIGHT, 100000));
         List<Integer> predecessors  = new ArrayList<>(Collections.nCopies(BombermanGame.WIDTH * BombermanGame.HEIGHT, -1));
-        List<Integer> priorityScores = BombermanGame.getPriorityScores();
+        List<Integer> priorityScores;
+        if (this.id % 2 == 0) {
+            priorityScores = BombermanGame.getPriorityScores();
+        } else {
+            priorityScores = BombermanGame.getPriorityScores1();
+        }
         Queue<Integer> pq = new PriorityQueue<>(new Comparator<Integer>() {
             public int compare(Integer n1, Integer n2)
             {
-                return (distTo.get(n1) + priorityScores.get(n1) + MyMath.distanceManhattan(n1, v))
-                        - (distTo.get(n2) + priorityScores.get(n2) + MyMath.distanceManhattan(n2, v));
+                return (distTo.get(n1) + priorityScores.get(n1))
+                        - (distTo.get(n2) + priorityScores.get(n2));
             }
         });
 
         pq.add(u);
         distTo.set(u, 0);
         predecessors.set(u, u);
+
+//        System.out.println("//////////////////////////////////////////////////////////////////");
+
         while (pq.size() > 0) {
             int t = pq.remove();
             visited.set(t, true);
@@ -321,16 +334,23 @@ public abstract class Enemy extends MovingEntity {
 
         if (predecessors.get(v) != -1) {
             int t = v;
-            while (predecessors.get(t) != u) {
+//            System.out.println("v = " + v);
+            while (predecessors.get(t) - u != 0) {
+//            while (predecessors.get(t) != u) {
+//                System.out.println(t + "  " + predecessors.get(t));
                 t = predecessors.get(t);
             }
+            if (t == u) {
+                return -1;
+            }
+
             return t;
         }
 
         return -1;
     }
 
-    public boolean moveToCell(int n) {
+    public boolean moveToCell(Integer n) {
         Point p = MyMath.convertIntToPoint(n);
         int cellX = p.x * Sprite.SCALED_SIZE;
         int cellY = (p.y + 2) * Sprite.SCALED_SIZE;

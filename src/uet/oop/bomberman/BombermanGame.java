@@ -2,6 +2,7 @@ package uet.oop.bomberman;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
@@ -57,6 +58,7 @@ public class BombermanGame extends Application {
     private static boolean win = false;
     private static boolean playerDeath = false;
     private static List<Integer> priorityScores;
+    private static List<Integer> priorityScores1 = new ArrayList<>(Collections.nCopies(WIDTH * HEIGHT, 0));
     private static List<String> mapList = new ArrayList<>();
     private static List<List<Character>> map = new ArrayList<>();
     private static List<Entity> grasses = new ArrayList<>();
@@ -72,12 +74,22 @@ public class BombermanGame extends Application {
     private static List<List<Integer>> adjList = new ArrayList<>();
     private static List<List<Integer>> adjListWallpass = new ArrayList<>();
 
+    private static List<Integer> distanceManhattanToPlayer;
+
     public static void main(String[] args) {
         Application.launch(BombermanGame.class);
     }
 
     public static Scene getScene() {
         return scene;
+    }
+
+    public static List<Integer> getDistanceManhattanToPlayer() {
+        return distanceManhattanToPlayer;
+    }
+
+    public static List<Integer> getPriorityScores1() {
+        return priorityScores1;
     }
 
     public static void setLevelComplete(boolean levelComplete) {
@@ -147,6 +159,10 @@ public class BombermanGame extends Application {
     public void start(Stage stage) {
         GamePlayData.loadMapListFromFile();
         priorityScores = MyMath.assign_priority_scores_to_vertices(BombermanGame.WIDTH, BombermanGame.HEIGHT);
+        for (int i = 0; i < priorityScores.size(); i++) {
+            priorityScores1.set(i, Math.min(BombermanGame.WIDTH, BombermanGame.HEIGHT) / 2 - priorityScores.get(i));
+        }
+
         font = GamePlayData.loadFont(getClass().getResource("/font/calibrib.ttf").toString(), 24);
         gameFont = GamePlayData.loadFont(getClass().getResource("/font/game_font.ttf").toString(), 24);
 
@@ -240,6 +256,9 @@ public class BombermanGame extends Application {
     }
 
     public void update() {
+        setIdMinvo();
+        setIdDoll();
+
         flames.forEach(Entity::update);
         bombers.forEach(Entity::update);
         enemies.forEach(Entity::update);
@@ -862,4 +881,30 @@ public class BombermanGame extends Application {
     public static void removeNeighbor(List<List<Integer>> list, Point p) {
         removeNeighbor(list, p.x, p.y);
     }
+
+    public void setIdMinvo() {
+        int id = 0;
+        for (int i = 0; i < enemies.size(); i++) {
+            if (enemies.get(i) instanceof Minvo) {
+                ((Minvo)enemies.get(i)).setId(id++);
+            }
+        }
+    }
+
+    public void setIdDoll() {
+        int id = 0;
+        for (int i = 0; i < enemies.size(); i++) {
+            if (enemies.get(i) instanceof Doll) {
+                ((Doll)enemies.get(i)).setId(id++);
+            }
+        }
+    }
+
+//    public void calculateDistanceManhattanToPlayer() {
+//        List<Integer> distance = new ArrayList<>(Collections.nCopies(WIDTH * HEIGHT, 0));
+//
+//        for (int i = 0; i < distance.size(); i++) {
+//            distance.set(i, MyMath.distanceManhattan(i,
+//        }
+//    }
 }
