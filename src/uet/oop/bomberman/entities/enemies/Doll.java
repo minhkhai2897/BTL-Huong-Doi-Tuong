@@ -1,6 +1,7 @@
 package uet.oop.bomberman.entities.enemies;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 import javafx.scene.image.Image;
 import uet.oop.bomberman.BombermanGame;
@@ -14,6 +15,7 @@ public class Doll extends Enemy {
         super(x, y, img);
         this.setSpeed(2);
         this.animation = new DollAnimation();
+        this.moveOptimizations = new ArrayList<>(BombermanGame.WIDTH * BombermanGame.HEIGHT);
     }
 
     public void update() {
@@ -45,7 +47,7 @@ public class Doll extends Enemy {
 
         int u = MyMath.converPointToInt(this.getPosition());
         int v = MyMath.converPointToInt(bomber.getPosition());
-        int n = this.findFirstVertexOnShortestPathDijkstra(adjList, u, v);
+        int n = this.findFirstVertexOnShortestPathAstar(adjList, u, v);
         if (n != -1) {
             boolean moved = this.moveToCell(n);
             if (!moved) {

@@ -29,7 +29,7 @@ public class MyMath {
     }
 
     public static List<Integer> assign_priority_scores_to_vertices(int width, int height) {
-        List<List<Integer>> vertex = new ArrayList<>();
+        List<List<Integer>> vertex = new ArrayList<>(height);
         for (int i = 0; i < height; i++) {
             vertex.add(new ArrayList<>(Collections.nCopies(width, 0)));
         }
@@ -73,19 +73,8 @@ public class MyMath {
     public static int distanceManhattan(int u, int v) {
         Point p1 = convertIntToPoint(u);
         Point p2 = convertIntToPoint(v);
-        return (Math.abs(p1.x - p2.x) + Math.abs(p1.y - p2.y)) * Sprite.SCALED_SIZE;
+        return (Math.abs(p1.x - p2.x) + Math.abs(p1.y - p2.y)) * 2 * Sprite.SCALED_SIZE;
     }
-
-//    public static void main(String[] args) {
-//        List<Integer> a = assign_priority_scores_to_vertices(BombermanGame.WIDTH, BombermanGame.HEIGHT);
-//        for (int i = 0; i < BombermanGame.HEIGHT; i++) {
-//            for (int j = 0; j < BombermanGame.WIDTH; j++) {
-//                int n = converPointToInt(j, i);
-//                System.out.print(a.get(n) + " ");
-//            }
-//            System.out.println();
-//        }
-//    }
 }
 
 

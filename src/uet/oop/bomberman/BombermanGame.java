@@ -71,10 +71,10 @@ public class BombermanGame extends Application {
     private static List<Entity> bombs = new ArrayList<>();
     private static List<Entity> deads = new ArrayList<>();
     private static List<Entity> flames = new ArrayList<>();
-    private static List<List<Integer>> adjList0 = new ArrayList<>();
-    private static List<List<Integer>> adjList = new ArrayList<>();
-    private static List<List<Integer>> adjListWallpass0 = new ArrayList<>();
-    private static List<List<Integer>> adjListWallpass = new ArrayList<>();
+    private static List<List<Integer>> adjList0 = new ArrayList<>(BombermanGame.WIDTH * BombermanGame.HEIGHT);
+    private static List<List<Integer>> adjList = new ArrayList<>(BombermanGame.WIDTH * BombermanGame.HEIGHT);
+    private static List<List<Integer>> adjListWallpass0 = new ArrayList<>(BombermanGame.WIDTH * BombermanGame.HEIGHT);
+    private static List<List<Integer>> adjListWallpass = new ArrayList<>(BombermanGame.WIDTH * BombermanGame.HEIGHT);
     public static void main(String[] args) {
         Application.launch(BombermanGame.class);
     }
@@ -771,13 +771,11 @@ public class BombermanGame extends Application {
     }
 
     public void createAdjList() {
-        for (int i = 0; i < map.size(); i++) {
-            for (int j = 0; j < map.get(i).size(); j++) {
-                adjList0.add(new ArrayList<>());
-                adjList.add(new ArrayList<>());
-                adjListWallpass0.add(new ArrayList<>());
-                adjListWallpass.add(new ArrayList<>());
-            }
+        for (int i = 0; i < BombermanGame.WIDTH * BombermanGame.HEIGHT; i++) {
+            adjList0.add(new ArrayList<>());
+            adjList.add(new ArrayList<>());
+            adjListWallpass0.add(new ArrayList<>());
+            adjListWallpass.add(new ArrayList<>());
         }
         for (int i = 0; i < map.size(); i++) {
             for (int j = 0; j < map.get(i).size(); j++) {

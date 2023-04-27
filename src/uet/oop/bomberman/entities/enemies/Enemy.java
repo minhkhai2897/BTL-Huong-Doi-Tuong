@@ -306,9 +306,9 @@ public abstract class Enemy extends MovingEntity {
      * @param v dinh ket thuc
      * @return
      */
-    public int findFirstVertexOnShortestPathDijkstra(List<List<Integer>> adjList, int u, int v) {
+    public int findFirstVertexOnShortestPathAstar(List<List<Integer>> adjList, int u, int v) {
         List<Boolean> visited = new ArrayList<>(Collections.nCopies(BombermanGame.WIDTH * BombermanGame.HEIGHT, false));
-        List<Integer> distTo = new ArrayList<>(Collections.nCopies(BombermanGame.WIDTH * BombermanGame.HEIGHT, Integer.MAX_VALUE));
+        List<Integer> distTo = new ArrayList<>(Collections.nCopies(BombermanGame.WIDTH * BombermanGame.HEIGHT, 1000000));
         List<Integer> predecessors  = new ArrayList<>(Collections.nCopies(BombermanGame.WIDTH * BombermanGame.HEIGHT, -1));
         List<Integer> priorityScores;
         if (this.moveOptimizations.isEmpty()) {
@@ -326,8 +326,9 @@ public abstract class Enemy extends MovingEntity {
             public int compare(Integer n1, Integer n2)
             {
                 // Hàm Manhattan dinh thu 2 là u vi chung ta đang tìm đường đi từ v -> u
-                return (distTo.get(n1) + priorityScores.get(n1) + moveOptimizations.get(n1))
-                        - (distTo.get(n2) + priorityScores.get(n2) + moveOptimizations.get(n2));
+                // Chú ý: Khoang cach giua 2 dinh = khoang cach manhattan giua 2 dinh ke.
+                return (distTo.get(n1) + priorityScores.get(n1) + MyMath.distanceManhattan(n1, u) * 9 / 10 + moveOptimizations.get(n1))
+                        - (distTo.get(n2) + priorityScores.get(n2) + MyMath.distanceManhattan(n2, u) * 9 / 10 + moveOptimizations.get(n2));
             }
         });
 
@@ -344,8 +345,8 @@ public abstract class Enemy extends MovingEntity {
             }
             for (int i = 0; i < adjList.get(t).size(); i++) {
                 if (!visited.get(adjList.get(t).get(i))) {
-                    if (distTo.get(adjList.get(t).get(i)) > distTo.get(t) + Sprite.SCALED_SIZE) {
-                        distTo.set(adjList.get(t).get(i), distTo.get(t) + Sprite.SCALED_SIZE);
+                    if (distTo.get(adjList.get(t).get(i)) > distTo.get(t) + 2 * Sprite.SCALED_SIZE) {
+                        distTo.set(adjList.get(t).get(i), distTo.get(t) + 2 * Sprite.SCALED_SIZE);
                         predecessors.set(adjList.get(t).get(i), t);
                     }
                     pq.add(adjList.get(t).get(i));
@@ -396,7 +397,6 @@ public abstract class Enemy extends MovingEntity {
         }
         return false;
     }
-
 
     public List<Integer> updateMoveOptimizationsList() {
         List<Integer> moveOptimizations = new ArrayList<>(Collections.nCopies(BombermanGame.WIDTH * BombermanGame.HEIGHT, 1));
