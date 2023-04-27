@@ -7,12 +7,12 @@ import java.util.*;
 import java.util.List;
 
 public class MyMath {
-    public static int getRandomNumber(Integer min, Integer max) {
+    public static int getRandomNumber(int min, int max) {
         Random random = new Random();
         return random.nextInt((max - min) + 1) + min;
     }
 
-    public static Point convertIntToPoint(Integer n) {
+    public static Point convertIntToPoint(int n) {
         int x = n % BombermanGame.WIDTH;
         int y = (n - x) / BombermanGame.WIDTH;
         return new Point(x, y);
@@ -23,12 +23,12 @@ public class MyMath {
         return n;
     }
 
-    public static int converPointToInt(Integer x, Integer y) {
+    public static int converPointToInt(int x, int y) {
         int n = BombermanGame.WIDTH * y + x;
         return n;
     }
 
-    public static List<Integer> assign_priority_scores_to_vertices(Integer width, Integer height) {
+    public static List<Integer> assign_priority_scores_to_vertices(int width, int height) {
         List<List<Integer>> vertex = new ArrayList<>();
         for (int i = 0; i < height; i++) {
             vertex.add(new ArrayList<>(Collections.nCopies(width, 0)));
@@ -63,18 +63,29 @@ public class MyMath {
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
                 int n = converPointToInt(j, i);
-                priorityScores.set(n, (t - 1) - vertex.get(i).get(j));
+                priorityScores.set(n, 2 * ((t - 1) - vertex.get(i).get(j)));
             }
         }
 
         return priorityScores;
     }
 
-    public static int distanceManhattan(Integer u, Integer v) {
+    public static int distanceManhattan(int u, int v) {
         Point p1 = convertIntToPoint(u);
         Point p2 = convertIntToPoint(v);
         return (Math.abs(p1.x - p2.x) + Math.abs(p1.y - p2.y)) * Sprite.SCALED_SIZE;
     }
+
+//    public static void main(String[] args) {
+//        List<Integer> a = assign_priority_scores_to_vertices(BombermanGame.WIDTH, BombermanGame.HEIGHT);
+//        for (int i = 0; i < BombermanGame.HEIGHT; i++) {
+//            for (int j = 0; j < BombermanGame.WIDTH; j++) {
+//                int n = converPointToInt(j, i);
+//                System.out.print(a.get(n) + " ");
+//            }
+//            System.out.println();
+//        }
+//    }
 }
 
 

@@ -8,6 +8,8 @@ import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.bomber.Bomber;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Minvo extends Enemy {
@@ -23,6 +25,8 @@ public class Minvo extends Enemy {
         this.ableToMoveRight = true;
         this.ableToMoveDown = true;
         this.ableToMoveUp = true;
+
+        this.moveOptimizations = this.updateMoveOptimizationsList();
         this.handleCollision();
         this.handleMove();
         this.move();
@@ -45,18 +49,14 @@ public class Minvo extends Enemy {
 
         int u = MyMath.converPointToInt(this.getPosition());
         int v = MyMath.converPointToInt(bomber.getPosition());
-        int n = this.findFirstVertexOnShortestPathAstar(adjListWallpass, u, v);
+        int n = this.findFirstVertexOnShortestPathDijkstra(adjListWallpass, u, v);
         if (n != -1) {
             boolean moved = this.moveToCell(n);
             if (!moved) {
                 Point p = MyMath.convertIntToPoint(n);
                 BombermanGame.removeNeighbor(adjList, p);
                 BombermanGame.removeNeighbor(adjListWallpass, p);
-//                if (u == n) {
-//                    this.autoMoveToPlayer();
-//                    return;
-//                }
-                this.handleMove();
+                this.autoMoveToPlayer();
             }
             return;
         }

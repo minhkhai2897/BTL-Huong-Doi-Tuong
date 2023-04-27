@@ -71,11 +71,10 @@ public class BombermanGame extends Application {
     private static List<Entity> bombs = new ArrayList<>();
     private static List<Entity> deads = new ArrayList<>();
     private static List<Entity> flames = new ArrayList<>();
+    private static List<List<Integer>> adjList0 = new ArrayList<>();
     private static List<List<Integer>> adjList = new ArrayList<>();
+    private static List<List<Integer>> adjListWallpass0 = new ArrayList<>();
     private static List<List<Integer>> adjListWallpass = new ArrayList<>();
-
-    private static List<Integer> distanceManhattanToPlayer;
-
     public static void main(String[] args) {
         Application.launch(BombermanGame.class);
     }
@@ -84,9 +83,6 @@ public class BombermanGame extends Application {
         return scene;
     }
 
-    public static List<Integer> getDistanceManhattanToPlayer() {
-        return distanceManhattanToPlayer;
-    }
 
     public static List<Integer> getPriorityScores1() {
         return priorityScores1;
@@ -160,7 +156,7 @@ public class BombermanGame extends Application {
         GamePlayData.loadMapListFromFile();
         priorityScores = MyMath.assign_priority_scores_to_vertices(BombermanGame.WIDTH, BombermanGame.HEIGHT);
         for (int i = 0; i < priorityScores.size(); i++) {
-            priorityScores1.set(i, Math.min(BombermanGame.WIDTH, BombermanGame.HEIGHT) / 2 - priorityScores.get(i));
+            priorityScores1.set(i, (Math.min(BombermanGame.WIDTH, BombermanGame.HEIGHT) / 2) * 2 - priorityScores.get(i));
         }
 
         font = GamePlayData.loadFont(getClass().getResource("/font/calibrib.ttf").toString(), 24);
@@ -367,7 +363,6 @@ public class BombermanGame extends Application {
         Entity portal = new Portal(bricks.get(randomNumber).getX() / Sprite.SCALED_SIZE,
                 bricks.get(randomNumber).getY() / Sprite.SCALED_SIZE, Sprite.portal.getFxImage());
         portals.add(portal);
-
         createAdjList();
     }
 
@@ -408,8 +403,20 @@ public class BombermanGame extends Application {
         for (int i = 0; i < flames.size(); i++) {
             if (flames.get(i).getAnimation().isFinishDeadAnimation()) {
                 Point position = flames.get(i).getPosition();
+
                 this.addNeighbor(adjList, position);
+                int n = MyMath.converPointToInt(position);
+                adjList.get(n).clear();
+                for (int j = 0; j < adjList0.get(n).size(); j++) {
+                    adjList.get(n).add(adjList0.get(n).get(j));
+                }
+
                 this.addNeighbor(adjListWallpass, position);
+                adjListWallpass.get(n).clear();
+                for (int j = 0; j < adjListWallpass0.get(n).size(); j++) {
+                    adjListWallpass.get(n).add(adjListWallpass0.get(n).get(j));
+                }
+
                 flames.remove(i--);
             }
         }
@@ -438,6 +445,7 @@ public class BombermanGame extends Application {
                 deads.add(bricks.get(i));
                 this.addRandomItem(bricks.get(i).getX() / Sprite.SCALED_SIZE, bricks.get(i).getY() / Sprite.SCALED_SIZE);
                 Point position = bricks.get(i).getPosition();
+                this.addNeighbor(adjList0, position);
                 this.addNeighbor(adjList, position);
                 bricks.remove(i--);
             }
@@ -450,6 +458,7 @@ public class BombermanGame extends Application {
                 ableToPlayPlayerDeathSound = true;
             }
         }
+
 
         for (int i = 0; i < enemies.size(); i++) {
             if (enemies.get(i).getHp() <= 0) {
@@ -701,7 +710,10 @@ public class BombermanGame extends Application {
         items.clear();
         bricks.clear();
         portals.clear();
+
+        adjList0.clear();
         adjList.clear();
+        adjListWallpass0.clear();
         adjListWallpass.clear();
     }
 
@@ -761,14 +773,18 @@ public class BombermanGame extends Application {
     public void createAdjList() {
         for (int i = 0; i < map.size(); i++) {
             for (int j = 0; j < map.get(i).size(); j++) {
+                adjList0.add(new ArrayList<>());
                 adjList.add(new ArrayList<>());
+                adjListWallpass0.add(new ArrayList<>());
                 adjListWallpass.add(new ArrayList<>());
             }
         }
         for (int i = 0; i < map.size(); i++) {
             for (int j = 0; j < map.get(i).size(); j++) {
                 if (map.get(i).get(j) != '#' && map.get(i).get(j) != '*') {
+                    this.addNeighbor(adjList0, j, i);
                     this.addNeighbor(adjList, j, i);
+                    this.addNeighbor(adjListWallpass0, j, i);
                     this.addNeighbor(adjListWallpass, j, i);
                 }
             }
@@ -777,6 +793,7 @@ public class BombermanGame extends Application {
         for (int i = 0; i < map.size(); i++) {
             for (int j = 0; j < map.get(i).size(); j++) {
                 if (map.get(i).get(j) == '*') {
+                    this.addNeighbor(adjListWallpass0, j, i);
                     this.addNeighbor(adjListWallpass, j, i);
                 }
             }
@@ -786,54 +803,31 @@ public class BombermanGame extends Application {
     public static void addNeighbor(List<List<Integer>> list, int x, int y) {
         int n = MyMath.converPointToInt(x, y);
         if (n - BombermanGame.WIDTH >= 0) {
-            boolean k = true;
-            for (int i = 0; i < list.get(n - BombermanGame.WIDTH).size(); i++) {
-                if (list.get(n - BombermanGame.WIDTH).get(i) == n) {
-                    k = false;
-                    break;
-                }
-            }
-            if (k) {
-                list.get(n - BombermanGame.WIDTH).add(n);
-            }
+            addSingleNeighbor(list, n - BombermanGame.WIDTH, n);
         }
         if (n - 1 >= 0 && ((n - 1) / BombermanGame.WIDTH) == (n / BombermanGame.WIDTH)) {
-            boolean k = true;
-            for (int i = 0; i < list.get(n - 1).size(); i++) {
-                if (list.get(n - 1).get(i) == n) {
-                    k = false;
-                    break;
-                }
-            }
-            if (k) {
-                list.get(n - 1).add(n);
-            }
+            addSingleNeighbor(list, n - 1, n);
         }
         if (n + 1 < BombermanGame.WIDTH * BombermanGame.HEIGHT
              && ((n + 1) / BombermanGame.WIDTH == (n / BombermanGame.WIDTH)))
         {
-            boolean k = true;
-            for (int i = 0; i < list.get(n + 1).size(); i++) {
-                if (list.get(n + 1).get(i) == n) {
-                    k = false;
-                    break;
-                }
-            }
-            if (k) {
-                list.get(n + 1).add(n);
-            }
+            addSingleNeighbor(list, n + 1, n);
         }
         if (n + BombermanGame.WIDTH < BombermanGame.WIDTH * BombermanGame.HEIGHT) {
-            boolean k = true;
-            for (int i = 0; i < list.get(n + BombermanGame.WIDTH).size(); i++) {
-                if (list.get(n + BombermanGame.WIDTH).get(i) == n) {
-                    k = false;
-                    break;
-                }
+            addSingleNeighbor(list, n + BombermanGame.WIDTH, n);
+        }
+    }
+
+    public static void addSingleNeighbor(List<List<Integer>> list,int  currentCell, int neighborCell) {
+        boolean k = true;
+        for (int i = 0; i < list.get(currentCell).size(); i++) {
+            if (list.get(currentCell).get(i) == neighborCell) {
+                k = false;
+                break;
             }
-            if (k) {
-                list.get(n + BombermanGame.WIDTH).add(n);
-            }
+        }
+        if (k) {
+            list.get(currentCell).add(neighborCell);
         }
     }
     public static void addNeighbor(List<List<Integer>> list, Point p) {
@@ -842,38 +836,29 @@ public class BombermanGame extends Application {
 
     public static void removeNeighbor(List<List<Integer>> list, int x, int y) {
         int n = MyMath.converPointToInt(x, y);
+        list.get(n).clear();
+
         if (n - BombermanGame.WIDTH >= 0) {
-            for (int i = 0; i < list.get(n - BombermanGame.WIDTH).size(); i++) {
-                if (list.get(n - BombermanGame.WIDTH).get(i) == n) {
-                    list.get(n - BombermanGame.WIDTH).remove(i);
-                    break;
-                }
-            }
+            removeSingleNeighbor(list, n - BombermanGame.WIDTH, n);
         }
         if (n - 1 >= 0 && ((n - 1) / BombermanGame.WIDTH) == (n / BombermanGame.WIDTH)) {
-            for (int i = 0; i < list.get(n - 1).size(); i++) {
-                if (list.get(n - 1).get(i) == n) {
-                    list.get(n - 1).remove(i);
-                    break;
-                }
-            }
+            removeSingleNeighbor(list, n - 1, n);
         }
         if (n + 1 < BombermanGame.WIDTH * BombermanGame.HEIGHT
                 && ((n + 1) / BombermanGame.WIDTH == (n / BombermanGame.WIDTH)))
         {
-            for (int i = 0; i < list.get(n + 1).size(); i++) {
-                if (list.get(n + 1).get(i) == n) {
-                    list.get(n + 1).remove(i);
-                    break;
-                }
-            }
+            removeSingleNeighbor(list, n + 1, n);
         }
         if (n + BombermanGame.WIDTH < BombermanGame.WIDTH * BombermanGame.HEIGHT) {
-            for (int i = 0; i < list.get(n + BombermanGame.WIDTH).size(); i++) {
-                if (list.get(n + BombermanGame.WIDTH).get(i) == n) {
-                    list.get(n + BombermanGame.WIDTH).remove(i);
-                    break;
-                }
+            removeSingleNeighbor(list, n + BombermanGame.WIDTH, n);
+        }
+    }
+
+    public static void removeSingleNeighbor(List<List<Integer>> list, int currentCell, int NeighborCell) {
+        for (int i = 0; i < list.get(currentCell).size(); i++) {
+            if (list.get(currentCell).get(i) == NeighborCell) {
+                list.get(currentCell).remove(i);
+                break;
             }
         }
     }
@@ -899,12 +884,4 @@ public class BombermanGame extends Application {
             }
         }
     }
-
-//    public void calculateDistanceManhattanToPlayer() {
-//        List<Integer> distance = new ArrayList<>(Collections.nCopies(WIDTH * HEIGHT, 0));
-//
-//        for (int i = 0; i < distance.size(); i++) {
-//            distance.set(i, MyMath.distanceManhattan(i,
-//        }
-//    }
 }
