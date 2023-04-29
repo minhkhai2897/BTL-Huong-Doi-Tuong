@@ -128,6 +128,11 @@ public abstract class Enemy extends MovingEntity {
         }
     }
 
+    /**
+     * Ham di chuyen tu dong den cho nguoi chơi
+     *
+     * (Di chuyen theo toa do nguoi choi)
+     */
     public void autoMoveToPlayer() {
         if (ableToMoveDown == false && ableToMoveLeft == false
             && ableToMoveUp == false && ableToMoveRight == false)
@@ -297,6 +302,11 @@ public abstract class Enemy extends MovingEntity {
         }
     }
 
+    /**
+     * Hàm di chuyen đơn giản den vi tri mot ô
+     * @param n vị trí ô
+     * @return true nếu di chuyen duoc, nguoc lai tra ve false
+     */
     public boolean moveToCell(int n) {
         Point p = MyMath.convertIntToPoint(n);
         int cellX = p.x * Sprite.SCALED_SIZE;

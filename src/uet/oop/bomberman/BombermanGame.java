@@ -246,6 +246,7 @@ public class BombermanGame extends Application {
     }
 
     public void update() {
+        Doll.checkAndSpawnDoll();
         setIdMinvo();
         setIdDoll();
 

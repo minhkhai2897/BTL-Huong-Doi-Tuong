@@ -30,7 +30,7 @@ Có nhiều loại Enemy trong Bomberman. Gồm các loại sau:
 - ![](res/sprites/oneal_left1.png) *Oneal:* Di chuyển ngẫu nhiên với vận tốc ngẫu nhiên*
 - ![](res/sprites/kondoria_left1.png) *Kondoria:* Di chuyển ngẫu nhiên với vận tốc ngẫu nhiên, có thể đi xuyên tường
 - ![](res/sprites/minvo_left1.png) *Minvo:* Di chuyển đến vị trí của người chơi với tốc độ gấp đôi bình thường, có thể đi xuyên tường
-- ![](res/sprites/doll_left1.png) *Doll:* Di chuyển đến vị trí của người chơi với tốc độ gấp đôi bình thường
+- ![](res/sprites/doll_left1.png) *Doll:* Di chuyển đến vị trí của người chơi với tốc độ gấp đôi bình thường, khi chỉ có 1 con Doll còn sống, nó sẽ tự sinh sản thêm 1 con nữa
 
 ## Mô tả game play, xử lý va chạm và xử lý bom nổ
 - Trong một màn chơi, Bomber sẽ được người chơi di chuyển, đặt và kích hoạt Bomb với mục tiêu chính là tiêu diệt tất cả Enemy và tìm ra vị trí Portal để có thể qua màn mới
@@ -45,6 +45,6 @@ Có nhiều loại Enemy trong Bomberman. Gồm các loại sau:
 - Di chuyển: A, S, D, W Hoặc các phím mũi tên
 - Đặt bom: Space hoặc X
 
-Ghi Chú: Thuật toán di chuyển của Doll và Minvo có một phần là thuật toán Dijkstra
+Ghi Chú: Thuật toán di chuyển của Doll và Minvo có một phần là thuật toán tìm đường A*
 
-Link youtube: https://www.youtube.com/watch?v=3aZaHjUJeCI
+Youtube:
