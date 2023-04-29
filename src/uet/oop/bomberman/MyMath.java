@@ -7,6 +7,7 @@ import java.util.*;
 import java.util.List;
 
 public class MyMath {
+    public static final int MULTIPLIER = 100000;
     public static int getRandomNumber(int min, int max) {
         Random random = new Random();
         return random.nextInt((max - min) + 1) + min;
@@ -73,7 +74,7 @@ public class MyMath {
     public static int distanceManhattan(int u, int v) {
         Point p1 = convertIntToPoint(u);
         Point p2 = convertIntToPoint(v);
-        return (Math.abs(p1.x - p2.x) + Math.abs(p1.y - p2.y)) * 2 * Sprite.SCALED_SIZE;
+        return (Math.abs(p1.x - p2.x) + Math.abs(p1.y - p2.y)) * MULTIPLIER;
     }
 }
 

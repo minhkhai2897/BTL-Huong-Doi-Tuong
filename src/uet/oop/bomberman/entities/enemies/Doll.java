@@ -4,6 +4,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.scene.image.Image;
+import uet.oop.bomberman.Astar;
 import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.MyMath;
 import uet.oop.bomberman.animation.DollAnimation;
@@ -15,7 +16,6 @@ public class Doll extends Enemy {
         super(x, y, img);
         this.setSpeed(2);
         this.animation = new DollAnimation();
-        this.moveOptimizations = new ArrayList<>(BombermanGame.WIDTH * BombermanGame.HEIGHT);
     }
 
     public void update() {
@@ -38,8 +38,8 @@ public class Doll extends Enemy {
      */
     public void handleMove() {
         List<Entity> bombers = BombermanGame.getBombers();
-        List<List<Integer>> adjList = BombermanGame.getAdjList();
-        List<List<Integer>> adjListWallpass = BombermanGame.getAdjListWallpass();
+        List<List<Integer>> adjList = Astar.getAdjList();
+        List<List<Integer>> adjListWallpass = Astar.getAdjListWallpass();
         if (bombers.size() < 1) {
             return;
         }
@@ -47,13 +47,19 @@ public class Doll extends Enemy {
 
         int u = MyMath.converPointToInt(this.getPosition());
         int v = MyMath.converPointToInt(bomber.getPosition());
-        int n = this.findFirstVertexOnShortestPathAstar(adjList, u, v);
+        List<Integer> priorityScores;
+        if (this.id % 2 == 0) {
+            priorityScores = BombermanGame.getPriorityScores();
+        } else {
+            priorityScores = BombermanGame.getPriorityScores1();
+        }
+        int n = Astar.findFirstVertexOnShortestPathAstar(adjList, priorityScores, this.moveOptimizations, u, v);
         if (n != -1) {
             boolean moved = this.moveToCell(n);
             if (!moved) {
                 Point p = MyMath.convertIntToPoint(n);
-                BombermanGame.removeNeighbor(adjList, p);
-                BombermanGame.removeNeighbor(adjListWallpass, p);
+                Astar.removeNeighbor(adjList, p);
+                Astar.removeNeighbor(adjListWallpass, p);
                 this.autoMoveToPlayer();
             }
             return;

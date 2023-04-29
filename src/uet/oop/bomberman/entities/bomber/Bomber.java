@@ -183,6 +183,10 @@ public class Bomber extends MovingEntity {
      * Them bomb khi nhan duoc lenh tu ban phim va co du dieu kien.
      */
     public void addBomb() {
+        if (this.getHp() < 1) {
+            return;
+        }
+
         List<Entity> bombs = BombermanGame.getBombs();
         List<Entity> bricks = BombermanGame.getBricks();
         List<Entity> portals = BombermanGame.getPortals();

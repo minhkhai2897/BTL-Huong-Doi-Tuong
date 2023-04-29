@@ -71,10 +71,7 @@ public class BombermanGame extends Application {
     private static List<Entity> bombs = new ArrayList<>();
     private static List<Entity> deads = new ArrayList<>();
     private static List<Entity> flames = new ArrayList<>();
-    private static List<List<Integer>> adjList0 = new ArrayList<>(BombermanGame.WIDTH * BombermanGame.HEIGHT);
-    private static List<List<Integer>> adjList = new ArrayList<>(BombermanGame.WIDTH * BombermanGame.HEIGHT);
-    private static List<List<Integer>> adjListWallpass0 = new ArrayList<>(BombermanGame.WIDTH * BombermanGame.HEIGHT);
-    private static List<List<Integer>> adjListWallpass = new ArrayList<>(BombermanGame.WIDTH * BombermanGame.HEIGHT);
+
     public static void main(String[] args) {
         Application.launch(BombermanGame.class);
     }
@@ -83,6 +80,9 @@ public class BombermanGame extends Application {
         return scene;
     }
 
+    public static List<List<Character>> getMap() {
+        return map;
+    }
 
     public static List<Integer> getPriorityScores1() {
         return priorityScores1;
@@ -139,13 +139,7 @@ public class BombermanGame extends Application {
         BombermanGame.mapList = mapList;
     }
 
-    public static List<List<Integer>> getAdjList() {
-        return adjList;
-    }
 
-    public static List<List<Integer>> getAdjListWallpass() {
-        return adjListWallpass;
-    }
 
     public static List<String> getMapList() {
         List<String> mapListCopy = new ArrayList<>(mapList);
@@ -363,7 +357,7 @@ public class BombermanGame extends Application {
         Entity portal = new Portal(bricks.get(randomNumber).getX() / Sprite.SCALED_SIZE,
                 bricks.get(randomNumber).getY() / Sprite.SCALED_SIZE, Sprite.portal.getFxImage());
         portals.add(portal);
-        createAdjList();
+        Astar.createAdjList();
     }
 
     public void addRandomItem(int x, int y) {
@@ -404,17 +398,17 @@ public class BombermanGame extends Application {
             if (flames.get(i).getAnimation().isFinishDeadAnimation()) {
                 Point position = flames.get(i).getPosition();
 
-                this.addNeighbor(adjList, position);
+                Astar.addNeighbor(Astar.getAdjList(), position);
                 int n = MyMath.converPointToInt(position);
-                adjList.get(n).clear();
-                for (int j = 0; j < adjList0.get(n).size(); j++) {
-                    adjList.get(n).add(adjList0.get(n).get(j));
+                Astar.getAdjList().get(n).clear();
+                for (int j = 0; j < Astar.getAdjList0().get(n).size(); j++) {
+                    Astar.getAdjList().get(n).add(Astar.getAdjList0().get(n).get(j));
                 }
 
-                this.addNeighbor(adjListWallpass, position);
-                adjListWallpass.get(n).clear();
-                for (int j = 0; j < adjListWallpass0.get(n).size(); j++) {
-                    adjListWallpass.get(n).add(adjListWallpass0.get(n).get(j));
+                Astar.addNeighbor(Astar.getAdjListWallpass(), position);
+                Astar.getAdjListWallpass().get(n).clear();
+                for (int j = 0; j < Astar.getAdjListWallpass0().get(n).size(); j++) {
+                    Astar.getAdjListWallpass().get(n).add(Astar.getAdjListWallpass0().get(n).get(j));
                 }
 
                 flames.remove(i--);
@@ -445,8 +439,8 @@ public class BombermanGame extends Application {
                 deads.add(bricks.get(i));
                 this.addRandomItem(bricks.get(i).getX() / Sprite.SCALED_SIZE, bricks.get(i).getY() / Sprite.SCALED_SIZE);
                 Point position = bricks.get(i).getPosition();
-                this.addNeighbor(adjList0, position);
-                this.addNeighbor(adjList, position);
+                Astar.addNeighbor(Astar.getAdjList0(), position);
+                Astar.addNeighbor(Astar.getAdjList(), position);
                 bricks.remove(i--);
             }
         }
@@ -711,10 +705,10 @@ public class BombermanGame extends Application {
         bricks.clear();
         portals.clear();
 
-        adjList0.clear();
-        adjList.clear();
-        adjListWallpass0.clear();
-        adjListWallpass.clear();
+        Astar.getAdjList0().clear();
+        Astar.getAdjList().clear();
+        Astar.getAdjListWallpass0().clear();
+        Astar.getAdjListWallpass().clear();
     }
 
     public void handleSound() {
@@ -768,101 +762,6 @@ public class BombermanGame extends Application {
             this.music = AudioManager.setAndPlayMusicLoop(music,  getClass().getResource("/sounds/Find_The_Door.wav").toString());
             ableToPlayFindTheDoorMusic = false;
         }
-    }
-
-    public void createAdjList() {
-        for (int i = 0; i < BombermanGame.WIDTH * BombermanGame.HEIGHT; i++) {
-            adjList0.add(new ArrayList<>());
-            adjList.add(new ArrayList<>());
-            adjListWallpass0.add(new ArrayList<>());
-            adjListWallpass.add(new ArrayList<>());
-        }
-        for (int i = 0; i < map.size(); i++) {
-            for (int j = 0; j < map.get(i).size(); j++) {
-                if (map.get(i).get(j) != '#' && map.get(i).get(j) != '*') {
-                    this.addNeighbor(adjList0, j, i);
-                    this.addNeighbor(adjList, j, i);
-                    this.addNeighbor(adjListWallpass0, j, i);
-                    this.addNeighbor(adjListWallpass, j, i);
-                }
-            }
-        }
-
-        for (int i = 0; i < map.size(); i++) {
-            for (int j = 0; j < map.get(i).size(); j++) {
-                if (map.get(i).get(j) == '*') {
-                    this.addNeighbor(adjListWallpass0, j, i);
-                    this.addNeighbor(adjListWallpass, j, i);
-                }
-            }
-        }
-    }
-
-    public static void addNeighbor(List<List<Integer>> list, int x, int y) {
-        int n = MyMath.converPointToInt(x, y);
-        if (n - BombermanGame.WIDTH >= 0) {
-            addSingleNeighbor(list, n - BombermanGame.WIDTH, n);
-        }
-        if (n - 1 >= 0 && ((n - 1) / BombermanGame.WIDTH) == (n / BombermanGame.WIDTH)) {
-            addSingleNeighbor(list, n - 1, n);
-        }
-        if (n + 1 < BombermanGame.WIDTH * BombermanGame.HEIGHT
-             && ((n + 1) / BombermanGame.WIDTH == (n / BombermanGame.WIDTH)))
-        {
-            addSingleNeighbor(list, n + 1, n);
-        }
-        if (n + BombermanGame.WIDTH < BombermanGame.WIDTH * BombermanGame.HEIGHT) {
-            addSingleNeighbor(list, n + BombermanGame.WIDTH, n);
-        }
-    }
-
-    public static void addSingleNeighbor(List<List<Integer>> list,int  currentCell, int neighborCell) {
-        boolean k = true;
-        for (int i = 0; i < list.get(currentCell).size(); i++) {
-            if (list.get(currentCell).get(i) == neighborCell) {
-                k = false;
-                break;
-            }
-        }
-        if (k) {
-            list.get(currentCell).add(neighborCell);
-        }
-    }
-    public static void addNeighbor(List<List<Integer>> list, Point p) {
-        addNeighbor(list, p.x, p.y);
-    }
-
-    public static void removeNeighbor(List<List<Integer>> list, int x, int y) {
-        int n = MyMath.converPointToInt(x, y);
-        list.get(n).clear();
-
-        if (n - BombermanGame.WIDTH >= 0) {
-            removeSingleNeighbor(list, n - BombermanGame.WIDTH, n);
-        }
-        if (n - 1 >= 0 && ((n - 1) / BombermanGame.WIDTH) == (n / BombermanGame.WIDTH)) {
-            removeSingleNeighbor(list, n - 1, n);
-        }
-        if (n + 1 < BombermanGame.WIDTH * BombermanGame.HEIGHT
-                && ((n + 1) / BombermanGame.WIDTH == (n / BombermanGame.WIDTH)))
-        {
-            removeSingleNeighbor(list, n + 1, n);
-        }
-        if (n + BombermanGame.WIDTH < BombermanGame.WIDTH * BombermanGame.HEIGHT) {
-            removeSingleNeighbor(list, n + BombermanGame.WIDTH, n);
-        }
-    }
-
-    public static void removeSingleNeighbor(List<List<Integer>> list, int currentCell, int NeighborCell) {
-        for (int i = 0; i < list.get(currentCell).size(); i++) {
-            if (list.get(currentCell).get(i) == NeighborCell) {
-                list.get(currentCell).remove(i);
-                break;
-            }
-        }
-    }
-
-    public static void removeNeighbor(List<List<Integer>> list, Point p) {
-        removeNeighbor(list, p.x, p.y);
     }
 
     public void setIdMinvo() {

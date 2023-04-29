@@ -205,7 +205,6 @@ public abstract class Enemy extends MovingEntity {
                 return;
             }
 
-
             while (true) {
                 // Phan tu dong di chuyen ve phia nguoi cho
                 // bomber o ben trai enemy
@@ -298,64 +297,6 @@ public abstract class Enemy extends MovingEntity {
         }
     }
 
-    /**
-     * // Ham nay tim duong di tu dinh ket thuc den dinh bat dau.
-     * Sau do tra ve ô cuối cùng gần đỉnh bắt đầu.
-     * @param adjList danh sach ke
-     * @param u dinh bat dau
-     * @param v dinh ket thuc
-     * @return
-     */
-    public int findFirstVertexOnShortestPathAstar(List<List<Integer>> adjList, int u, int v) {
-        List<Boolean> visited = new ArrayList<>(Collections.nCopies(BombermanGame.WIDTH * BombermanGame.HEIGHT, false));
-        List<Integer> distTo = new ArrayList<>(Collections.nCopies(BombermanGame.WIDTH * BombermanGame.HEIGHT, 1000000));
-        List<Integer> predecessors  = new ArrayList<>(Collections.nCopies(BombermanGame.WIDTH * BombermanGame.HEIGHT, -1));
-        List<Integer> priorityScores;
-        if (this.moveOptimizations.isEmpty()) {
-            Exception e = new Exception("List moveOptimizations is Empty");
-            e.printStackTrace();
-            return -1;
-        }
-        if (this.id % 2 == 0) {
-            priorityScores = BombermanGame.getPriorityScores();
-        } else {
-            priorityScores = BombermanGame.getPriorityScores1();
-        }
-
-        Queue<Integer> pq = new PriorityQueue<>(new Comparator<Integer>() {
-            public int compare(Integer n1, Integer n2)
-            {
-                // Hàm Manhattan dinh thu 2 là u vi chung ta đang tìm đường đi từ v -> u
-                // Chú ý: Khoang cach giua 2 dinh = khoang cach manhattan giua 2 dinh ke.
-                return (distTo.get(n1) + priorityScores.get(n1) + MyMath.distanceManhattan(n1, u) * 9 / 10 + moveOptimizations.get(n1))
-                        - (distTo.get(n2) + priorityScores.get(n2) + MyMath.distanceManhattan(n2, u) * 9 / 10 + moveOptimizations.get(n2));
-            }
-        });
-
-        pq.add(v);
-        distTo.set(v, 0);
-        predecessors.set(v, v);
-
-        while (pq.size() > 0) {
-            int t = pq.remove();
-            visited.set(t, true);
-
-            if (t == u) {
-                break;
-            }
-            for (int i = 0; i < adjList.get(t).size(); i++) {
-                if (!visited.get(adjList.get(t).get(i))) {
-                    if (distTo.get(adjList.get(t).get(i)) > distTo.get(t) + 2 * Sprite.SCALED_SIZE) {
-                        distTo.set(adjList.get(t).get(i), distTo.get(t) + 2 * Sprite.SCALED_SIZE);
-                        predecessors.set(adjList.get(t).get(i), t);
-                    }
-                    pq.add(adjList.get(t).get(i));
-                }
-            }
-        }
-        return predecessors.get(u);
-    }
-
     public boolean moveToCell(int n) {
         Point p = MyMath.convertIntToPoint(n);
         int cellX = p.x * Sprite.SCALED_SIZE;
@@ -399,24 +340,24 @@ public abstract class Enemy extends MovingEntity {
     }
 
     public List<Integer> updateMoveOptimizationsList() {
-        List<Integer> moveOptimizations = new ArrayList<>(Collections.nCopies(BombermanGame.WIDTH * BombermanGame.HEIGHT, 1));
+        List<Integer> moveOptimizations = new ArrayList<>(Collections.nCopies(BombermanGame.WIDTH * BombermanGame.HEIGHT, 0));
 
         Point p = this.getPosition();
         int n = MyMath.converPointToInt(p);
 
         if (this.moveUp && n - BombermanGame.WIDTH >= 0) {
-            moveOptimizations.set(n - BombermanGame.WIDTH, 0);
+            moveOptimizations.set(n - BombermanGame.WIDTH, -1);
         }
         else if (this.moveLeft && n - 1 >= 0 && ((n - 1) / BombermanGame.WIDTH) == (n / BombermanGame.WIDTH)) {
-            moveOptimizations.set(n - 1, 0);
+            moveOptimizations.set(n - 1, -1);
         }
         else if (this.moveRight && n + 1 < BombermanGame.WIDTH * BombermanGame.HEIGHT
                 && ((n + 1) / BombermanGame.WIDTH == (n / BombermanGame.WIDTH)))
         {
-            moveOptimizations.set(n + 1, 0);
+            moveOptimizations.set(n + 1, -1);
         }
         else if (this.moveDown && n + BombermanGame.WIDTH < BombermanGame.WIDTH * BombermanGame.HEIGHT) {
-            moveOptimizations.set(n + BombermanGame.WIDTH, 0);
+            moveOptimizations.set(n + BombermanGame.WIDTH, -1);
         }
 
         return moveOptimizations;
