@@ -47,4 +47,8 @@ Có nhiều loại Enemy trong Bomberman. Gồm các loại sau:
 
 Ghi Chú: Thuật toán di chuyển của Doll và Minvo có một phần là thuật toán tìm đường A*
 
-Youtube:
+Cây thừa kế:
+
+
+Youtube: https://www.youtube.com/watch?v=8pvwQSyUOHk
+
