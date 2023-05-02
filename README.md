@@ -1,8 +1,8 @@
 # Bài tập lớn OOP - Bomberman Game
 
-Mô phỏng lại trò chơi [Bomberman](https://www.youtube.com/watch?v=mKIOVwqgSXM) kinh điển của NES.
+Mô phỏng lại trò chơi Bomberman kinh điển của NES.
 
-<img src="res/demo.png" alt="drawing" width="400"/>
+<img src="res/sprites/introImage.png" alt="drawing" width="800"/>
 
 ## Mô tả về các đối tượng trong trò chơi:
 
@@ -42,13 +42,26 @@ Có nhiều loại Enemy trong Bomberman. Gồm các loại sau:
 - Game hiện có 15 màn chơi.
 
 ## Hướng dẫn người chơi:
+
 - Di chuyển: A, S, D, W Hoặc các phím mũi tên
 - Đặt bom: Space hoặc X
 
 Ghi Chú: Thuật toán di chuyển của Doll và Minvo có một phần là thuật toán tìm đường A*
 
-Cây thừa kế: https://docs.google.com/presentation/d/1E5ikJPZ8ysxOAJ-3HJ2bqZxZsW4o5SJo/edit?usp=sharing&ouid=114829471800399208312&rtpof=true&sd=true
+## Cây thừa kế: https://docs.google.com/presentation/d/1E5ikJPZ8ysxOAJ-3HJ2bqZxZsW4o5SJo/edit?usp=sharing&ouid=114829471800399208312&rtpof=true&sd=true
 
+## Youtube: https://www.youtube.com/watch?v=8pvwQSyUOHk
 
-Youtube: https://www.youtube.com/watch?v=8pvwQSyUOHk
+## Một số hình ảnh trong game:
+
+- Minvo đuổi theo nguười chơi (luôn ép người chơi vào các đường biên):
+  ![minvo di chuyển](res/gif/minvo_di_chuyen.gif)
+- Khi xuất hiện từ hai Minvo trở lên, chúng sẽ tự phân chia đường di chuyển:
+  ![minvo phân đường di chuyển](res/gif/minvo_phan_duong_di_chuyen.gif)
+- Doll tìm đường:
+  ![doll tìm đường](res/gif/doll_tim_duong.gif)
+- Khi chỉ còn một Doll sống sót, nó sẽ tự nhân bản để tạo ra thêm một Doll mới:
+  ![doll nhân bản](res/gif/doll_nhan_ban.gif)
+- Doll tìm đường và nhân bản:
+  ![doll tìm đường và nhân bản](res/gif/doll_tim_duong_va_nhan_ban.gif)
 
