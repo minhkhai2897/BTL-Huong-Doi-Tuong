@@ -49,10 +49,10 @@ public class Doll extends Enemy {
         int u = MyMath.converPointToInt(this.getPosition());
         int v = MyMath.converPointToInt(bomber.getPosition());
         List<Integer> priorityScores;
-        if (this.id % 2 == 0) {
-            priorityScores = BombermanGame.getPriorityScores();
-        } else {
+        if (this.id % 2 == 1 && (MyMath.distanceManhattan(u, v) / MyMath.MULTIPLIER <= 8)) {
             priorityScores = BombermanGame.getPriorityScores1();
+        } else {
+            priorityScores = BombermanGame.getPriorityScores();
         }
         int n = Astar.findFirstVertexOnShortestPathAstar(adjList, priorityScores, this.moveOptimizations, u, v);
         if (n != -1) {

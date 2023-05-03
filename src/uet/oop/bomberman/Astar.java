@@ -144,8 +144,8 @@ public class Astar {
             return -1;
         }
 
-        List<Boolean> visited = new ArrayList<>(Collections.nCopies(BombermanGame.WIDTH * BombermanGame.HEIGHT, false));
-        List<Boolean> marked = new ArrayList<>(Collections.nCopies(BombermanGame.WIDTH * BombermanGame.HEIGHT, false));
+        List<Boolean> openList = new ArrayList<>(Collections.nCopies(BombermanGame.WIDTH * BombermanGame.HEIGHT, false));
+        List<Boolean> closedList = new ArrayList<>(Collections.nCopies(BombermanGame.WIDTH * BombermanGame.HEIGHT, false));
         List<Integer> distTo = new ArrayList<>(Collections.nCopies(BombermanGame.WIDTH * BombermanGame.HEIGHT, 1000000000));
         List<Integer> predecessors  = new ArrayList<>(Collections.nCopies(BombermanGame.WIDTH * BombermanGame.HEIGHT, -1));
         Queue<Integer> pq;
@@ -161,7 +161,7 @@ public class Astar {
         pq.add(u);
         distTo.set(u, 0);
         predecessors.set(u, u);
-        marked.set(u, true);
+        openList.set(u, true);
 
 ///////////////////////////////////////////////////////////////////////test0
 //        List<Character> a = new ArrayList<>(BombermanGame.WIDTH * BombermanGame.HEIGHT);
@@ -183,25 +183,27 @@ public class Astar {
 
         while (pq.size() > 0) {
             int t = pq.remove();
-            visited.set(t, true);
+            closedList.set(t, true);
             if (t == v) {
                 break;
             }
             for (int i = 0; i < adjList.get(t).size(); i++) {
-                if (!visited.get(adjList.get(t).get(i))) {
-                    if (distTo.get(adjList.get(t).get(i)) > distTo.get(t) + MyMath.MULTIPLIER + moveOptimizations.get(adjList.get(t).get(i))) {
-                        distTo.set(adjList.get(t).get(i), distTo.get(t) + MyMath.MULTIPLIER + moveOptimizations.get(adjList.get(t).get(i)));
-                        predecessors.set(adjList.get(t).get(i), t);
+                if (distTo.get(adjList.get(t).get(i)) > distTo.get(t) + MyMath.MULTIPLIER + moveOptimizations.get(adjList.get(t).get(i))) {
+                    distTo.set(adjList.get(t).get(i), distTo.get(t) + MyMath.MULTIPLIER + moveOptimizations.get(adjList.get(t).get(i)));
+                    predecessors.set(adjList.get(t).get(i), t);
+                    if (closedList.get(adjList.get(t).get(i))) {
+                        closedList.set(adjList.get(t).get(i), false);
+                        pq.add(adjList.get(t).get(i));
+                    }
 
 ///////////////////////////////////////////////////////////////////////test1
 //                        mark(a, adjList.get(t).get(i));
 ///////////////////////////////////////////////////////////////////////test1
 
-                    }
-                    if (!marked.get(adjList.get(t).get(i))) {
-                        marked.set(adjList.get(t).get(i), true);
-                        pq.add(adjList.get(t).get(i));
-                    }
+                }
+                if (!openList.get(adjList.get(t).get(i))) {
+                    openList.set(adjList.get(t).get(i), true);
+                    pq.add(adjList.get(t).get(i));
                 }
             }
         }
