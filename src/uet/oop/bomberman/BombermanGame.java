@@ -354,10 +354,17 @@ public class BombermanGame extends Application {
                 }
             }
         }
-        int randomNumber = MyMath.getRandomNumber(0, bricks.size() - 1);
-        Entity portal = new Portal(bricks.get(randomNumber).getX() / Sprite.SCALED_SIZE,
-                bricks.get(randomNumber).getY() / Sprite.SCALED_SIZE, Sprite.portal.getFxImage());
-        portals.add(portal);
+
+        if (bricks.isEmpty()) {
+            Entity portal = new Portal(1, 3, Sprite.portal.getFxImage());
+            portals.add(portal);
+        }
+        else {
+            int randomNumber = MyMath.getRandomNumber(0, bricks.size() - 1);
+            Entity portal = new Portal(bricks.get(randomNumber).getX() / Sprite.SCALED_SIZE,
+                    bricks.get(randomNumber).getY() / Sprite.SCALED_SIZE, Sprite.portal.getFxImage());
+            portals.add(portal);
+        }
         Astar.createAdjList();
     }
 
