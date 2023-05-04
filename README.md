@@ -62,6 +62,6 @@ Ghi Chú: Thuật toán di chuyển của Doll và Minvo có một phần là th
   ![doll tìm đường](res/gif/doll_tim_duong.gif)
 - Khi chỉ còn một Doll sống sót, nó sẽ tự nhân bản để tạo ra thêm một Doll mới:
   ![doll nhân bản](res/gif/doll_nhan_ban.gif)
-- Doll tìm đường và nhân bản:
-  ![doll tìm đường và nhân bản](res/gif/doll_tim_duong_va_nhan_ban.gif)
+- Doll đuổi theo người chơi:
+  ![doll di chuyen](res/gif/doll_di_chuyen.gif)
 
