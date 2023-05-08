@@ -1,5 +1,7 @@
 # Bài tập lớn OOP - Bomberman Game
 
+Nhóm 03: Vũ Minh Khải - Nguyễn Gia Lộc
+
 Mô phỏng lại trò chơi Bomberman kinh điển của NES.
 
 <img src="res/sprites/introImage.png" alt="drawing" width="800"/>
