@@ -1,7 +1,5 @@
 # Bài tập lớn OOP - Bomberman Game
 
-Nhóm 03: Vũ Minh Khải - Nguyễn Gia Lộc
-
 Mô phỏng lại trò chơi Bomberman kinh điển của NES.
 
 <img src="res/sprites/introImage.png" alt="drawing" width="800"/>
@@ -49,8 +47,6 @@ Có nhiều loại Enemy trong Bomberman. Gồm các loại sau:
 - Đặt bom: Space hoặc X
 
 Ghi Chú: Thuật toán di chuyển của Doll và Minvo có một phần là thuật toán tìm đường A*
-
-## Cây thừa kế: https://docs.google.com/presentation/d/1E5ikJPZ8ysxOAJ-3HJ2bqZxZsW4o5SJo/edit?usp=sharing&ouid=114829471800399208312&rtpof=true&sd=true
 
 ## Youtube: https://www.youtube.com/watch?v=8pvwQSyUOHk
 
